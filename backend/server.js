@@ -1,0 +1,59 @@
+import "./config/env.js";
+
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+
+import { generalLimiter } from "./middleware/rateLimit.middleware.js";
+import { notFound, errorHandler } from "./middleware/error.middleware.js";
+import { successResponse } from "./utils/response.js";
+import { logger } from "./utils/logger.js";
+
+import authRoutes from "./routes/auth.routes.js";
+import productsRoutes from "./routes/products.routes.js";
+import servicesRoutes from "./routes/services.routes.js";
+import professionalsRoutes from "./routes/professionals.routes.js";
+import ordersRoutes from "./routes/orders.routes.js";
+import bookingsRoutes from "./routes/bookings.routes.js";
+import usersRoutes from "./routes/users.routes.js";
+
+const app = express();
+
+const PORT = process.env.PORT || 5000;
+const CLIENT_URL = process.env.CLIENT_URL || "http://127.0.0.1:5500";
+
+app.use(helmet());
+
+app.use(
+    cors({
+        origin: CLIENT_URL,
+        credentials: true,
+    })
+);
+
+app.use(express.json());
+
+app.use(generalLimiter);
+
+app.get("/api/health", (req, res) => {
+    return successResponse(res, {
+        message: "FixKart API is running",
+    });
+});
+
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productsRoutes);
+app.use("/api/services", servicesRoutes);
+app.use("/api/professionals", professionalsRoutes);
+app.use("/api/orders", ordersRoutes);
+app.use("/api/bookings", bookingsRoutes);
+app.use("/api/users", usersRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
+
+app.listen(PORT, () => {
+    logger.info(
+        `FixKart API listening on http://localhost:${PORT}`
+    );
+});
