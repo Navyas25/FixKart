@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - FixKart</title>
+</head>
+<body>
+    <header>
+        <div id="branding">
+            <a href="../index.html">FixKart</a>
+        </div>
+
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../pages/products.html">Products</a></li>
+                <li><a href="../pages/services.html">Services</a></li>
+                <li><a href="../pages/professionals.html">Professionals</a></li>
+                <li><a href="../pages/about.html">About</a></li>
+                <li><a href="../pages/contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <form role="search" aria-label="Site search">
+            <label for="site-search">Search</label>
+            <input type="search" id="site-search" name="q" placeholder="Search products or services">
+            <button type="submit">Search</button>
+        </form>
+
+        <nav aria-label="Account navigation">
+            <ul>
+                <li><a href="../pages/login.html">Login</a></li>
+                <li><a href="../pages/register.html">Register</a></li>
+                <li><a href="../pages/profile.html">Profile</a></li>
+                <li><a href="../pages/cart.html">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Products</h1>
+
+        <aside id="product-filters">
+            <h2>Filters</h2>
+            <form aria-label="Product filters">
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="">All Categories</option>
+                    <option value="tools">Tools</option>
+                    <option value="plumbing">Plumbing Supplies</option>
+                    <option value="electrical">Electrical Supplies</option>
+                    <option value="automotive">Automotive</option>
+                </select>
+            </form>
+        </aside>
+
+        <section id="product-list">
+            <h2>All Products</h2>
+            <article>
+                <img src="../assets/images/placeholder-product.png" alt="Placeholder product image">
+                <h3><a href="product-details.html">Product Name</a></h3>
+                <p>Product short description placeholder.</p>
+                <a href="product-details.html">View Details</a>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <section id="footer-links">
+            <nav aria-label="Footer navigation">
+                <ul>
+                    <li><a href="../pages/about.html">About FixKart</a></li>
+                    <li><a href="../pages/contact.html">Contact Us</a></li>
+                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
+                    <li><a href="../pages/terms.html">Terms of Service</a></li>
+                </ul>
+            </nav>
+        </section>
+
+        <section id="footer-about">
+            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
+        </section>
+
+        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+    </footer>
+<script src="../js/products.js"></script>
+</body>
+</html>

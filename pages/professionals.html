@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professionals - FixKart</title>
+</head>
+<body>
+    <header>
+        <div id="branding">
+            <a href="../index.html">FixKart</a>
+        </div>
+
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../pages/products.html">Products</a></li>
+                <li><a href="../pages/services.html">Services</a></li>
+                <li><a href="../pages/professionals.html">Professionals</a></li>
+                <li><a href="../pages/about.html">About</a></li>
+                <li><a href="../pages/contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <form role="search" aria-label="Site search">
+            <label for="site-search">Search</label>
+            <input type="search" id="site-search" name="q" placeholder="Search products or services">
+            <button type="submit">Search</button>
+        </form>
+
+        <nav aria-label="Account navigation">
+            <ul>
+                <li><a href="../pages/login.html">Login</a></li>
+                <li><a href="../pages/register.html">Register</a></li>
+                <li><a href="../pages/profile.html">Profile</a></li>
+                <li><a href="../pages/cart.html">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Professionals</h1>
+
+        <aside id="professional-filters">
+            <h2>Filters</h2>
+            <form aria-label="Professional filters">
+                <label for="profession">Profession</label>
+                <select id="profession" name="profession">
+                    <option value="">All Professionals</option>
+                    <option value="plumber">Plumber</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="carpenter">Carpenter</option>
+                    <option value="mechanic">Mechanic</option>
+                    <option value="painter">Painter</option>
+                    <option value="ac-technician">AC Technician</option>
+                </select>
+            </form>
+        </aside>
+
+        <section id="professional-list">
+            <h2>Available Professionals</h2>
+            <article>
+                <img src="../assets/images/placeholder-professional.png" alt="Placeholder professional profile photo">
+                <h3><a href="professional-profile.html">Professional Name</a></h3>
+                <p>Profession placeholder</p>
+                <a href="professional-profile.html">View Profile</a>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <section id="footer-links">
+            <nav aria-label="Footer navigation">
+                <ul>
+                    <li><a href="../pages/about.html">About FixKart</a></li>
+                    <li><a href="../pages/contact.html">Contact Us</a></li>
+                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
+                    <li><a href="../pages/terms.html">Terms of Service</a></li>
+                </ul>
+            </nav>
+        </section>
+
+        <section id="footer-about">
+            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
+        </section>
+
+        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+    </footer>
+<script src="../js/professionals.js"></script>
+</body>
+</html>
