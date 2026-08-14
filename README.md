@@ -19,58 +19,7 @@ The goal of this stage is to establish the full page/file architecture so the te
 | Navya   | Backend + Database    |
 | Raghav  | Backend + Database    |
 
-## Project Structure
 
-```
-FixKart/
-│
-├── index.html                  Homepage
-│
-├── pages/                      Shared, role-agnostic pages (marketplace, services, auth, account, static)
-│   ├── products.html
-│   ├── product-details.html
-│   ├── services.html
-│   ├── service-details.html
-│   ├── professionals.html
-│   ├── professional-profile.html
-│   ├── cart.html
-│   ├── checkout.html
-│   ├── order-confirmation.html
-│   ├── orders.html
-│   ├── booking.html
-│   ├── booking-confirmation.html
-│   ├── bookings.html
-│   ├── login.html
-│   ├── register.html
-│   ├── forgot-password.html
-│   ├── profile.html
-│   ├── addresses.html
-│   ├── about.html
-│   ├── contact.html
-│   ├── privacy.html
-│   ├── terms.html
-│   └── 404.html
-│
-├── admin/                       Admin dashboard entry point
-│   └── index.html
-│
-├── vendor/                      Vendor dashboard entry point
-│   └── index.html
-│
-├── professional/                 Professional dashboard entry point
-│   └── index.html
-│
-├── assets/
-│   ├── images/                  Product, professional, and marketing images
-│   ├── icons/                   Icon assets
-│   └── fonts/                   Font files
-│
-├── css/                          Stylesheets (empty for now)
-│
-├── js/                            Scripts (empty for now)
-│
-└── README.md
-```
 
 ## Navigation Flows
 
