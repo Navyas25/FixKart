@@ -1,89 +1,861 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Manage your saved delivery addresses on FixKart."
+    >
+
     <title>My Addresses - FixKart</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="FixKart Home"
+            >
+                <span
+                    class="brand-mark"
+                    aria-hidden="true"
+                >
+                    F
+                </span>
+
+                <span>
+                    Fix<span class="brand-accent">Kart</span>
+                </span>
+            </a>
+
+
+            <!-- Mobile Menu Button -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+            >
+                ☰
+            </button>
+
+
+            <!-- Main Navigation -->
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="products.html">
+                    Products
+                </a>
+
+                <a href="services.html">
+                    Services
+                </a>
+
+                <a href="professionals.html">
+                    Professionals
+                </a>
+
+                <a href="about.html">
+                    About
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </nav>
+
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                action="products.html"
+                method="get"
+            >
+
+                <span aria-hidden="true">
+                    ⌕
+                </span>
+
+                <label
+                    for="site-search"
+                    class="sr-only"
+                >
+                    Search products and services
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="profile.html"
+                    class="btn-icon profile-desktop-only"
+                    aria-label="Profile"
+                    title="Profile"
+                >
+                    👤
+                </a>
+
+                <a
+                    href="cart.html"
+                    class="btn-icon"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                >
+                    🛒
+                    <span class="badge-count">0</span>
+                </a>
+
+            </div>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>My Addresses</h1>
 
-        <section id="address-list">
-            <article>
-                <p>Address placeholder</p>
-                <button type="button">Edit</button>
-                <button type="button">Remove</button>
-            </article>
-        </section>
+    <!-- ================= MAIN ================= -->
+    <main id="main-content">
 
-        <section id="add-address-form">
-            <h2>Add New Address</h2>
-            <form aria-label="Add address form">
-                <label for="new-address-line">Address</label>
-                <input type="text" id="new-address-line" name="new-address-line">
+        <div class="container">
 
-                <label for="new-city">City</label>
-                <input type="text" id="new-city" name="new-city">
+            <!-- Page Header -->
+            <section class="section">
 
-                <label for="new-postal-code">Postal Code</label>
-                <input type="text" id="new-postal-code" name="new-postal-code">
+                <div class="section-head">
 
-                <button type="submit">Save Address</button>
-            </form>
-        </section>
+                    <div>
+
+                        <span class="eyebrow">
+                            Account
+                        </span>
+
+                        <h1>
+                            My Addresses
+                        </h1>
+
+                        <p>
+                            Manage your saved delivery and service
+                            addresses.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="profile.html"
+                        class="btn btn-outline"
+                    >
+                        Back to Profile
+                    </a>
+
+                </div>
+
+
+                <!-- ================= ADDRESS LAYOUT ================= -->
+                <div class="grid grid-2">
+
+
+                    <!-- ================= SAVED ADDRESSES ================= -->
+                    <section>
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <h2>
+                                    Saved Addresses
+                                </h2>
+
+                                <p>
+                                    Choose an address for your orders
+                                    and services.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Address Card -->
+                        <article class="card">
+
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: flex-start;
+                                    gap: 1rem;
+                                    margin-bottom: 1rem;
+                                "
+                            >
+
+                                <div>
+
+                                    <span class="badge badge-blue">
+                                        Home
+                                    </span>
+
+                                    <h3
+                                        style="
+                                            margin-top: 0.75rem;
+                                        "
+                                    >
+                                        Home Address
+                                    </h3>
+
+                                </div>
+
+                                <span
+                                    class="badge badge-green"
+                                >
+                                    Default
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 0.75rem;
+                                    align-items: flex-start;
+                                "
+                            >
+
+                                <span
+                                    aria-hidden="true"
+                                    style="font-size: 1.25rem;"
+                                >
+                                    📍
+                                </span>
+
+                                <p>
+                                    123 Main Street,<br>
+                                    Sector 15,<br>
+                                    New Delhi, Delhi - 110001
+                                </p>
+
+                            </div>
+
+
+                            <div
+                                class="row gap-2"
+                                style="
+                                    margin-top: 1.5rem;
+                                    flex-wrap: wrap;
+                                "
+                            >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm"
+                                >
+                                    Remove
+                                </button>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- Second Address -->
+                        <article class="card">
+
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: flex-start;
+                                    gap: 1rem;
+                                    margin-bottom: 1rem;
+                                "
+                            >
+
+                                <div>
+
+                                    <span class="badge">
+                                        Work
+                                    </span>
+
+                                    <h3
+                                        style="
+                                            margin-top: 0.75rem;
+                                        "
+                                    >
+                                        Office Address
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 0.75rem;
+                                    align-items: flex-start;
+                                "
+                            >
+
+                                <span
+                                    aria-hidden="true"
+                                    style="font-size: 1.25rem;"
+                                >
+                                    📍
+                                </span>
+
+                                <p>
+                                    45 Business Park,<br>
+                                    Sector 18,<br>
+                                    Noida, Uttar Pradesh - 201301
+                                </p>
+
+                            </div>
+
+
+                            <div
+                                class="row gap-2"
+                                style="
+                                    margin-top: 1.5rem;
+                                    flex-wrap: wrap;
+                                "
+                            >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm"
+                                >
+                                    Remove
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm"
+                                >
+                                    Make Default
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    </section>
+
+
+                    <!-- ================= ADD ADDRESS ================= -->
+                    <section>
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <h2>
+                                    Add New Address
+                                </h2>
+
+                                <p>
+                                    Add another address for convenient
+                                    checkout.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            class="card"
+                            aria-label="Add address form"
+                            action="#"
+                            method="post"
+                        >
+
+                            <!-- Address Type -->
+                            <div class="form-group">
+
+                                <label for="address-type">
+                                    Address Type
+                                </label>
+
+                                <select
+                                    id="address-type"
+                                    name="address-type"
+                                >
+                                    <option value="home">
+                                        Home
+                                    </option>
+
+                                    <option value="work">
+                                        Work
+                                    </option>
+
+                                    <option value="other">
+                                        Other
+                                    </option>
+                                </select>
+
+                            </div>
+
+
+                            <!-- Full Name -->
+                            <div class="form-group">
+
+                                <label for="full-name">
+                                    Full Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="full-name"
+                                    name="full-name"
+                                    placeholder="Enter full name"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Phone -->
+                            <div class="form-group">
+
+                                <label for="phone">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="Enter phone number"
+                                    autocomplete="tel"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Address -->
+                            <div class="form-group">
+
+                                <label for="new-address-line">
+                                    Address
+                                </label>
+
+                                <textarea
+                                    id="new-address-line"
+                                    name="new-address-line"
+                                    rows="3"
+                                    placeholder="House number, street, locality"
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+                            <!-- City + State -->
+                            <div class="form-row">
+
+                                <div class="form-group">
+
+                                    <label for="new-city">
+                                        City
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="new-city"
+                                        name="new-city"
+                                        placeholder="Enter city"
+                                        autocomplete="address-level2"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="new-state">
+                                        State
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="new-state"
+                                        name="new-state"
+                                        placeholder="Enter state"
+                                        autocomplete="address-level1"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Postal Code -->
+                            <div class="form-group">
+
+                                <label for="new-postal-code">
+                                    Postal Code
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="new-postal-code"
+                                    name="new-postal-code"
+                                    placeholder="Enter postal code"
+                                    inputmode="numeric"
+                                    autocomplete="postal-code"
+                                    maxlength="6"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Default Address -->
+                            <div
+                                class="form-check"
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 0.5rem;
+                                    margin-bottom: 1.5rem;
+                                "
+                            >
+
+                                <input
+                                    type="checkbox"
+                                    id="make-default"
+                                    name="make-default"
+                                >
+
+                                <label for="make-default">
+                                    Make this my default address
+                                </label>
+
+                            </div>
+
+
+                            <!-- Submit -->
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                style="width: 100%;"
+                            >
+                                Save Address
+                            </button>
+
+                        </form>
+
+                    </section>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= ADDRESS INFO ================= -->
+            <section class="section">
+
+                <div
+                    class="card"
+                    style="
+                        max-width: 900px;
+                        margin: 0 auto;
+                    "
+                >
+
+                    <div
+                        style="
+                            display: flex;
+                            gap: 1rem;
+                            align-items: flex-start;
+                        "
+                    >
+
+                        <span
+                            aria-hidden="true"
+                            style="font-size: 2rem;"
+                        >
+                            🔒
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                Your address information is secure
+                            </h3>
+
+                            <p>
+                                Your saved addresses are used to make
+                                product deliveries and service bookings
+                                easier. Never share sensitive account
+                                information with others.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+
+                <!-- Brand -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand home services,
+                        all in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Marketplace -->
+                <div class="footer-col">
+
+                    <h4>
+                        Marketplace
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="services.html">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="professionals.html">
+                                Professionals
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="contact.html">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>
+                        Account
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="cart.html">
+                                Cart
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 FixKart. All rights reserved.
+                </span>
+
+                <div class="footer-social">
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        LinkedIn
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </footer>
 
+
+    <!-- ================= MOBILE STICKY CTA ================= -->
+    <div class="sticky-mobile-cta">
+
+        <a
+            href="products.html"
+            class="btn btn-primary"
+            style="flex: 1;"
+        >
+            Products
+        </a>
+
+        <a
+            href="services.html"
+            class="btn btn-accent"
+            style="flex: 1;"
+        >
+            Services
+        </a>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="../js/main.js"></script>
+
 </body>
+
 </html>

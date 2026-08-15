@@ -1,68 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms of Service - FixKart</title>
+
+    <!-- FixKart CSS -->
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <a href="../index.html" class="brand">FixKart</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="../index.html">Home</a>
+                <a href="../pages/products.html">Products</a>
+                <a href="../pages/services.html">Services</a>
+                <a href="../pages/professionals.html">Professionals</a>
+                <a href="../pages/about.html">About</a>
+                <a href="../pages/contact.html">Contact</a>
+            </nav>
+
+            <form class="header-search" role="search" aria-label="Site search">
+                <label for="site-search" class="sr-only">Search</label>
+                <input type="search" id="site-search" placeholder="Search products or services">
+            </form>
+
+            <div class="header-actions">
+                <a href="../pages/login.html" class="btn btn-outline btn-sm">Login</a>
+                <a href="../pages/register.html" class="btn btn-primary btn-sm">Register</a>
+                <a href="../pages/profile.html" class="btn btn-outline btn-sm">Profile</a>
+                <a href="../pages/cart.html" class="btn btn-icon" aria-label="Cart">Cart</a>
+            </div>
+
+            <button class="nav-toggle" type="button" aria-label="Open menu">☰</button>
         </div>
-
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
+    <!-- ================= MAIN ================= -->
     <main>
-        <h1>Terms of Service</h1>
 
-        <section id="terms-content">
-            <p>Terms of service text placeholder.</p>
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <a href="../index.html">Home</a> /
+                    <span>Terms of Service</span>
+                </div>
+
+                <h1>Terms of Service</h1>
+                <p class="text-secondary">
+                    Please read these terms carefully before using FixKart's platform and services.
+                </p>
+            </div>
         </section>
+
+        <!-- Terms Content -->
+        <section class="section">
+            <div class="container">
+                <div class="card card-pad">
+
+                    <h2>1. Acceptance of Terms</h2>
+                    <p>
+                        By accessing or using FixKart, you agree to comply with these Terms of Service.
+                        If you do not agree, please do not use our platform.
+                    </p>
+
+                    <hr class="divider">
+
+                    <h2>2. User Accounts</h2>
+                    <p>
+                        You are responsible for maintaining the confidentiality of your account credentials
+                        and for all activities that occur under your account.
+                    </p>
+
+                    <hr class="divider">
+
+                    <h2>3. Products & Services</h2>
+                    <p>
+                        FixKart provides a marketplace for hardware products and connects customers with
+                        verified service professionals. Prices and availability may change without notice.
+                    </p>
+
+                    <hr class="divider">
+
+                    <h2>4. Payments</h2>
+                    <p>
+                        All payments must be completed through approved payment methods. Refunds are subject
+                        to our cancellation and refund policy.
+                    </p>
+
+                    <hr class="divider">
+
+                    <h2>5. User Responsibilities</h2>
+                    <ul style="padding-left:20px; list-style:disc;">
+                        <li>Provide accurate account information.</li>
+                        <li>Use the platform only for lawful purposes.</li>
+                        <li>Respect professionals and other users.</li>
+                        <li>Do not misuse or attempt to disrupt our services.</li>
+                    </ul>
+
+                    <hr class="divider">
+
+                    <h2>6. Limitation of Liability</h2>
+                    <p>
+                        FixKart is not liable for indirect or incidental damages arising from the use of
+                        products or services provided through the platform.
+                    </p>
+
+                    <hr class="divider">
+
+                    <h2>7. Changes to Terms</h2>
+                    <p>
+                        We may update these Terms of Service from time to time. Continued use of FixKart
+                        after changes constitutes acceptance of the revised terms.
+                    </p>
+
+                    <hr class="divider">
+
+                    <h2>8. Contact Us</h2>
+                    <p>
+                        If you have any questions about these Terms, please contact us through the
+                        <a href="../pages/contact.html">Contact</a> page.
+                    </p>
+
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
+        <div class="container">
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+            <div class="footer-inner">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+                <div>
+                    <div class="footer-brand">FixKart</div>
+                    <p>
+                        Hardware marketplace and on-demand home services, in one place.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../pages/products.html">Products</a></li>
+                        <li><a href="../pages/services.html">Services</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="../pages/about.html">About Us</a></li>
+                        <li><a href="../pages/contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="../pages/login.html">Login</a></li>
+                        <li><a href="../pages/register.html">Register</a></li>
+                        <li><a href="../pages/profile.html">Profile</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="../pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="../pages/terms.html" aria-current="page">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 FixKart. All rights reserved.</p>
+            </div>
+
+        </div>
     </footer>
 
 </body>

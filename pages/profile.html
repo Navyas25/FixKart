@@ -3,86 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>My Profile - FixKart</title>
+
+    <!-- FixKart CSS -->
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- Profile page specific styles -->
+    <style>
+        .profile-page {
+            padding: 48px 0;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .profile-card {
+            padding: 32px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 999px;
+            background: var(--blue-tint);
+            color: var(--blue-dark);
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .profile-nav {
+            margin-top: 24px;
+        }
+
+        .profile-nav a {
+            display: block;
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .profile-nav a:hover {
+            color: var(--blue);
+        }
+
+        .profile-form-card {
+            padding: 32px;
+        }
+
+        .profile-form-card h1 {
+            margin-bottom: 8px;
+        }
+
+        .profile-form-card > p {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .form-actions {
+            margin-top: 24px;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 768px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-form-card {
+                padding: 24px;
+            }
+
+            .profile-card {
+                padding: 24px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a href="../index.html" class="brand">
+                <span>FixKart</span>
+            </a>
+
+            <!-- Main Navigation -->
+            <nav class="main-nav" aria-label="Main navigation">
+
+                <a href="../index.html">Home</a>
+
+                <a href="../pages/products.html">Products</a>
+
+                <a href="../pages/services.html">Services</a>
+
+                <a href="../pages/professionals.html">Professionals</a>
+
+                <a href="../pages/about.html">About</a>
+
+                <a href="../pages/contact.html">Contact</a>
+
+            </nav>
+
+            <!-- Search -->
+            <form class="header-search" role="search" aria-label="Site search">
+
+                <label for="site-search" class="sr-only">
+                    Search
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+            <!-- Account Actions -->
+            <div class="header-actions">
+
+                <a href="../pages/login.html" class="btn btn-outline btn-sm">
+                    Login
+                </a>
+
+                <a href="../pages/register.html" class="btn btn-primary btn-sm">
+                    Register
+                </a>
+
+                <a href="../pages/cart.html" class="btn btn-icon" aria-label="Shopping cart">
+                    Cart
+                </a>
+
+            </div>
+
+            <!-- Mobile Navigation Button -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+            >
+                ☰
+            </button>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>My Profile</h1>
 
-        <section id="profile-details">
-            <form aria-label="Profile details form">
-                <label for="profile-name">Full Name</label>
-                <input type="text" id="profile-name" name="profile-name">
+    <!-- ================= MAIN ================= -->
+    <main class="profile-page">
 
-                <label for="profile-email">Email</label>
-                <input type="email" id="profile-email" name="profile-email">
+        <div class="container">
 
-                <label for="profile-phone">Phone Number</label>
-                <input type="tel" id="profile-phone" name="profile-phone">
+            <div class="profile-layout">
 
-                <button type="submit">Save Changes</button>
-            </form>
-        </section>
+                <!-- ================= PROFILE SIDEBAR ================= -->
+                <aside>
 
-        <nav aria-label="Profile navigation">
-            <ul>
-                <li><a href="addresses.html">Manage Addresses</a></li>
-                <li><a href="orders.html">My Orders</a></li>
-                <li><a href="bookings.html">My Bookings</a></li>
-            </ul>
-        </nav>
+                    <div class="card profile-card">
+
+                        <div class="profile-avatar">
+                            NB
+                        </div>
+
+                        <h3>My Profile</h3>
+
+                        <p class="text-secondary">
+                            Manage your FixKart account
+                        </p>
+
+                        <nav class="profile-nav" aria-label="Profile navigation">
+
+                            <a href="profile.html" aria-current="page">
+                                Profile Details
+                            </a>
+
+                            <a href="addresses.html">
+                                Manage Addresses
+                            </a>
+
+                            <a href="orders.html">
+                                My Orders
+                            </a>
+
+                            <a href="bookings.html">
+                                My Bookings
+                            </a>
+
+                            <a href="login.html">
+                                Logout
+                            </a>
+
+                        </nav>
+
+                    </div>
+
+                </aside>
+
+
+                <!-- ================= PROFILE DETAILS ================= -->
+                <section>
+
+                    <div class="card profile-form-card">
+
+                        <h1>My Profile</h1>
+
+                        <p>
+                            Update your personal information and account details.
+                        </p>
+
+                        <form
+                            action="#"
+                            method="post"
+                            aria-label="Profile details form"
+                        >
+
+                            <!-- Full Name -->
+                            <div class="form-group">
+
+                                <label for="profile-name">
+                                    Full Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="profile-name"
+                                    name="profile-name"
+                                    placeholder="Enter your full name"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Email -->
+                            <div class="form-group">
+
+                                <label for="profile-email">
+                                    Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="profile-email"
+                                    name="profile-email"
+                                    placeholder="Enter your email address"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Phone -->
+                            <div class="form-group">
+
+                                <label for="profile-phone">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="profile-phone"
+                                    name="profile-phone"
+                                    placeholder="Enter your phone number"
+                                    autocomplete="tel"
+                                >
+
+                            </div>
+
+
+                            <!-- Buttons -->
+                            <div class="form-actions">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Save Changes
+                                </button>
+
+                                <a
+                                    href="../index.html"
+                                    class="btn btn-outline"
+                                >
+                                    Cancel
+                                </a>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- About -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand
+                        home services, in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+
+                    <h4>Quick Links</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../index.html">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/services.html">
+                                Services
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>Company</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/contact.html">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>Account</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="orders.html">
+                                Orders
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="bookings.html">
+                                Bookings
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>Legal</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <p>
+                    &copy; 2026 FixKart. All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+
     </footer>
+
 
 </body>
 </html>

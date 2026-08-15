@@ -1,89 +1,1109 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Browse tools, plumbing supplies, electrical supplies, automotive products and more on FixKart."
+    >
+
     <title>Products - FixKart</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="FixKart Home"
+            >
+                <span class="brand-mark" aria-hidden="true">F</span>
+
+                <span>
+                    Fix<span class="brand-accent">Kart</span>
+                </span>
+            </a>
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+            >
+                ☰
+            </button>
+
+            <!-- Main Navigation -->
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a href="../index.html">Home</a>
+                <a href="products.html">Products</a>
+                <a href="services.html">Services</a>
+                <a href="professionals.html">Professionals</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                action="products.html"
+                method="get"
+            >
+                <label
+                    for="site-search"
+                    class="sr-only"
+                >
+                    Search products and services
+                </label>
+
+                <span aria-hidden="true">⌕</span>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+            </form>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="profile.html"
+                    class="btn-icon profile-desktop-only"
+                    aria-label="Profile"
+                    title="Profile"
+                >
+                    👤
+                </a>
+
+                <a
+                    href="cart.html"
+                    class="btn-icon"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                >
+                    🛒
+
+                    <span
+                        class="badge-count"
+                        id="cart-count"
+                    >
+                        0
+                    </span>
+                </a>
+
+            </div>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>Products</h1>
 
-        <aside id="product-filters">
-            <h2>Filters</h2>
-            <form aria-label="Product filters">
-                <label for="category">Category</label>
-                <select id="category" name="category">
-                    <option value="">All Categories</option>
-                    <option value="tools">Tools</option>
-                    <option value="plumbing">Plumbing Supplies</option>
-                    <option value="electrical">Electrical Supplies</option>
-                    <option value="automotive">Automotive</option>
-                </select>
-            </form>
-        </aside>
+    <!-- ================= MAIN ================= -->
+    <main id="main-content">
 
-        <section id="product-list">
-            <h2>All Products</h2>
-            <article>
-                <img src="../assets/images/placeholder-product.png" alt="Placeholder product image">
-                <h3><a href="product-details.html">Product Name</a></h3>
-                <p>Product short description placeholder.</p>
-                <a href="product-details.html">View Details</a>
-            </article>
+        <section class="section">
+
+            <div class="container">
+
+                <!-- Page Heading -->
+                <div class="section-head">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            Hardware Marketplace
+                        </span>
+
+                        <h1>
+                            Products
+                        </h1>
+
+                        <p>
+                            Find the tools, supplies, and hardware you need
+                            for home repairs, maintenance, and professional work.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= PRODUCTS LAYOUT ================= -->
+                <div class="filters-layout">
+
+                    <!-- ================= FILTERS ================= -->
+                    <aside
+                        id="product-filters"
+                        class="filters-panel card"
+                    >
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    Browse
+                                </span>
+
+                                <h2>
+                                    Filters
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            id="product-filter-form"
+                            aria-label="Product filters"
+                        >
+
+                            <!-- Category -->
+                            <div class="form-group">
+
+                                <label for="category">
+                                    Category
+                                </label>
+
+                                <select
+                                    id="category"
+                                    name="category"
+                                >
+
+                                    <option value="">
+                                        All Categories
+                                    </option>
+
+                                    <option value="tools">
+                                        Tools
+                                    </option>
+
+                                    <option value="plumbing">
+                                        Plumbing Supplies
+                                    </option>
+
+                                    <option value="electrical">
+                                        Electrical Supplies
+                                    </option>
+
+                                    <option value="automotive">
+                                        Automotive
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Price -->
+                            <div
+                                class="form-group"
+                                style="margin-top: 1rem;"
+                            >
+
+                                <label for="price-range">
+                                    Maximum Price
+                                </label>
+
+                                <select
+                                    id="price-range"
+                                    name="price"
+                                >
+
+                                    <option value="">
+                                        Any Price
+                                    </option>
+
+                                    <option value="500">
+                                        Under ₹500
+                                    </option>
+
+                                    <option value="1000">
+                                        Under ₹1,000
+                                    </option>
+
+                                    <option value="2500">
+                                        Under ₹2,500
+                                    </option>
+
+                                    <option value="5000">
+                                        Under ₹5,000
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Sort -->
+                            <div
+                                class="form-group"
+                                style="margin-top: 1rem;"
+                            >
+
+                                <label for="sort">
+                                    Sort By
+                                </label>
+
+                                <select
+                                    id="sort"
+                                    name="sort"
+                                >
+
+                                    <option value="featured">
+                                        Featured
+                                    </option>
+
+                                    <option value="price-low">
+                                        Price: Low to High
+                                    </option>
+
+                                    <option value="price-high">
+                                        Price: High to Low
+                                    </option>
+
+                                    <option value="name">
+                                        Name
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                style="
+                                    width: 100%;
+                                    margin-top: 1.25rem;
+                                "
+                            >
+                                Apply Filters
+                            </button>
+
+                            <button
+                                type="reset"
+                                class="btn btn-outline"
+                                style="
+                                    width: 100%;
+                                    margin-top: 0.75rem;
+                                "
+                            >
+                                Clear Filters
+                            </button>
+
+                        </form>
+
+                    </aside>
+
+
+                    <!-- ================= PRODUCT LIST ================= -->
+                    <section
+                        id="product-list"
+                        aria-label="All products"
+                    >
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                gap: 1rem;
+                                margin-bottom: 1.5rem;
+                                flex-wrap: wrap;
+                            "
+                        >
+
+                            <div>
+
+                                <h2>
+                                    All Products
+                                </h2>
+
+                                <p>
+                                    Browse our available hardware products.
+                                </p>
+
+                            </div>
+
+                            <span
+                                id="product-count"
+                                class="eyebrow"
+                            >
+                                Products Available
+                            </span>
+
+                        </div>
+
+
+                        <!-- Product Grid -->
+                        <div class="grid-3">
+
+
+                            <!-- Product 1 -->
+                            <article
+                                class="card product-card"
+                                data-category="tools"
+                                data-price="799"
+                            >
+
+                                <img
+                                    src="../assets/images/placeholder-product.png"
+                                    alt="Professional hand tool"
+                                    style="
+                                        width: 100%;
+                                        height: 220px;
+                                        object-fit: contain;
+                                    "
+                                >
+
+                                <div style="padding-top: 1rem;">
+
+                                    <span class="eyebrow">
+                                        Tools
+                                    </span>
+
+                                    <h3>
+                                        <a href="product-details.html">
+                                            Professional Hand Tool
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Durable hand tool suitable for
+                                        everyday repairs and maintenance.
+                                    </p>
+
+                                    <div
+                                        style="
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            gap: 1rem;
+                                            margin-top: 1rem;
+                                        "
+                                    >
+
+                                        <strong>
+                                            ₹799
+                                        </strong>
+
+                                        <a
+                                            href="product-details.html"
+                                            class="btn btn-primary"
+                                        >
+                                            View Details
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Product 2 -->
+                            <article
+                                class="card product-card"
+                                data-category="plumbing"
+                                data-price="499"
+                            >
+
+                                <img
+                                    src="../assets/images/placeholder-product.png"
+                                    alt="Plumbing supplies"
+                                    style="
+                                        width: 100%;
+                                        height: 220px;
+                                        object-fit: contain;
+                                    "
+                                >
+
+                                <div style="padding-top: 1rem;">
+
+                                    <span class="eyebrow">
+                                        Plumbing
+                                    </span>
+
+                                    <h3>
+                                        <a href="product-details.html">
+                                            Plumbing Repair Kit
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Essential plumbing components for
+                                        common household repairs.
+                                    </p>
+
+                                    <div
+                                        style="
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            gap: 1rem;
+                                            margin-top: 1rem;
+                                        "
+                                    >
+
+                                        <strong>
+                                            ₹499
+                                        </strong>
+
+                                        <a
+                                            href="product-details.html"
+                                            class="btn btn-primary"
+                                        >
+                                            View Details
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Product 3 -->
+                            <article
+                                class="card product-card"
+                                data-category="electrical"
+                                data-price="649"
+                            >
+
+                                <img
+                                    src="../assets/images/placeholder-product.png"
+                                    alt="Electrical supplies"
+                                    style="
+                                        width: 100%;
+                                        height: 220px;
+                                        object-fit: contain;
+                                    "
+                                >
+
+                                <div style="padding-top: 1rem;">
+
+                                    <span class="eyebrow">
+                                        Electrical
+                                    </span>
+
+                                    <h3>
+                                        <a href="product-details.html">
+                                            Electrical Repair Kit
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Useful electrical components for
+                                        maintenance and repair work.
+                                    </p>
+
+                                    <div
+                                        style="
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            gap: 1rem;
+                                            margin-top: 1rem;
+                                        "
+                                    >
+
+                                        <strong>
+                                            ₹649
+                                        </strong>
+
+                                        <a
+                                            href="product-details.html"
+                                            class="btn btn-primary"
+                                        >
+                                            View Details
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Product 4 -->
+                            <article
+                                class="card product-card"
+                                data-category="automotive"
+                                data-price="1299"
+                            >
+
+                                <img
+                                    src="../assets/images/placeholder-product.png"
+                                    alt="Automotive repair tool"
+                                    style="
+                                        width: 100%;
+                                        height: 220px;
+                                        object-fit: contain;
+                                    "
+                                >
+
+                                <div style="padding-top: 1rem;">
+
+                                    <span class="eyebrow">
+                                        Automotive
+                                    </span>
+
+                                    <h3>
+                                        <a href="product-details.html">
+                                            Automotive Repair Tool
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Reliable tool for basic vehicle
+                                        maintenance and repairs.
+                                    </p>
+
+                                    <div
+                                        style="
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            gap: 1rem;
+                                            margin-top: 1rem;
+                                        "
+                                    >
+
+                                        <strong>
+                                            ₹1,299
+                                        </strong>
+
+                                        <a
+                                            href="product-details.html"
+                                            class="btn btn-primary"
+                                        >
+                                            View Details
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Product 5 -->
+                            <article
+                                class="card product-card"
+                                data-category="tools"
+                                data-price="1099"
+                            >
+
+                                <img
+                                    src="../assets/images/placeholder-product.png"
+                                    alt="Power tool"
+                                    style="
+                                        width: 100%;
+                                        height: 220px;
+                                        object-fit: contain;
+                                    "
+                                >
+
+                                <div style="padding-top: 1rem;">
+
+                                    <span class="eyebrow">
+                                        Tools
+                                    </span>
+
+                                    <h3>
+                                        <a href="product-details.html">
+                                            Multi-Purpose Tool
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Versatile tool for home improvement
+                                        and professional projects.
+                                    </p>
+
+                                    <div
+                                        style="
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            gap: 1rem;
+                                            margin-top: 1rem;
+                                        "
+                                    >
+
+                                        <strong>
+                                            ₹1,099
+                                        </strong>
+
+                                        <a
+                                            href="product-details.html"
+                                            class="btn btn-primary"
+                                        >
+                                            View Details
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Product 6 -->
+                            <article
+                                class="card product-card"
+                                data-category="plumbing"
+                                data-price="899"
+                            >
+
+                                <img
+                                    src="../assets/images/placeholder-product.png"
+                                    alt="Plumbing fittings"
+                                    style="
+                                        width: 100%;
+                                        height: 220px;
+                                        object-fit: contain;
+                                    "
+                                >
+
+                                <div style="padding-top: 1rem;">
+
+                                    <span class="eyebrow">
+                                        Plumbing
+                                    </span>
+
+                                    <h3>
+                                        <a href="product-details.html">
+                                            Plumbing Fittings Set
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        A practical set of fittings for
+                                        plumbing installation and repairs.
+                                    </p>
+
+                                    <div
+                                        style="
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            gap: 1rem;
+                                            margin-top: 1rem;
+                                        "
+                                    >
+
+                                        <strong>
+                                            ₹899
+                                        </strong>
+
+                                        <a
+                                            href="product-details.html"
+                                            class="btn btn-primary"
+                                        >
+                                            View Details
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+
+                        <!-- No Results -->
+                        <div
+                            id="no-products"
+                            class="card"
+                            style="
+                                display: none;
+                                text-align: center;
+                                padding: 3rem 1.5rem;
+                                margin-top: 1.5rem;
+                            "
+                        >
+
+                            <h2>
+                                No Products Found
+                            </h2>
+
+                            <p>
+                                Try changing your category, price range,
+                                or search terms.
+                            </p>
+
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="document.getElementById('product-filter-form').reset(); filterProducts();"
+                            >
+                                Clear Filters
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
         </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- Brand -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand home services,
+                        all in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Marketplace -->
+                <div class="footer-col">
+
+                    <h4>
+                        Marketplace
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="services.html">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="professionals.html">
+                                Professionals
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="contact.html">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>
+                        Account
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="cart.html">
+                                Cart
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 FixKart. All rights reserved.
+                </span>
+
+                <div class="footer-social">
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        LinkedIn
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </footer>
-<script src="../js/products.js"></script>
+
+
+    <!-- Products JavaScript -->
+    <script src="../js/products.js"></script>
+
+    <!-- Main JavaScript -->
+    <script src="../js/main.js"></script>
+
+
+    <!-- ================= FILTER FALLBACK ================= -->
+    <script>
+        function filterProducts() {
+
+            const category =
+                document.getElementById("category").value;
+
+            const maxPrice =
+                document.getElementById("price-range").value;
+
+            const sort =
+                document.getElementById("sort").value;
+
+            const products =
+                Array.from(
+                    document.querySelectorAll(".product-card")
+                );
+
+            const productGrid =
+                document.querySelector("#product-list .grid-3");
+
+            let visibleProducts = products.filter(product => {
+
+                const productCategory =
+                    product.dataset.category;
+
+                const productPrice =
+                    Number(product.dataset.price);
+
+                const categoryMatch =
+                    !category ||
+                    productCategory === category;
+
+                const priceMatch =
+                    !maxPrice ||
+                    productPrice <= Number(maxPrice);
+
+                return categoryMatch && priceMatch;
+            });
+
+
+            /* Sorting */
+            visibleProducts.sort((a, b) => {
+
+                const priceA =
+                    Number(a.dataset.price);
+
+                const priceB =
+                    Number(b.dataset.price);
+
+                const nameA =
+                    a.querySelector("h3").innerText.toLowerCase();
+
+                const nameB =
+                    b.querySelector("h3").innerText.toLowerCase();
+
+
+                if (sort === "price-low") {
+                    return priceA - priceB;
+                }
+
+                if (sort === "price-high") {
+                    return priceB - priceA;
+                }
+
+                if (sort === "name") {
+                    return nameA.localeCompare(nameB);
+                }
+
+                return 0;
+            });
+
+
+            /* Hide all products first */
+            products.forEach(product => {
+                product.style.display = "none";
+            });
+
+
+            /* Show matching products */
+            visibleProducts.forEach(product => {
+                product.style.display = "block";
+                productGrid.appendChild(product);
+            });
+
+
+            /* Empty state */
+            const noProducts =
+                document.getElementById("no-products");
+
+            if (visibleProducts.length === 0) {
+                noProducts.style.display = "block";
+            } else {
+                noProducts.style.display = "none";
+            }
+
+
+            /* Product count */
+            const count =
+                document.getElementById("product-count");
+
+            count.textContent =
+                visibleProducts.length +
+                (
+                    visibleProducts.length === 1
+                        ? " Product"
+                        : " Products"
+                );
+        }
+
+
+        /* Filter form */
+        document
+            .getElementById("product-filter-form")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                filterProducts();
+
+            });
+
+
+        /* Reset filters */
+        document
+            .getElementById("product-filter-form")
+            .addEventListener("reset", function () {
+
+                setTimeout(function () {
+                    filterProducts();
+                }, 0);
+
+            });
+
+
+        /* Initial state */
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                filterProducts();
+            }
+        );
+    </script>
+
 </body>
 </html>

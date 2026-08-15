@@ -1,89 +1,554 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Vendor Dashboard - FixKart</title>
+
+    <!-- FixKart CSS -->
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a href="../index.html" class="brand">
+                FixKart
+            </a>
+
+            <!-- Main Navigation -->
+            <nav class="main-nav" aria-label="Main navigation">
+
+                <a href="../index.html">Home</a>
+
+                <a href="../pages/products.html">Products</a>
+
+                <a href="../pages/services.html">Services</a>
+
+                <a href="../pages/professionals.html">Professionals</a>
+
+                <a href="../pages/about.html">About</a>
+
+                <a href="../pages/contact.html">Contact</a>
+
+            </nav>
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                aria-label="Site search"
+            >
+
+                <label for="site-search" class="sr-only">
+                    Search
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+            <!-- Account Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="../pages/login.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="../pages/register.html"
+                    class="btn btn-primary btn-sm"
+                >
+                    Register
+                </a>
+
+                <a
+                    href="../pages/profile.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Profile
+                </a>
+
+                <a
+                    href="../pages/cart.html"
+                    class="btn btn-icon"
+                    aria-label="Shopping cart"
+                >
+                    Cart
+                </a>
+
+            </div>
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+            >
+                ☰
+            </button>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
+
+    <!-- ================= MAIN ================= -->
     <main>
-        <h1>Vendor Dashboard</h1>
 
-        <nav aria-label="Vendor Dashboard navigation">
-            <ul>
-                <li><a href="#my-products">My Products</a></li><li><a href="#incoming-orders">Incoming Orders</a></li><li><a href="#inventory">Inventory</a></li><li><a href="#earnings">Earnings</a></li>
-            </ul>
-        </nav>
+        <!-- Page Header -->
+        <section class="page-header">
 
-        <section id="dashboard-main">
-            <section id="my-products">
-                <h2>My Products</h2>
-                <p>Placeholder content for my products.</p>
-            </section>
-            <section id="incoming-orders">
-                <h2>Incoming Orders</h2>
-                <p>Placeholder content for incoming orders.</p>
-            </section>
-            <section id="inventory">
-                <h2>Inventory</h2>
-                <p>Placeholder content for inventory.</p>
-            </section>
-            <section id="earnings">
-                <h2>Earnings</h2>
-                <p>Placeholder content for earnings.</p>
-            </section>
+            <div class="container">
+
+                <div class="breadcrumbs">
+
+                    <a href="../index.html">
+                        Home
+                    </a>
+
+                    <span> / Vendor Dashboard</span>
+
+                </div>
+
+                <h1>
+                    Vendor Dashboard
+                </h1>
+
+                <p class="text-secondary">
+                    Manage your products, orders, inventory,
+                    and earnings from one place.
+                </p>
+
+            </div>
+
         </section>
+
+
+        <!-- ================= DASHBOARD ================= -->
+        <section class="section">
+
+            <div class="container">
+
+                <!-- Dashboard Navigation -->
+                <nav
+                    class="card card-pad"
+                    aria-label="Vendor Dashboard navigation"
+                >
+
+                    <div class="row gap-4 flex-wrap">
+
+                        <a
+                            href="#my-products"
+                            class="btn btn-outline btn-sm"
+                        >
+                            My Products
+                        </a>
+
+                        <a
+                            href="#incoming-orders"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Incoming Orders
+                        </a>
+
+                        <a
+                            href="#inventory"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Inventory
+                        </a>
+
+                        <a
+                            href="#earnings"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Earnings
+                        </a>
+
+                    </div>
+
+                </nav>
+
+
+                <!-- Dashboard Cards -->
+                <div
+                    class="grid grid-2"
+                    style="margin-top: 32px;"
+                >
+
+                    <!-- ================= PRODUCTS ================= -->
+                    <section
+                        id="my-products"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-blue">
+                            Products
+                        </span>
+
+                        <h2>
+                            My Products
+                        </h2>
+
+                        <p class="text-secondary">
+                            Add, edit, and manage the hardware
+                            products you sell on FixKart.
+                        </p>
+
+                        <div class="row gap-3">
+
+                            <div>
+
+                                <strong>
+                                    0
+                                </strong>
+
+                                <p class="text-secondary">
+                                    Active Products
+                                </p>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    0
+                                </strong>
+
+                                <p class="text-secondary">
+                                    Out of Stock
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                        >
+                            Manage Products
+                        </button>
+
+                    </section>
+
+
+                    <!-- ================= ORDERS ================= -->
+                    <section
+                        id="incoming-orders"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-orange">
+                            Orders
+                        </span>
+
+                        <h2>
+                            Incoming Orders
+                        </h2>
+
+                        <p class="text-secondary">
+                            View and manage new customer orders
+                            placed for your products.
+                        </p>
+
+                        <div class="row gap-3">
+
+                            <div>
+
+                                <strong>
+                                    0
+                                </strong>
+
+                                <p class="text-secondary">
+                                    New Orders
+                                </p>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    0
+                                </strong>
+
+                                <p class="text-secondary">
+                                    Processing
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline btn-sm"
+                        >
+                            View Orders
+                        </button>
+
+                    </section>
+
+
+                    <!-- ================= INVENTORY ================= -->
+                    <section
+                        id="inventory"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-green">
+                            Inventory
+                        </span>
+
+                        <h2>
+                            Inventory
+                        </h2>
+
+                        <p class="text-secondary">
+                            Keep track of product stock levels
+                            and update inventory when required.
+                        </p>
+
+                        <p>
+                            <strong>
+                                Stock Status:
+                            </strong>
+
+                            <span class="badge badge-green">
+                                All Good
+                            </span>
+                        </p>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Manage Inventory
+                        </button>
+
+                    </section>
+
+
+                    <!-- ================= EARNINGS ================= -->
+                    <section
+                        id="earnings"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-gray">
+                            Earnings
+                        </span>
+
+                        <h2>
+                            Earnings
+                        </h2>
+
+                        <p class="text-secondary">
+                            Track revenue generated from your
+                            completed product orders.
+                        </p>
+
+                        <h3>
+                            ₹0
+                        </h3>
+
+                        <p class="text-secondary">
+                            Total earnings
+                        </p>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                        >
+                            View Earnings
+                        </button>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- About -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand
+                        home services, in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+
+                    <h4>
+                        Quick Links
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../index.html">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/services.html">
+                                Services
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/contact.html">
+                                Contact Us
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Vendor -->
+                <div class="footer-col">
+
+                    <h4>
+                        Vendor
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="#my-products">
+                                My Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#incoming-orders">
+                                Incoming Orders
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#inventory">
+                                Inventory
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#earnings">
+                                Earnings
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <p>
+                    &copy; 2026 FixKart. All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+
     </footer>
 
 </body>

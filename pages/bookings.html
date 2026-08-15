@@ -1,73 +1,647 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="View and manage your FixKart service bookings."
+    >
+
     <title>My Bookings - FixKart</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="FixKart Home"
+            >
+                <span class="brand-mark" aria-hidden="true">
+                    F
+                </span>
+
+                <span>
+                    Fix<span class="brand-accent">Kart</span>
+                </span>
+            </a>
+
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+            >
+                ☰
+            </button>
+
+
+            <!-- Main Navigation -->
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="products.html">
+                    Products
+                </a>
+
+                <a href="services.html">
+                    Services
+                </a>
+
+                <a href="professionals.html">
+                    Professionals
+                </a>
+
+                <a href="about.html">
+                    About
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </nav>
+
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                action="products.html"
+                method="get"
+            >
+
+                <span aria-hidden="true">
+                    ⌕
+                </span>
+
+                <label
+                    for="site-search"
+                    class="sr-only"
+                >
+                    Search products and services
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="profile.html"
+                    class="btn-icon profile-desktop-only"
+                    aria-label="Profile"
+                    title="Profile"
+                >
+                    👤
+                </a>
+
+                <a
+                    href="cart.html"
+                    class="btn-icon"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                >
+                    🛒
+                    <span class="badge-count">0</span>
+                </a>
+
+            </div>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>My Bookings</h1>
 
-        <section id="booking-list">
-            <article>
-                <h2>Booking Number Placeholder</h2>
-                <p>Booking status placeholder</p>
-                <p>Scheduled date placeholder</p>
-            </article>
+    <!-- ================= MAIN ================= -->
+    <main id="main-content">
+
+        <section class="section">
+
+            <div class="container">
+
+                <!-- Page Heading -->
+                <div class="section-head">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            Account
+                        </span>
+
+                        <h1>
+                            My Bookings
+                        </h1>
+
+                        <p>
+                            View and manage your FixKart service bookings.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="services.html"
+                        class="btn btn-primary"
+                    >
+                        Book a Service
+                    </a>
+
+                </div>
+
+
+                <!-- ================= BOOKING LIST ================= -->
+                <section
+                    id="booking-list"
+                    aria-label="Your bookings"
+                >
+
+                    <!-- Booking Card -->
+                    <article class="card">
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                gap: 1.5rem;
+                                flex-wrap: wrap;
+                            "
+                        >
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    Booking
+                                </span>
+
+                                <h2>
+                                    #FK-2026-00125
+                                </h2>
+
+                            </div>
+
+
+                            <!-- Status -->
+                            <span
+                                class="status-badge"
+                                style="
+                                    padding: 0.45rem 0.8rem;
+                                    border-radius: 999px;
+                                    background: #dcfce7;
+                                    color: #166534;
+                                    font-weight: 600;
+                                "
+                            >
+                                Confirmed
+                            </span>
+
+                        </div>
+
+
+                        <!-- Booking Information -->
+                        <div
+                            class="booking-details"
+                            style="
+                                display: grid;
+                                grid-template-columns:
+                                    repeat(3, 1fr);
+                                gap: 1rem;
+                                margin-top: 1.5rem;
+                                padding-top: 1.5rem;
+                                border-top: 1px solid var(--border);
+                            "
+                        >
+
+                            <div>
+
+                                <span>
+                                    Service
+                                </span>
+
+                                <strong>
+                                    Home Service
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Scheduled Date
+                                </span>
+
+                                <strong>
+                                    20 August 2026
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Scheduled Time
+                                </span>
+
+                                <strong>
+                                    10:00 AM
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Address -->
+                        <div
+                            style="
+                                margin-top: 1.5rem;
+                            "
+                        >
+
+                            <strong>
+                                Service Address
+                            </strong>
+
+                            <p>
+                                Your saved service address
+                            </p>
+
+                        </div>
+
+
+                        <!-- Actions -->
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                flex-wrap: wrap;
+                                margin-top: 1.5rem;
+                            "
+                        >
+
+                            <a
+                                href="booking-confirmation.html"
+                                class="btn btn-outline"
+                            >
+                                View Details
+                            </a>
+
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                data-booking-id="FK-2026-00125"
+                            >
+                                Cancel Booking
+                            </button>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Empty State -->
+                    <article
+                        id="empty-booking-state"
+                        class="card"
+                        style="
+                            display: none;
+                            text-align: center;
+                            padding: 3rem 1.5rem;
+                        "
+                    >
+
+                        <div
+                            aria-hidden="true"
+                            style="
+                                font-size: 3rem;
+                                margin-bottom: 1rem;
+                            "
+                        >
+                            📅
+                        </div>
+
+                        <h2>
+                            No Bookings Yet
+                        </h2>
+
+                        <p>
+                            You haven't booked a professional service yet.
+                        </p>
+
+                        <a
+                            href="services.html"
+                            class="btn btn-primary"
+                        >
+                            Explore Services
+                        </a>
+
+                    </article>
+
+                </section>
+
+            </div>
+
         </section>
+
+
+        <!-- ================= HELP SECTION ================= -->
+        <section class="section">
+
+            <div class="container">
+
+                <div
+                    class="card"
+                    style="
+                        text-align: center;
+                        max-width: 900px;
+                        margin: 0 auto;
+                    "
+                >
+
+                    <span class="eyebrow">
+                        Need Assistance?
+                    </span>
+
+                    <h2>
+                        Need help with a booking?
+                    </h2>
+
+                    <p>
+                        If you have questions about your booking,
+                        our support team is here to help.
+                    </p>
+
+                    <div
+                        class="hero-ctas"
+                        style="
+                            justify-content: center;
+                            flex-wrap: wrap;
+                        "
+                    >
+
+                        <a
+                            href="contact.html"
+                            class="btn btn-primary"
+                        >
+                            Contact Support
+                        </a>
+
+                        <a
+                            href="services.html"
+                            class="btn btn-outline"
+                        >
+                            Book Another Service
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- Brand -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand home services,
+                        all in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Marketplace -->
+                <div class="footer-col">
+
+                    <h4>
+                        Marketplace
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="services.html">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="professionals.html">
+                                Professionals
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="contact.html">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>
+                        Account
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="cart.html">
+                                Cart
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="bookings.html">
+                                My Bookings
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 FixKart. All rights reserved.
+                </span>
+
+                <div class="footer-social">
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        LinkedIn
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </footer>
-<script src="../js/bookings.js"></script>
+
+
+    <!-- ================= MOBILE STICKY CTA ================= -->
+    <div class="sticky-mobile-cta">
+
+        <a
+            href="services.html"
+            class="btn btn-primary"
+            style="flex: 1;"
+        >
+            Book Service
+        </a>
+
+        <a
+            href="profile.html"
+            class="btn btn-accent"
+            style="flex: 1;"
+        >
+            Profile
+        </a>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="../js/bookings.js"></script>
+    <script src="../js/main.js"></script>
+
 </body>
+
 </html>

@@ -3,92 +3,1327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="FixKart Admin Dashboard - Manage products, orders, services, professionals and users."
+    >
+
     <title>Admin Dashboard - FixKart</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a href="../index.html" class="brand" aria-label="FixKart Home">
+
+                <span class="brand-mark" aria-hidden="true">
+                    F
+                </span>
+
+                <span>
+                    Fix<span class="brand-accent">Kart</span>
+                </span>
+
+            </a>
+
+
+            <!-- Mobile Menu Button -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+            >
+                ☰
+            </button>
+
+
+            <!-- Main Navigation -->
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="../pages/products.html">
+                    Products
+                </a>
+
+                <a href="../pages/services.html">
+                    Services
+                </a>
+
+                <a href="../pages/professionals.html">
+                    Professionals
+                </a>
+
+                <a href="../pages/about.html">
+                    About
+                </a>
+
+                <a href="../pages/contact.html">
+                    Contact
+                </a>
+
+            </nav>
+
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                action="../pages/products.html"
+                method="get"
+            >
+
+                <span aria-hidden="true">
+                    ⌕
+                </span>
+
+                <label
+                    for="site-search"
+                    class="sr-only"
+                >
+                    Search products and services
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="../pages/profile.html"
+                    class="btn-icon profile-desktop-only"
+                    aria-label="Profile"
+                    title="Profile"
+                >
+                    👤
+                </a>
+
+                <a
+                    href="../pages/cart.html"
+                    class="btn-icon"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                >
+                    🛒
+                    <span class="badge-count">0</span>
+                </a>
+
+            </div>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>Admin Dashboard</h1>
 
-        <nav aria-label="Admin Dashboard navigation">
-            <ul>
-                <li><a href="#manage-products">Manage Products</a></li><li><a href="#manage-orders">Manage Orders</a></li><li><a href="#manage-services">Manage Services</a></li><li><a href="#manage-professionals">Manage Professionals</a></li><li><a href="#manage-users">Manage Users</a></li>
-            </ul>
-        </nav>
+    <!-- ================= MAIN ================= -->
+    <main id="main-content">
 
-        <section id="dashboard-main">
-            <section id="manage-products">
-                <h2>Manage Products</h2>
-                <p>Placeholder content for manage products.</p>
+        <div class="container">
+
+
+            <!-- ================= DASHBOARD HEADER ================= -->
+            <section class="section">
+
+                <div class="section-head">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            Administration
+                        </span>
+
+                        <h1>
+                            Admin Dashboard
+                        </h1>
+
+                        <p>
+                            Manage FixKart products, orders, services,
+                            professionals and users.
+                        </p>
+
+                    </div>
+
+                    <div class="row gap-2">
+
+                        <a
+                            href="../index.html"
+                            class="btn btn-outline"
+                        >
+                            View Website
+                        </a>
+
+                        <a
+                            href="../pages/profile.html"
+                            class="btn btn-primary"
+                        >
+                            Admin Profile
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= DASHBOARD LAYOUT ================= -->
+                <div class="dash-layout">
+
+
+                    <!-- ================= SIDEBAR ================= -->
+                    <aside class="dash-sidebar">
+
+                        <div class="dash-sidebar-title">
+                            Dashboard
+                        </div>
+
+                        <nav
+                            class="dash-nav"
+                            aria-label="Admin Dashboard navigation"
+                        >
+
+                            <a
+                                href="#dashboard-overview"
+                                class="is-active"
+                            >
+                                Overview
+                            </a>
+
+                            <a href="#manage-products">
+                                Products
+                            </a>
+
+                            <a href="#manage-orders">
+                                Orders
+                            </a>
+
+                            <a href="#manage-services">
+                                Services
+                            </a>
+
+                            <a href="#manage-professionals">
+                                Professionals
+                            </a>
+
+                            <a href="#manage-users">
+                                Users
+                            </a>
+
+                        </nav>
+
+                    </aside>
+
+
+                    <!-- ================= DASHBOARD CONTENT ================= -->
+                    <div class="dash-content">
+
+
+                        <!-- ================= OVERVIEW ================= -->
+                        <section
+                            id="dashboard-overview"
+                            class="dash-section"
+                        >
+
+                            <div class="section-head">
+
+                                <div>
+
+                                    <span class="eyebrow">
+                                        Overview
+                                    </span>
+
+                                    <h2>
+                                        Dashboard Overview
+                                    </h2>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Stats -->
+                            <div class="stat-grid">
+
+
+                                <!-- Products -->
+                                <article class="stat-card card">
+
+                                    <div class="stat-icon">
+                                        📦
+                                    </div>
+
+                                    <div>
+
+                                        <span class="stat-label">
+                                            Total Products
+                                        </span>
+
+                                        <strong class="stat-value">
+                                            248
+                                        </strong>
+
+                                        <span class="stat-change positive">
+                                            +12 this month
+                                        </span>
+
+                                    </div>
+
+                                </article>
+
+
+                                <!-- Orders -->
+                                <article class="stat-card card">
+
+                                    <div class="stat-icon">
+                                        🛒
+                                    </div>
+
+                                    <div>
+
+                                        <span class="stat-label">
+                                            Total Orders
+                                        </span>
+
+                                        <strong class="stat-value">
+                                            1,284
+                                        </strong>
+
+                                        <span class="stat-change positive">
+                                            +18.5%
+                                        </span>
+
+                                    </div>
+
+                                </article>
+
+
+                                <!-- Services -->
+                                <article class="stat-card card">
+
+                                    <div class="stat-icon">
+                                        🔧
+                                    </div>
+
+                                    <div>
+
+                                        <span class="stat-label">
+                                            Active Services
+                                        </span>
+
+                                        <strong class="stat-value">
+                                            36
+                                        </strong>
+
+                                        <span class="stat-change positive">
+                                            +4 this month
+                                        </span>
+
+                                    </div>
+
+                                </article>
+
+
+                                <!-- Users -->
+                                <article class="stat-card card">
+
+                                    <div class="stat-icon">
+                                        👥
+                                    </div>
+
+                                    <div>
+
+                                        <span class="stat-label">
+                                            Registered Users
+                                        </span>
+
+                                        <strong class="stat-value">
+                                            3,642
+                                        </strong>
+
+                                        <span class="stat-change positive">
+                                            +8.2%
+                                        </span>
+
+                                    </div>
+
+                                </article>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ================= PRODUCTS ================= -->
+                        <section
+                            id="manage-products"
+                            class="dash-section"
+                        >
+
+                            <div class="section-head">
+
+                                <div>
+
+                                    <span class="eyebrow">
+                                        Marketplace
+                                    </span>
+
+                                    <h2>
+                                        Manage Products
+                                    </h2>
+
+                                    <p>
+                                        Add, edit and manage hardware
+                                        products available on FixKart.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                >
+                                    + Add Product
+                                </button>
+
+                            </div>
+
+
+                            <div class="card table-card">
+
+                                <div class="table-responsive">
+
+                                    <table>
+
+                                        <thead>
+
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Category</th>
+                                                <th>Price</th>
+                                                <th>Stock</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+
+                                                <td>
+                                                    Professional Hammer
+                                                </td>
+
+                                                <td>
+                                                    Tools
+                                                </td>
+
+                                                <td>
+                                                    ₹499
+                                                </td>
+
+                                                <td>
+                                                    48
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-green">
+                                                        Active
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-sm btn-outline"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+
+
+                                            <tr>
+
+                                                <td>
+                                                    Screwdriver Set
+                                                </td>
+
+                                                <td>
+                                                    Tools
+                                                </td>
+
+                                                <td>
+                                                    ₹599
+                                                </td>
+
+                                                <td>
+                                                    32
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-green">
+                                                        Active
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-sm btn-outline"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+
+
+                                            <tr>
+
+                                                <td>
+                                                    Electrical Repair Kit
+                                                </td>
+
+                                                <td>
+                                                    Electrical
+                                                </td>
+
+                                                <td>
+                                                    ₹799
+                                                </td>
+
+                                                <td>
+                                                    8
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-orange">
+                                                        Low Stock
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-sm btn-outline"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ================= ORDERS ================= -->
+                        <section
+                            id="manage-orders"
+                            class="dash-section"
+                        >
+
+                            <div class="section-head">
+
+                                <div>
+
+                                    <span class="eyebrow">
+                                        Sales
+                                    </span>
+
+                                    <h2>
+                                        Manage Orders
+                                    </h2>
+
+                                    <p>
+                                        Monitor customer orders and
+                                        delivery status.
+                                    </p>
+
+                                </div>
+
+                                <a
+                                    href="#manage-orders"
+                                    class="btn btn-outline"
+                                >
+                                    View All Orders
+                                </a>
+
+                            </div>
+
+
+                            <div class="card table-card">
+
+                                <div class="table-responsive">
+
+                                    <table>
+
+                                        <thead>
+
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+
+                                                <td>
+                                                    #FK1024
+                                                </td>
+
+                                                <td>
+                                                    Rahul Sharma
+                                                </td>
+
+                                                <td>
+                                                    ₹1,298
+                                                </td>
+
+                                                <td>
+                                                    15 Aug 2026
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-green">
+                                                        Delivered
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+
+                                            <tr>
+
+                                                <td>
+                                                    #FK1025
+                                                </td>
+
+                                                <td>
+                                                    Priya Singh
+                                                </td>
+
+                                                <td>
+                                                    ₹799
+                                                </td>
+
+                                                <td>
+                                                    15 Aug 2026
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-orange">
+                                                        Processing
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+
+                                            <tr>
+
+                                                <td>
+                                                    #FK1026
+                                                </td>
+
+                                                <td>
+                                                    Amit Kumar
+                                                </td>
+
+                                                <td>
+                                                    ₹1,599
+                                                </td>
+
+                                                <td>
+                                                    14 Aug 2026
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-blue">
+                                                        Shipped
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ================= SERVICES ================= -->
+                        <section
+                            id="manage-services"
+                            class="dash-section"
+                        >
+
+                            <div class="section-head">
+
+                                <div>
+
+                                    <span class="eyebrow">
+                                        Services
+                                    </span>
+
+                                    <h2>
+                                        Manage Services
+                                    </h2>
+
+                                    <p>
+                                        Manage FixKart's home service
+                                        categories.
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                >
+                                    + Add Service
+                                </button>
+
+                            </div>
+
+
+                            <div class="grid grid-3">
+
+
+                                <article class="service-card card">
+
+                                    <div class="service-icon">
+                                        🚰
+                                    </div>
+
+                                    <h3>
+                                        Plumbing
+                                    </h3>
+
+                                    <p>
+                                        Plumbing repairs, installations
+                                        and maintenance.
+                                    </p>
+
+                                    <span class="badge badge-green">
+                                        Active
+                                    </span>
+
+                                </article>
+
+
+                                <article class="service-card card">
+
+                                    <div class="service-icon">
+                                        ⚡
+                                    </div>
+
+                                    <h3>
+                                        Electrical
+                                    </h3>
+
+                                    <p>
+                                        Electrical installation and
+                                        repair services.
+                                    </p>
+
+                                    <span class="badge badge-green">
+                                        Active
+                                    </span>
+
+                                </article>
+
+
+                                <article class="service-card card">
+
+                                    <div class="service-icon">
+                                        🪚
+                                    </div>
+
+                                    <h3>
+                                        Carpentry
+                                    </h3>
+
+                                    <p>
+                                        Furniture repair and carpentry
+                                        services.
+                                    </p>
+
+                                    <span class="badge badge-green">
+                                        Active
+                                    </span>
+
+                                </article>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ================= PROFESSIONALS ================= -->
+                        <section
+                            id="manage-professionals"
+                            class="dash-section"
+                        >
+
+                            <div class="section-head">
+
+                                <div>
+
+                                    <span class="eyebrow">
+                                        Workforce
+                                    </span>
+
+                                    <h2>
+                                        Manage Professionals
+                                    </h2>
+
+                                    <p>
+                                        Review and manage registered
+                                        FixKart professionals.
+                                    </p>
+
+                                </div>
+
+                                <a
+                                    href="../pages/professionals.html"
+                                    class="btn btn-outline"
+                                >
+                                    View Professionals
+                                </a>
+
+                            </div>
+
+
+                            <div class="grid grid-3">
+
+
+                                <article class="pro-card card">
+
+                                    <div class="pro-header">
+
+                                        <div class="pro-avatar">
+                                            RS
+                                        </div>
+
+                                        <div>
+
+                                            <h4>
+                                                Rahul Sharma
+                                            </h4>
+
+                                            <div class="pro-profession">
+                                                Plumber
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="pro-meta">
+
+                                        <span>
+                                            ⭐ 4.9
+                                        </span>
+
+                                        <span>
+                                            120+ jobs
+                                        </span>
+
+                                    </div>
+
+                                    <span class="badge badge-verified">
+                                        ✓ Verified
+                                    </span>
+
+                                </article>
+
+
+                                <article class="pro-card card">
+
+                                    <div class="pro-header">
+
+                                        <div class="pro-avatar">
+                                            AS
+                                        </div>
+
+                                        <div>
+
+                                            <h4>
+                                                Amit Singh
+                                            </h4>
+
+                                            <div class="pro-profession">
+                                                Electrician
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="pro-meta">
+
+                                        <span>
+                                            ⭐ 4.8
+                                        </span>
+
+                                        <span>
+                                            95+ jobs
+                                        </span>
+
+                                    </div>
+
+                                    <span class="badge badge-verified">
+                                        ✓ Verified
+                                    </span>
+
+                                </article>
+
+
+                                <article class="pro-card card">
+
+                                    <div class="pro-header">
+
+                                        <div class="pro-avatar">
+                                            VK
+                                        </div>
+
+                                        <div>
+
+                                            <h4>
+                                                Vikram Kumar
+                                            </h4>
+
+                                            <div class="pro-profession">
+                                                Carpenter
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="pro-meta">
+
+                                        <span>
+                                            ⭐ 4.9
+                                        </span>
+
+                                        <span>
+                                            150+ jobs
+                                        </span>
+
+                                    </div>
+
+                                    <span class="badge badge-verified">
+                                        ✓ Verified
+                                    </span>
+
+                                </article>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ================= USERS ================= -->
+                        <section
+                            id="manage-users"
+                            class="dash-section"
+                        >
+
+                            <div class="section-head">
+
+                                <div>
+
+                                    <span class="eyebrow">
+                                        Accounts
+                                    </span>
+
+                                    <h2>
+                                        Manage Users
+                                    </h2>
+
+                                    <p>
+                                        View and manage registered FixKart
+                                        customers.
+                                    </p>
+
+                                </div>
+
+                                <a
+                                    href="#manage-users"
+                                    class="btn btn-outline"
+                                >
+                                    View All Users
+                                </a>
+
+                            </div>
+
+
+                            <div class="card table-card">
+
+                                <div class="table-responsive">
+
+                                    <table>
+
+                                        <thead>
+
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Joined</th>
+                                                <th>Status</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+
+                                                <td>
+                                                    Rahul Sharma
+                                                </td>
+
+                                                <td>
+                                                    rahul@example.com
+                                                </td>
+
+                                                <td>
+                                                    Customer
+                                                </td>
+
+                                                <td>
+                                                    Aug 2026
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-green">
+                                                        Active
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+
+                                            <tr>
+
+                                                <td>
+                                                    Priya Singh
+                                                </td>
+
+                                                <td>
+                                                    priya@example.com
+                                                </td>
+
+                                                <td>
+                                                    Customer
+                                                </td>
+
+                                                <td>
+                                                    Aug 2026
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-green">
+                                                        Active
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+
+                                            <tr>
+
+                                                <td>
+                                                    Amit Kumar
+                                                </td>
+
+                                                <td>
+                                                    amit@example.com
+                                                </td>
+
+                                                <td>
+                                                    Professional
+                                                </td>
+
+                                                <td>
+                                                    Jul 2026
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-green">
+                                                        Active
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                    </div>
+
+                </div>
+
             </section>
-            <section id="manage-orders">
-                <h2>Manage Orders</h2>
-                <p>Placeholder content for manage orders.</p>
-            </section>
-            <section id="manage-services">
-                <h2>Manage Services</h2>
-                <p>Placeholder content for manage services.</p>
-            </section>
-            <section id="manage-professionals">
-                <h2>Manage Professionals</h2>
-                <p>Placeholder content for manage professionals.</p>
-            </section>
-            <section id="manage-users">
-                <h2>Manage Users</h2>
-                <p>Placeholder content for manage users.</p>
-            </section>
-        </section>
+
+        </div>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+
+                <!-- Brand -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand home services,
+                        all in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Marketplace -->
+                <div class="footer-col">
+
+                    <h4>
+                        Marketplace
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/services.html">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/professionals.html">
+                                Professionals
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/contact.html">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>
+                        Account
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/cart.html">
+                                Cart
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 FixKart. All rights reserved.
+                </span>
+
+                <div class="footer-social">
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        LinkedIn
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </footer>
+
+
+    <!-- ================= MOBILE STICKY CTA ================= -->
+    <div class="sticky-mobile-cta">
+
+        <a
+            href="../pages/products.html"
+            class="btn btn-primary"
+            style="flex:1;"
+        >
+            Products
+        </a>
+
+        <a
+            href="../pages/services.html"
+            class="btn btn-accent"
+            style="flex:1;"
+        >
+            Services
+        </a>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="../js/main.js"></script>
 
 </body>
 </html>

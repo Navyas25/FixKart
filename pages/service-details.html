@@ -1,72 +1,503 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Service Details - FixKart</title>
+
+    <!-- FixKart CSS -->
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a href="../index.html" class="brand">
+                FixKart
+            </a>
+
+            <!-- Main Navigation -->
+            <nav class="main-nav" aria-label="Main navigation">
+
+                <a href="../index.html">Home</a>
+
+                <a href="../pages/products.html">Products</a>
+
+                <a href="../pages/services.html">Services</a>
+
+                <a href="../pages/professionals.html">Professionals</a>
+
+                <a href="../pages/about.html">About</a>
+
+                <a href="../pages/contact.html">Contact</a>
+
+            </nav>
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                aria-label="Site search"
+            >
+
+                <label for="site-search" class="sr-only">
+                    Search
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+            <!-- Account Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="../pages/login.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="../pages/register.html"
+                    class="btn btn-primary btn-sm"
+                >
+                    Register
+                </a>
+
+                <a
+                    href="../pages/profile.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Profile
+                </a>
+
+                <a
+                    href="../pages/cart.html"
+                    class="btn btn-icon"
+                    aria-label="Shopping cart"
+                >
+                    Cart
+                </a>
+
+            </div>
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+            >
+                ☰
+            </button>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>Service Details</h1>
 
-        <section id="service-detail">
-            <h2>Service Name</h2>
-            <p>Full service description placeholder.</p>
-            <p>Starting price placeholder</p>
-            <a href="professionals.html">Find Professionals for This Service</a>
+    <!-- ================= MAIN CONTENT ================= -->
+    <main>
+
+        <!-- Page Header -->
+        <section class="page-header">
+
+            <div class="container">
+
+                <div class="breadcrumbs">
+
+                    <a href="../index.html">
+                        Home
+                    </a>
+
+                    <span> / </span>
+
+                    <a href="../pages/services.html">
+                        Services
+                    </a>
+
+                    <span> / Service Details</span>
+
+                </div>
+
+                <h1>Service Details</h1>
+
+            </div>
+
         </section>
+
+
+        <!-- Service Details -->
+        <section class="section">
+
+            <div class="container">
+
+                <div class="card card-pad">
+
+                    <div class="section-head">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                FixKart Service
+                            </span>
+
+                            <h2>
+                                Service Name
+                            </h2>
+
+                            <p>
+                                Full service description placeholder.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Service Information -->
+                    <div class="grid grid-2">
+
+                        <div>
+
+                            <h3>
+                                About This Service
+                            </h3>
+
+                            <p class="text-secondary">
+                                Get reliable and professional help
+                                for your home service needs through
+                                FixKart.
+                            </p>
+
+                            <p class="text-secondary">
+                                Our verified professionals can help
+                                you complete the service safely and
+                                efficiently.
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            <h3>
+                                Starting Price
+                            </h3>
+
+                            <p class="service-price">
+                                Starting price placeholder
+                            </p>
+
+                            <p class="text-secondary">
+                                Final pricing may vary depending on
+                                the service requirements.
+                            </p>
+
+                            <a
+                                href="professionals.html"
+                                class="btn btn-primary"
+                            >
+                                Find Professionals
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Why Choose FixKart -->
+        <section class="section">
+
+            <div class="container">
+
+                <div class="section-head">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            Why FixKart
+                        </span>
+
+                        <h2>
+                            Reliable Service at Your Doorstep
+                        </h2>
+
+                        <p>
+                            Everything you need to get your service
+                            completed with confidence.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="trust-grid">
+
+                    <div class="trust-item">
+
+                        <div class="trust-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                Verified Professionals
+                            </h4>
+
+                            <p>
+                                Connect with trusted service
+                                professionals.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="trust-item">
+
+                        <div class="trust-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                Convenient Booking
+                            </h4>
+
+                            <p>
+                                Book the service you need quickly
+                                and easily.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="trust-item">
+
+                        <div class="trust-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                Transparent Pricing
+                            </h4>
+
+                            <p>
+                                Know the starting price before
+                                booking.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="trust-item">
+
+                        <div class="trust-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                Reliable Support
+                            </h4>
+
+                            <p>
+                                Get assistance whenever you need it.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- About -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand
+                        home services, in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+
+                    <h4>Quick Links</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../index.html">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/services.html">
+                                Services
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>Company</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/contact.html">
+                                Contact Us
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>Account</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>Legal</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <p>
+                    &copy; 2026 FixKart. All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+
     </footer>
-<script src="../js/service-details.js"></script>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script src="../js/service-details.js"></script>
+
 </body>
 </html>

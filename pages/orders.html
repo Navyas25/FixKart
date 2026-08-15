@@ -1,73 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="View and track your FixKart hardware orders."
+    >
+
     <title>My Orders - FixKart</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="FixKart Home"
+            >
+                <span class="brand-mark" aria-hidden="true">F</span>
+
+                <span>
+                    Fix<span class="brand-accent">Kart</span>
+                </span>
+            </a>
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+            >
+                ☰
+            </button>
+
+            <!-- Main Navigation -->
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a href="../index.html">Home</a>
+                <a href="products.html">Products</a>
+                <a href="services.html">Services</a>
+                <a href="professionals.html">Professionals</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                action="products.html"
+                method="get"
+            >
+                <span aria-hidden="true">⌕</span>
+
+                <label
+                    for="site-search"
+                    class="sr-only"
+                >
+                    Search products and services
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+            </form>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="profile.html"
+                    class="btn-icon profile-desktop-only"
+                    aria-label="Profile"
+                    title="Profile"
+                >
+                    👤
+                </a>
+
+                <a
+                    href="cart.html"
+                    class="btn-icon"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                >
+                    🛒
+                    <span
+                        class="badge-count"
+                        id="cart-count"
+                    >
+                        0
+                    </span>
+                </a>
+
+            </div>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>My Orders</h1>
 
-        <section id="order-list">
-            <article>
-                <h2>Order Number Placeholder</h2>
-                <p>Order status placeholder</p>
-                <p>Order date placeholder</p>
-            </article>
+    <!-- ================= MAIN ================= -->
+    <main id="main-content">
+
+        <section class="section">
+
+            <div class="container">
+
+                <!-- Page Heading -->
+                <div class="section-head">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            Order History
+                        </span>
+
+                        <h1>
+                            My Orders
+                        </h1>
+
+                        <p>
+                            View your recent hardware orders and
+                            track their status.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="products.html"
+                        class="btn btn-primary"
+                    >
+                        Continue Shopping
+                    </a>
+
+                </div>
+
+
+                <!-- ================= ORDER LIST ================= -->
+                <section
+                    id="order-list"
+                    aria-label="Your orders"
+                >
+
+                    <!-- Order 1 -->
+                    <article
+                        class="card"
+                        style="margin-bottom: 1.25rem;"
+                    >
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                gap: 1rem;
+                                flex-wrap: wrap;
+                            "
+                        >
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    Hardware Order
+                                </span>
+
+                                <h2>
+                                    Order #FK-2026-001
+                                </h2>
+
+                            </div>
+
+                            <span
+                                style="
+                                    display: inline-flex;
+                                    align-items: center;
+                                    padding: 0.4rem 0.8rem;
+                                    border-radius: 999px;
+                                    background: rgba(34, 197, 94, 0.12);
+                                    font-size: 0.85rem;
+                                    font-weight: 600;
+                                "
+                            >
+                                Confirmed
+                            </span>
+
+                        </div>
+
+
+                        <!-- Order Details -->
+                        <div
+                            class="grid-3"
+                            style="margin-top: 1.5rem;"
+                        >
+
+                            <div>
+
+                                <small>
+                                    Order Date
+                                </small>
+
+                                <p>
+                                    August 15, 2026
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                <small>
+                                    Estimated Delivery
+                                </small>
+
+                                <p>
+                                    3–5 business days
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                <small>
+                                    Payment
+                                </small>
+
+                                <p>
+                                    Confirmed
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Order Actions -->
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                flex-wrap: wrap;
+                                margin-top: 1.5rem;
+                                padding-top: 1.25rem;
+                                border-top: 1px solid var(--border);
+                            "
+                        >
+
+                            <a
+                                href="order-confirmation.html"
+                                class="btn btn-primary"
+                            >
+                                View Order
+                            </a>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline"
+                                onclick="trackOrder('FK-2026-001')"
+                            >
+                                Track Order
+                            </button>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Empty State -->
+                    <div
+                        id="empty-orders"
+                        class="card"
+                        style="
+                            display: none;
+                            text-align: center;
+                            padding: 3rem 1.5rem;
+                        "
+                    >
+
+                        <div
+                            style="
+                                font-size: 3rem;
+                                margin-bottom: 1rem;
+                            "
+                            aria-hidden="true"
+                        >
+                            📦
+                        </div>
+
+                        <h2>
+                            No Orders Yet
+                        </h2>
+
+                        <p>
+                            You haven't placed any hardware orders yet.
+                            Start shopping to see your orders here.
+                        </p>
+
+                        <a
+                            href="products.html"
+                            class="btn btn-primary"
+                        >
+                            Browse Products
+                        </a>
+
+                    </div>
+
+                </section>
+
+            </div>
+
         </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- Brand -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand home services,
+                        all in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Marketplace -->
+                <div class="footer-col">
+
+                    <h4>
+                        Marketplace
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="services.html">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="professionals.html">
+                                Professionals
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="contact.html">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>
+                        Account
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="cart.html">
+                                Cart
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 FixKart. All rights reserved.
+                </span>
+
+                <div class="footer-social">
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        LinkedIn
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </footer>
-<script src="../js/orders.js"></script>
+
+
+    <!-- Orders JavaScript -->
+    <script src="../js/orders.js"></script>
+
+    <!-- Main JavaScript -->
+    <script src="../js/main.js"></script>
+
+    <script>
+        function trackOrder(orderNumber) {
+            alert(
+                "Tracking information for " +
+                orderNumber +
+                " will be available once your order has been dispatched."
+            );
+        }
+    </script>
+
 </body>
 </html>

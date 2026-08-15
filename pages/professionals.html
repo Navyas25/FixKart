@@ -1,91 +1,691 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Professionals - FixKart</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
+
+    <!-- ================= HEADER ================= -->
     <header>
+
         <div id="branding">
             <a href="../index.html">FixKart</a>
         </div>
 
+        <!-- Main Navigation -->
         <nav aria-label="Main navigation">
             <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
+                <li>
+                    <a href="../index.html">Home</a>
+                </li>
+
+                <li>
+                    <a href="products.html">Products</a>
+                </li>
+
+                <li>
+                    <a href="services.html">Services</a>
+                </li>
+
+                <li>
+                    <a href="professionals.html" aria-current="page">
+                        Professionals
+                    </a>
+                </li>
+
+                <li>
+                    <a href="about.html">About</a>
+                </li>
+
+                <li>
+                    <a href="contact.html">Contact</a>
+                </li>
             </ul>
         </nav>
 
+        <!-- Search -->
         <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
+
+            <label for="site-search">
+                Search
+            </label>
+
+            <input
+                type="search"
+                id="site-search"
+                name="q"
+                placeholder="Search products or services"
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
         </form>
 
+        <!-- Account Navigation -->
         <nav aria-label="Account navigation">
             <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
+
+                <li>
+                    <a href="login.html">Login</a>
+                </li>
+
+                <li>
+                    <a href="register.html">Register</a>
+                </li>
+
+                <li>
+                    <a href="profile.html">Profile</a>
+                </li>
+
+                <li>
+                    <a href="cart.html">Cart</a>
+                </li>
+
             </ul>
         </nav>
+
     </header>
 
+
+    <!-- ================= MAIN ================= -->
     <main>
-        <h1>Professionals</h1>
 
-        <aside id="professional-filters">
-            <h2>Filters</h2>
-            <form aria-label="Professional filters">
-                <label for="profession">Profession</label>
-                <select id="profession" name="profession">
-                    <option value="">All Professionals</option>
-                    <option value="plumber">Plumber</option>
-                    <option value="electrician">Electrician</option>
-                    <option value="carpenter">Carpenter</option>
-                    <option value="mechanic">Mechanic</option>
-                    <option value="painter">Painter</option>
-                    <option value="ac-technician">AC Technician</option>
-                </select>
-            </form>
-        </aside>
+        <!-- Page Header -->
+        <section class="page-header">
 
-        <section id="professional-list">
-            <h2>Available Professionals</h2>
-            <article>
-                <img src="../assets/images/placeholder-professional.png" alt="Placeholder professional profile photo">
-                <h3><a href="professional-profile.html">Professional Name</a></h3>
-                <p>Profession placeholder</p>
-                <a href="professional-profile.html">View Profile</a>
-            </article>
+            <div class="container">
+
+                <h1>Find Trusted Professionals</h1>
+
+                <p>
+                    Connect with skilled professionals for your home
+                    repair and maintenance needs.
+                </p>
+
+            </div>
+
         </section>
+
+
+        <!-- Professionals Section -->
+        <section class="section">
+
+            <div class="container">
+
+                <div class="filters-layout">
+
+                    <!-- ================= FILTERS ================= -->
+                    <aside
+                        id="professional-filters"
+                        class="filters-panel"
+                    >
+
+                        <h2>Find a Professional</h2>
+
+                        <form aria-label="Professional filters">
+
+                            <!-- Profession -->
+                            <div class="form-group">
+
+                                <label for="profession">
+                                    Profession
+                                </label>
+
+                                <select
+                                    id="profession"
+                                    name="profession"
+                                >
+
+                                    <option value="">
+                                        All Professionals
+                                    </option>
+
+                                    <option value="plumber">
+                                        Plumber
+                                    </option>
+
+                                    <option value="electrician">
+                                        Electrician
+                                    </option>
+
+                                    <option value="carpenter">
+                                        Carpenter
+                                    </option>
+
+                                    <option value="mechanic">
+                                        Mechanic
+                                    </option>
+
+                                    <option value="painter">
+                                        Painter
+                                    </option>
+
+                                    <option value="ac-technician">
+                                        AC Technician
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Location -->
+                            <div class="form-group">
+
+                                <label for="professional-location">
+                                    Location
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="professional-location"
+                                    name="location"
+                                    placeholder="Enter your city"
+                                >
+
+                            </div>
+
+
+                            <!-- Rating -->
+                            <div class="form-group">
+
+                                <label for="professional-rating">
+                                    Minimum Rating
+                                </label>
+
+                                <select
+                                    id="professional-rating"
+                                    name="rating"
+                                >
+
+                                    <option value="">
+                                        Any Rating
+                                    </option>
+
+                                    <option value="4">
+                                        4+ Stars
+                                    </option>
+
+                                    <option value="4.5">
+                                        4.5+ Stars
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Apply Filters
+                            </button>
+
+                        </form>
+
+                    </aside>
+
+
+                    <!-- ================= PROFESSIONAL LIST ================= -->
+                    <section
+                        id="professional-list"
+                    >
+
+                        <div class="section-heading">
+
+                            <h2>
+                                Available Professionals
+                            </h2>
+
+                            <p>
+                                Choose a professional based on their
+                                skills, experience and ratings.
+                            </p>
+
+                        </div>
+
+
+                        <div class="grid-3">
+
+                            <!-- Professional 1 -->
+                            <article class="card professional-card">
+
+                                <img
+                                    src="../assets/images/placeholder-professional.png"
+                                    alt="Professional profile photo"
+                                >
+
+                                <div class="card-content">
+
+                                    <span class="badge">
+                                        Verified
+                                    </span>
+
+                                    <h3>
+                                        <a href="professional-profile.html">
+                                            Rajesh Kumar
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Plumber
+                                    </p>
+
+                                    <p>
+                                        Experienced in pipe repair,
+                                        leakage fixing and bathroom
+                                        plumbing.
+                                    </p>
+
+                                    <div class="professional-rating">
+                                        ★★★★★
+                                        <span>4.8</span>
+                                    </div>
+
+                                    <a
+                                        href="professional-profile.html"
+                                        class="btn btn-primary"
+                                    >
+                                        View Profile
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Professional 2 -->
+                            <article class="card professional-card">
+
+                                <img
+                                    src="../assets/images/placeholder-professional.png"
+                                    alt="Professional profile photo"
+                                >
+
+                                <div class="card-content">
+
+                                    <span class="badge">
+                                        Verified
+                                    </span>
+
+                                    <h3>
+                                        <a href="professional-profile.html">
+                                            Amit Sharma
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Electrician
+                                    </p>
+
+                                    <p>
+                                        Specializes in wiring,
+                                        electrical repairs and
+                                        appliance installation.
+                                    </p>
+
+                                    <div class="professional-rating">
+                                        ★★★★★
+                                        <span>4.9</span>
+                                    </div>
+
+                                    <a
+                                        href="professional-profile.html"
+                                        class="btn btn-primary"
+                                    >
+                                        View Profile
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Professional 3 -->
+                            <article class="card professional-card">
+
+                                <img
+                                    src="../assets/images/placeholder-professional.png"
+                                    alt="Professional profile photo"
+                                >
+
+                                <div class="card-content">
+
+                                    <span class="badge">
+                                        Verified
+                                    </span>
+
+                                    <h3>
+                                        <a href="professional-profile.html">
+                                            Vikram Singh
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Carpenter
+                                    </p>
+
+                                    <p>
+                                        Furniture repair, door
+                                        installation and custom
+                                        carpentry services.
+                                    </p>
+
+                                    <div class="professional-rating">
+                                        ★★★★☆
+                                        <span>4.7</span>
+                                    </div>
+
+                                    <a
+                                        href="professional-profile.html"
+                                        class="btn btn-primary"
+                                    >
+                                        View Profile
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Professional 4 -->
+                            <article class="card professional-card">
+
+                                <img
+                                    src="../assets/images/placeholder-professional.png"
+                                    alt="Professional profile photo"
+                                >
+
+                                <div class="card-content">
+
+                                    <span class="badge">
+                                        Verified
+                                    </span>
+
+                                    <h3>
+                                        <a href="professional-profile.html">
+                                            Mohit Verma
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Mechanic
+                                    </p>
+
+                                    <p>
+                                        Vehicle servicing, repairs
+                                        and general maintenance.
+                                    </p>
+
+                                    <div class="professional-rating">
+                                        ★★★★★
+                                        <span>4.8</span>
+                                    </div>
+
+                                    <a
+                                        href="professional-profile.html"
+                                        class="btn btn-primary"
+                                    >
+                                        View Profile
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Professional 5 -->
+                            <article class="card professional-card">
+
+                                <img
+                                    src="../assets/images/placeholder-professional.png"
+                                    alt="Professional profile photo"
+                                >
+
+                                <div class="card-content">
+
+                                    <span class="badge">
+                                        Verified
+                                    </span>
+
+                                    <h3>
+                                        <a href="professional-profile.html">
+                                            Suresh Yadav
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        Painter
+                                    </p>
+
+                                    <p>
+                                        Interior and exterior painting
+                                        and wall finishing services.
+                                    </p>
+
+                                    <div class="professional-rating">
+                                        ★★★★★
+                                        <span>4.6</span>
+                                    </div>
+
+                                    <a
+                                        href="professional-profile.html"
+                                        class="btn btn-primary"
+                                    >
+                                        View Profile
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- Professional 6 -->
+                            <article class="card professional-card">
+
+                                <img
+                                    src="../assets/images/placeholder-professional.png"
+                                    alt="Professional profile photo"
+                                >
+
+                                <div class="card-content">
+
+                                    <span class="badge">
+                                        Verified
+                                    </span>
+
+                                    <h3>
+                                        <a href="professional-profile.html">
+                                            Arjun Mehta
+                                        </a>
+                                    </h3>
+
+                                    <p>
+                                        AC Technician
+                                    </p>
+
+                                    <p>
+                                        AC installation, servicing,
+                                        cleaning and repair.
+                                    </p>
+
+                                    <div class="professional-rating">
+                                        ★★★★★
+                                        <span>4.9</span>
+                                    </div>
+
+                                    <a
+                                        href="professional-profile.html"
+                                        class="btn btn-primary"
+                                    >
+                                        View Profile
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CTA ================= -->
+        <section class="cta-section">
+
+            <div class="container">
+
+                <h2>
+                    Are you a skilled professional?
+                </h2>
+
+                <p>
+                    Join FixKart and connect with customers who need
+                    your services.
+                </p>
+
+                <a
+                    href="register.html"
+                    class="btn btn-primary"
+                >
+                    Join FixKart
+                </a>
+
+            </div>
+
+        </section>
+
     </main>
 
+
+    <!-- ================= FOOTER ================= -->
     <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+        <div class="footer-inner">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+            <!-- Brand -->
+            <section class="footer-brand">
+
+                <h2>FixKart</h2>
+
+                <p>
+                    Hardware marketplace and on-demand home services,
+                    all in one place.
+                </p>
+
+            </section>
+
+
+            <!-- Quick Links -->
+            <section>
+
+                <h3>Quick Links</h3>
+
+                <nav aria-label="Footer navigation">
+
+                    <ul>
+
+                        <li>
+                            <a href="../index.html">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="services.html">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="professionals.html">
+                                Professionals
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+            </section>
+
+
+            <!-- Support -->
+            <section>
+
+                <h3>Support</h3>
+
+                <nav aria-label="Support navigation">
+
+                    <ul>
+
+                        <li>
+                            <a href="about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="contact.html">
+                                Contact Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+            </section>
+
+        </div>
+
+
+        <p id="footer-copyright">
+            &copy; 2026 FixKart. All rights reserved.
+        </p>
+
     </footer>
-<script src="../js/professionals.js"></script>
+
+
+    <!-- JavaScript -->
+    <script src="../js/professionals.js"></script>
+
 </body>
 </html>

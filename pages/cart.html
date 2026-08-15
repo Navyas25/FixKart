@@ -1,82 +1,764 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="View and manage your FixKart shopping cart."
+    >
+
     <title>Cart - FixKart</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a
+                href="../index.html"
+                class="brand"
+                aria-label="FixKart Home"
+            >
+                <span class="brand-mark" aria-hidden="true">
+                    F
+                </span>
+
+                <span>
+                    Fix<span class="brand-accent">Kart</span>
+                </span>
+            </a>
+
+
+            <!-- Mobile Menu Button -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+            >
+                ☰
+            </button>
+
+
+            <!-- Main Navigation -->
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="products.html">
+                    Products
+                </a>
+
+                <a href="services.html">
+                    Services
+                </a>
+
+                <a href="professionals.html">
+                    Professionals
+                </a>
+
+                <a href="about.html">
+                    About
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </nav>
+
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                action="products.html"
+                method="get"
+            >
+
+                <span aria-hidden="true">
+                    ⌕
+                </span>
+
+                <label
+                    for="site-search"
+                    class="sr-only"
+                >
+                    Search products and services
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="profile.html"
+                    class="btn-icon profile-desktop-only"
+                    aria-label="Profile"
+                    title="Profile"
+                >
+                    👤
+                </a>
+
+                <a
+                    href="cart.html"
+                    class="btn-icon"
+                    aria-label="Shopping cart"
+                    title="Shopping cart"
+                >
+                    🛒
+                    <span
+                        class="badge-count"
+                        id="cart-count"
+                    >
+                        1
+                    </span>
+                </a>
+
+            </div>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <h1>Your Cart</h1>
 
-        <section id="cart-items">
-            <h2>Items in Cart</h2>
-            <article>
-                <img src="../assets/images/placeholder-product.png" alt="Placeholder product image">
-                <h3>Product Name</h3>
-                <label for="cart-quantity">Quantity</label>
-                <input type="number" id="cart-quantity" name="cart-quantity" min="1" value="1">
-                <button type="button">Remove</button>
-            </article>
+    <!-- ================= MAIN ================= -->
+    <main id="main-content">
+
+        <section class="section">
+
+            <div class="container">
+
+                <!-- Page Heading -->
+                <div class="section-head">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            Shopping Cart
+                        </span>
+
+                        <h1>
+                            Your Cart
+                        </h1>
+
+                        <p>
+                            Review your hardware items before
+                            proceeding to checkout.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="products.html"
+                        class="btn btn-outline"
+                    >
+                        Continue Shopping
+                    </a>
+
+                </div>
+
+
+                <!-- ================= CART LAYOUT ================= -->
+                <div class="booking-layout">
+
+
+                    <!-- ================= CART ITEMS ================= -->
+                    <section
+                        id="cart-items"
+                        aria-label="Items in cart"
+                    >
+
+                        <div class="card">
+
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    gap: 1rem;
+                                    margin-bottom: 1.5rem;
+                                "
+                            >
+
+                                <h2>
+                                    Items in Cart
+                                </h2>
+
+                                <span>
+                                    <strong id="cart-items-count">
+                                        1
+                                    </strong>
+                                    item
+                                </span>
+
+                            </div>
+
+
+                            <!-- Cart Item -->
+                            <article
+                                class="cart-line"
+                                data-product-id="1"
+                            >
+
+                                <!-- Product Image -->
+                                <div class="cart-line-media">
+
+                                    <img
+                                        src="../assets/images/placeholder-product.png"
+                                        alt="Product Name"
+                                    >
+
+                                </div>
+
+
+                                <!-- Product Information -->
+                                <div>
+
+                                    <h3>
+                                        Product Name
+                                    </h3>
+
+                                    <p>
+                                        Hardware Product
+                                    </p>
+
+                                    <strong>
+                                        ₹999
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- Quantity -->
+                                <div class="qty-control">
+
+                                    <button
+                                        type="button"
+                                        class="qty-decrease"
+                                        aria-label="Decrease quantity"
+                                    >
+                                        −
+                                    </button>
+
+                                    <input
+                                        type="number"
+                                        class="cart-quantity"
+                                        name="cart-quantity"
+                                        min="1"
+                                        value="1"
+                                        aria-label="Product quantity"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="qty-increase"
+                                        aria-label="Increase quantity"
+                                    >
+                                        +
+                                    </button>
+
+                                </div>
+
+
+                                <!-- Item Total -->
+                                <strong class="cart-line-total">
+                                    ₹999
+                                </strong>
+
+
+                                <!-- Remove -->
+                                <button
+                                    type="button"
+                                    class="btn btn-outline cart-remove"
+                                    data-product-id="1"
+                                >
+                                    Remove
+                                </button>
+
+                            </article>
+
+
+                            <!-- Empty Cart -->
+                            <div
+                                id="empty-cart"
+                                style="
+                                    display: none;
+                                    text-align: center;
+                                    padding: 3rem 1rem;
+                                "
+                            >
+
+                                <div
+                                    aria-hidden="true"
+                                    style="
+                                        font-size: 3rem;
+                                        margin-bottom: 1rem;
+                                    "
+                                >
+                                    🛒
+                                </div>
+
+                                <h2>
+                                    Your Cart is Empty
+                                </h2>
+
+                                <p>
+                                    You haven't added any hardware
+                                    products to your cart yet.
+                                </p>
+
+                                <a
+                                    href="products.html"
+                                    class="btn btn-primary"
+                                >
+                                    Browse Products
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ================= ORDER SUMMARY ================= -->
+                    <aside
+                        id="cart-summary"
+                        class="summary-card"
+                    >
+
+                        <div class="card">
+
+                            <span class="eyebrow">
+                                Order Summary
+                            </span>
+
+                            <h2>
+                                Your Order
+                            </h2>
+
+
+                            <!-- Subtotal -->
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    gap: 1rem;
+                                    padding: 1rem 0;
+                                    border-bottom: 1px solid var(--border);
+                                "
+                            >
+
+                                <span>
+                                    Subtotal
+                                </span>
+
+                                <strong id="cart-subtotal">
+                                    ₹999
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Delivery -->
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    gap: 1rem;
+                                    padding: 1rem 0;
+                                    border-bottom: 1px solid var(--border);
+                                "
+                            >
+
+                                <span>
+                                    Delivery
+                                </span>
+
+                                <strong id="cart-delivery">
+                                    Free
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Tax -->
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    gap: 1rem;
+                                    padding: 1rem 0;
+                                    border-bottom: 1px solid var(--border);
+                                "
+                            >
+
+                                <span>
+                                    Estimated Tax
+                                </span>
+
+                                <strong id="cart-tax">
+                                    ₹0
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Total -->
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    gap: 1rem;
+                                    padding: 1.25rem 0;
+                                    font-size: 1.15rem;
+                                "
+                            >
+
+                                <strong>
+                                    Total
+                                </strong>
+
+                                <strong id="cart-total">
+                                    ₹999
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Checkout -->
+                            <a
+                                href="checkout.html"
+                                class="btn btn-primary btn-lg"
+                                id="checkout-button"
+                                style="width: 100%;"
+                            >
+                                Proceed to Checkout
+                            </a>
+
+
+                            <!-- Secure Checkout -->
+                            <p
+                                style="
+                                    text-align: center;
+                                    margin-top: 1rem;
+                                "
+                            >
+                                🔒 Secure checkout
+                            </p>
+
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </div>
+
         </section>
 
-        <section id="cart-summary">
-            <h2>Order Summary</h2>
-            <p>Subtotal placeholder</p>
-            <a href="checkout.html">Proceed to Checkout</a>
+
+        <!-- ================= BENEFITS ================= -->
+        <section class="section">
+
+            <div class="container">
+
+                <div class="trust-grid">
+
+                    <article class="card">
+
+                        <h3>
+                            Secure Payments
+                        </h3>
+
+                        <p>
+                            Your payment information is handled
+                            securely.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <h3>
+                            Quality Hardware
+                        </h3>
+
+                        <p>
+                            Shop reliable tools and hardware products.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <h3>
+                            Fast Delivery
+                        </h3>
+
+                        <p>
+                            Get your hardware delivered conveniently.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <h3>
+                            Need Help?
+                        </h3>
+
+                        <p>
+                            Our support team is available to help.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
         </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- Brand -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand home services,
+                        all in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Marketplace -->
+                <div class="footer-col">
+
+                    <h4>
+                        Marketplace
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="services.html">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="professionals.html">
+                                Professionals
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="contact.html">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>
+                        Account
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="cart.html">
+                                Cart
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="bookings.html">
+                                My Bookings
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 FixKart. All rights reserved.
+                </span>
+
+                <div class="footer-social">
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        LinkedIn
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </footer>
-<script src="../js/cart.js"></script>
+
+
+    <!-- ================= MOBILE STICKY CTA ================= -->
+    <div class="sticky-mobile-cta">
+
+        <a
+            href="products.html"
+            class="btn btn-primary"
+            style="flex: 1;"
+        >
+            Continue Shopping
+        </a>
+
+        <a
+            href="checkout.html"
+            class="btn btn-accent"
+            style="flex: 1;"
+        >
+            Checkout
+        </a>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="../js/cart.js"></script>
+    <script src="../js/main.js"></script>
+
 </body>
+
 </html>

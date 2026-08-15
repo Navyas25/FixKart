@@ -1,89 +1,520 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Professional Dashboard - FixKart</title>
+
+    <!-- FixKart CSS -->
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a href="../index.html" class="brand">
+                FixKart
+            </a>
+
+            <!-- Main Navigation -->
+            <nav class="main-nav" aria-label="Main navigation">
+
+                <a href="../index.html">Home</a>
+
+                <a href="../pages/products.html">Products</a>
+
+                <a href="../pages/services.html">Services</a>
+
+                <a href="../pages/professionals.html">Professionals</a>
+
+                <a href="../pages/about.html">About</a>
+
+                <a href="../pages/contact.html">Contact</a>
+
+            </nav>
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                aria-label="Site search"
+            >
+
+                <label for="site-search" class="sr-only">
+                    Search
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+            <!-- Account Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="../pages/login.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="../pages/register.html"
+                    class="btn btn-primary btn-sm"
+                >
+                    Register
+                </a>
+
+                <a
+                    href="../pages/profile.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Profile
+                </a>
+
+                <a
+                    href="../pages/cart.html"
+                    class="btn btn-icon"
+                    aria-label="Shopping cart"
+                >
+                    Cart
+                </a>
+
+            </div>
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+            >
+                ☰
+            </button>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
+
+    <!-- ================= MAIN ================= -->
     <main>
-        <h1>Professional Dashboard</h1>
 
-        <nav aria-label="Professional Dashboard navigation">
-            <ul>
-                <li><a href="#my-bookings">My Bookings</a></li><li><a href="#availability">Availability</a></li><li><a href="#earnings">Earnings</a></li><li><a href="#profile-settings">Profile Settings</a></li>
-            </ul>
-        </nav>
+        <!-- Page Header -->
+        <section class="page-header">
 
-        <section id="dashboard-main">
-            <section id="my-bookings">
-                <h2>My Bookings</h2>
-                <p>Placeholder content for my bookings.</p>
-            </section>
-            <section id="availability">
-                <h2>Availability</h2>
-                <p>Placeholder content for availability.</p>
-            </section>
-            <section id="earnings">
-                <h2>Earnings</h2>
-                <p>Placeholder content for earnings.</p>
-            </section>
-            <section id="profile-settings">
-                <h2>Profile Settings</h2>
-                <p>Placeholder content for profile settings.</p>
-            </section>
+            <div class="container">
+
+                <div class="breadcrumbs">
+
+                    <a href="../index.html">
+                        Home
+                    </a>
+
+                    <span> / Professional Dashboard</span>
+
+                </div>
+
+                <h1>
+                    Professional Dashboard
+                </h1>
+
+                <p class="text-secondary">
+                    Manage your bookings, availability, earnings,
+                    and professional profile.
+                </p>
+
+            </div>
+
         </section>
+
+
+        <!-- ================= DASHBOARD ================= -->
+        <section class="section">
+
+            <div class="container">
+
+                <!-- Dashboard Navigation -->
+                <nav
+                    class="card card-pad"
+                    aria-label="Professional Dashboard navigation"
+                >
+
+                    <div class="row gap-4 flex-wrap">
+
+                        <a
+                            href="#my-bookings"
+                            class="btn btn-outline btn-sm"
+                        >
+                            My Bookings
+                        </a>
+
+                        <a
+                            href="#availability"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Availability
+                        </a>
+
+                        <a
+                            href="#earnings"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Earnings
+                        </a>
+
+                        <a
+                            href="#profile-settings"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Profile Settings
+                        </a>
+
+                    </div>
+
+                </nav>
+
+
+                <!-- Dashboard Cards -->
+                <div
+                    class="grid grid-2"
+                    style="margin-top: 32px;"
+                >
+
+                    <!-- ================= BOOKINGS ================= -->
+                    <section
+                        id="my-bookings"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-blue">
+                            Bookings
+                        </span>
+
+                        <h2>
+                            My Bookings
+                        </h2>
+
+                        <p class="text-secondary">
+                            View and manage your upcoming and
+                            completed service bookings.
+                        </p>
+
+                        <div class="row gap-3">
+
+                            <div>
+
+                                <strong>
+                                    0
+                                </strong>
+
+                                <p class="text-secondary">
+                                    Upcoming
+                                </p>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    0
+                                </strong>
+
+                                <p class="text-secondary">
+                                    Completed
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="#my-bookings"
+                            class="btn btn-primary btn-sm"
+                        >
+                            View Bookings
+                        </a>
+
+                    </section>
+
+
+                    <!-- ================= AVAILABILITY ================= -->
+                    <section
+                        id="availability"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-green">
+                            Availability
+                        </span>
+
+                        <h2>
+                            Availability
+                        </h2>
+
+                        <p class="text-secondary">
+                            Set your working hours and control when
+                            customers can book your services.
+                        </p>
+
+                        <p>
+                            <strong>
+                                Status:
+                            </strong>
+
+                            <span class="badge badge-green">
+                                Available
+                            </span>
+                        </p>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline btn-sm"
+                        >
+                            Update Availability
+                        </button>
+
+                    </section>
+
+
+                    <!-- ================= EARNINGS ================= -->
+                    <section
+                        id="earnings"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-orange">
+                            Earnings
+                        </span>
+
+                        <h2>
+                            Earnings
+                        </h2>
+
+                        <p class="text-secondary">
+                            Track your earnings from completed
+                            service bookings.
+                        </p>
+
+                        <h3>
+                            ₹0
+                        </h3>
+
+                        <p class="text-secondary">
+                            Total earnings
+                        </p>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline btn-sm"
+                        >
+                            View Earnings
+                        </button>
+
+                    </section>
+
+
+                    <!-- ================= PROFILE SETTINGS ================= -->
+                    <section
+                        id="profile-settings"
+                        class="card card-pad"
+                    >
+
+                        <span class="badge badge-gray">
+                            Account
+                        </span>
+
+                        <h2>
+                            Profile Settings
+                        </h2>
+
+                        <p class="text-secondary">
+                            Update your professional information,
+                            services, pricing, and contact details.
+                        </p>
+
+                        <a
+                            href="../pages/profile.html"
+                            class="btn btn-primary btn-sm"
+                        >
+                            Edit Profile
+                        </a>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- About -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand
+                        home services, in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+
+                    <h4>
+                        Quick Links
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../index.html">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/services.html">
+                                Services
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>
+                        Company
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/contact.html">
+                                Contact Us
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Professional -->
+                <div class="footer-col">
+
+                    <h4>
+                        Professional
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="#my-bookings">
+                                My Bookings
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#availability">
+                                Availability
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#earnings">
+                                Earnings
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <p>
+                    &copy; 2026 FixKart. All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+
     </footer>
 
 </body>

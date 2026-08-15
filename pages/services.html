@@ -1,90 +1,568 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Services - FixKart</title>
+
+    <!-- FixKart CSS -->
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-    <header>
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <!-- Brand -->
+            <a href="../index.html" class="brand">
+                FixKart
+            </a>
+
+            <!-- Main Navigation -->
+            <nav class="main-nav" aria-label="Main navigation">
+
+                <a href="../index.html">Home</a>
+
+                <a href="../pages/products.html">Products</a>
+
+                <a href="../pages/services.html" aria-current="page">
+                    Services
+                </a>
+
+                <a href="../pages/professionals.html">
+                    Professionals
+                </a>
+
+                <a href="../pages/about.html">
+                    About
+                </a>
+
+                <a href="../pages/contact.html">
+                    Contact
+                </a>
+
+            </nav>
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                aria-label="Site search"
+            >
+
+                <label for="site-search" class="sr-only">
+                    Search
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+            <!-- Account Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="../pages/login.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="../pages/register.html"
+                    class="btn btn-primary btn-sm"
+                >
+                    Register
+                </a>
+
+                <a
+                    href="../pages/profile.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Profile
+                </a>
+
+                <a
+                    href="../pages/cart.html"
+                    class="btn btn-icon"
+                    aria-label="Shopping cart"
+                >
+                    Cart
+                </a>
+
+            </div>
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+            >
+                ☰
+            </button>
+
         </div>
 
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../pages/products.html">Products</a></li>
-                <li><a href="../pages/services.html">Services</a></li>
-                <li><a href="../pages/professionals.html">Professionals</a></li>
-                <li><a href="../pages/about.html">About</a></li>
-                <li><a href="../pages/contact.html">Contact</a></li>
-            </ul>
-        </nav>
-
-        <form role="search" aria-label="Site search">
-            <label for="site-search">Search</label>
-            <input type="search" id="site-search" name="q" placeholder="Search products or services">
-            <button type="submit">Search</button>
-        </form>
-
-        <nav aria-label="Account navigation">
-            <ul>
-                <li><a href="../pages/login.html">Login</a></li>
-                <li><a href="../pages/register.html">Register</a></li>
-                <li><a href="../pages/profile.html">Profile</a></li>
-                <li><a href="../pages/cart.html">Cart</a></li>
-            </ul>
-        </nav>
     </header>
 
+
+    <!-- ================= MAIN ================= -->
     <main>
-        <h1>Services</h1>
 
-        <aside id="service-filters">
-            <h2>Filters</h2>
-            <form aria-label="Service filters">
-                <label for="service-category">Category</label>
-                <select id="service-category" name="service-category">
-                    <option value="">All Services</option>
-                    <option value="plumbing">Plumbing</option>
-                    <option value="electrical">Electrical</option>
-                    <option value="carpentry">Carpentry</option>
-                    <option value="automotive">Automotive</option>
-                    <option value="painting">Painting</option>
-                    <option value="ac-repair">AC Repair</option>
-                </select>
-            </form>
-        </aside>
+        <!-- Page Header -->
+        <section class="page-header">
 
-        <section id="service-list">
-            <h2>All Services</h2>
-            <article>
-                <h3><a href="service-details.html">Service Name</a></h3>
-                <p>Service short description placeholder.</p>
-                <a href="service-details.html">View Details</a>
-            </article>
+            <div class="container">
+
+                <div class="breadcrumbs">
+
+                    <a href="../index.html">
+                        Home
+                    </a>
+
+                    <span> / Services</span>
+
+                </div>
+
+                <h1>Services</h1>
+
+                <p class="text-secondary">
+                    Find trusted professionals for all your
+                    home and vehicle service needs.
+                </p>
+
+            </div>
+
         </section>
+
+
+        <!-- ================= SERVICES SECTION ================= -->
+        <section class="section">
+
+            <div class="container">
+
+                <div class="grid" style="grid-template-columns: 260px 1fr;">
+
+                    <!-- ================= FILTERS ================= -->
+                    <aside class="card card-pad">
+
+                        <h3>Filters</h3>
+
+                        <form
+                            aria-label="Service filters"
+                            id="service-filters"
+                        >
+
+                            <div class="form-group">
+
+                                <label for="service-category">
+                                    Category
+                                </label>
+
+                                <select
+                                    id="service-category"
+                                    name="service-category"
+                                >
+
+                                    <option value="">
+                                        All Services
+                                    </option>
+
+                                    <option value="plumbing">
+                                        Plumbing
+                                    </option>
+
+                                    <option value="electrical">
+                                        Electrical
+                                    </option>
+
+                                    <option value="carpentry">
+                                        Carpentry
+                                    </option>
+
+                                    <option value="automotive">
+                                        Automotive
+                                    </option>
+
+                                    <option value="painting">
+                                        Painting
+                                    </option>
+
+                                    <option value="ac-repair">
+                                        AC Repair
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </form>
+
+                    </aside>
+
+
+                    <!-- ================= SERVICE LIST ================= -->
+                    <section>
+
+                        <div class="section-head">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    FixKart Services
+                                </span>
+
+                                <h2>
+                                    All Services
+                                </h2>
+
+                                <p>
+                                    Choose a service and connect
+                                    with a professional.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Service Grid -->
+                        <div
+                            class="grid grid-3"
+                            id="service-list"
+                        >
+
+                            <!-- Plumbing -->
+                            <article class="card card-pad">
+
+                                <span class="badge badge-blue">
+                                    Plumbing
+                                </span>
+
+                                <h3>
+                                    Plumbing Services
+                                </h3>
+
+                                <p class="text-secondary">
+                                    Get professional help with
+                                    pipes, taps, leaks and other
+                                    plumbing problems.
+                                </p>
+
+                                <a
+                                    href="service-details.html"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    View Details
+                                </a>
+
+                            </article>
+
+
+                            <!-- Electrical -->
+                            <article class="card card-pad">
+
+                                <span class="badge badge-orange">
+                                    Electrical
+                                </span>
+
+                                <h3>
+                                    Electrical Services
+                                </h3>
+
+                                <p class="text-secondary">
+                                    Find professionals for wiring,
+                                    switches, repairs and electrical
+                                    installations.
+                                </p>
+
+                                <a
+                                    href="service-details.html"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    View Details
+                                </a>
+
+                            </article>
+
+
+                            <!-- Carpentry -->
+                            <article class="card card-pad">
+
+                                <span class="badge badge-green">
+                                    Carpentry
+                                </span>
+
+                                <h3>
+                                    Carpentry Services
+                                </h3>
+
+                                <p class="text-secondary">
+                                    Book skilled carpenters for
+                                    furniture, doors, shelves and
+                                    repairs.
+                                </p>
+
+                                <a
+                                    href="service-details.html"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    View Details
+                                </a>
+
+                            </article>
+
+
+                            <!-- Automotive -->
+                            <article class="card card-pad">
+
+                                <span class="badge badge-blue">
+                                    Automotive
+                                </span>
+
+                                <h3>
+                                    Automotive Services
+                                </h3>
+
+                                <p class="text-secondary">
+                                    Get reliable vehicle repair and
+                                    maintenance services.
+                                </p>
+
+                                <a
+                                    href="service-details.html"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    View Details
+                                </a>
+
+                            </article>
+
+
+                            <!-- Painting -->
+                            <article class="card card-pad">
+
+                                <span class="badge badge-orange">
+                                    Painting
+                                </span>
+
+                                <h3>
+                                    Painting Services
+                                </h3>
+
+                                <p class="text-secondary">
+                                    Hire professionals for interior,
+                                    exterior and home painting.
+                                </p>
+
+                                <a
+                                    href="service-details.html"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    View Details
+                                </a>
+
+                            </article>
+
+
+                            <!-- AC Repair -->
+                            <article class="card card-pad">
+
+                                <span class="badge badge-green">
+                                    AC Repair
+                                </span>
+
+                                <h3>
+                                    AC Repair Services
+                                </h3>
+
+                                <p class="text-secondary">
+                                    Get professional AC servicing,
+                                    maintenance and repair.
+                                </p>
+
+                                <a
+                                    href="service-details.html"
+                                    class="btn btn-outline btn-sm"
+                                >
+                                    View Details
+                                </a>
+
+                            </article>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
 
-    <footer>
-        <section id="footer-links">
-            <nav aria-label="Footer navigation">
-                <ul>
-                    <li><a href="../pages/about.html">About FixKart</a></li>
-                    <li><a href="../pages/contact.html">Contact Us</a></li>
-                    <li><a href="../pages/privacy.html">Privacy Policy</a></li>
-                    <li><a href="../pages/terms.html">Terms of Service</a></li>
-                </ul>
-            </nav>
-        </section>
 
-        <section id="footer-about">
-            <p>FixKart &mdash; Hardware marketplace and on-demand home services, in one place.</p>
-        </section>
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
 
-        <p id="footer-copyright">&copy; 2026 FixKart. All rights reserved.</p>
+        <div class="container">
+
+            <div class="footer-inner">
+
+                <!-- About -->
+                <div>
+
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
+
+                    <p>
+                        Hardware marketplace and on-demand
+                        home services, in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+
+                    <h4>Quick Links</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../index.html">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/products.html">
+                                Products
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/services.html">
+                                Services
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Company -->
+                <div class="footer-col">
+
+                    <h4>Company</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/about.html">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/contact.html">
+                                Contact Us
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>Account</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>Legal</h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="../pages/privacy.html">
+                                Privacy Policy
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../pages/terms.html">
+                                Terms of Service
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <p>
+                    &copy; 2026 FixKart. All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+
     </footer>
-<script src="../js/services.js"></script>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script src="../js/services.js"></script>
+
 </body>
 </html>
