@@ -146,3 +146,48 @@
   .hero-ctas { flex-direction: column; }
   .hero-ctas .btn { width: 100%; }
 }
+/* =========================================
+   ANIME.JS SCROLL ANIMATION
+========================================= */
+
+.category-tile,
+.product-card,
+.service-card,
+.pro-card,
+.trust-item,
+.step-card,
+.cta-band {
+    will-change: transform, opacity;
+}
+
+
+/* Hero animation elements */
+
+.hero-content,
+.hero-stat-card,
+.circular-badge {
+    will-change: transform, opacity;
+}
+
+
+/* Prevent animation overflow */
+
+.hero {
+    overflow: hidden;
+}
+
+
+/* Mobile navigation */
+
+@media (max-width: 768px) {
+
+    .main-nav {
+        display: none;
+    }
+
+    .main-nav.nav-open {
+        display: flex;
+        flex-direction: column;
+    }
+
+}
