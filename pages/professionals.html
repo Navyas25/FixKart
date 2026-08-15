@@ -7,94 +7,107 @@
 
     <title>Professionals - FixKart</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <!-- FixKart CSS -->
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
 
     <!-- ================= HEADER ================= -->
-    <header>
+    <header class="site-header">
 
-        <div id="branding">
-            <a href="../index.html">FixKart</a>
-        </div>
+        <div class="container header-inner">
 
-        <!-- Main Navigation -->
-        <nav aria-label="Main navigation">
-            <ul>
-                <li>
-                    <a href="../index.html">Home</a>
-                </li>
+            <!-- Brand -->
+            <a href="../index.html" class="brand">
+                FixKart
+            </a>
 
-                <li>
-                    <a href="products.html">Products</a>
-                </li>
+            <!-- Main Navigation -->
+            <nav class="main-nav" aria-label="Main navigation">
 
-                <li>
-                    <a href="services.html">Services</a>
-                </li>
+                <a href="../index.html">Home</a>
 
-                <li>
-                    <a href="professionals.html" aria-current="page">
-                        Professionals
-                    </a>
-                </li>
+                <a href="products.html">Products</a>
 
-                <li>
-                    <a href="about.html">About</a>
-                </li>
+                <a href="services.html">Services</a>
 
-                <li>
-                    <a href="contact.html">Contact</a>
-                </li>
-            </ul>
-        </nav>
+                <a href="professionals.html" aria-current="page">
+                    Professionals
+                </a>
 
-        <!-- Search -->
-        <form role="search" aria-label="Site search">
+                <a href="about.html">About</a>
 
-            <label for="site-search">
-                Search
-            </label>
+                <a href="contact.html">Contact</a>
 
-            <input
-                type="search"
-                id="site-search"
-                name="q"
-                placeholder="Search products or services"
+            </nav>
+
+            <!-- Search -->
+            <form
+                class="header-search"
+                role="search"
+                aria-label="Site search"
             >
 
-            <button type="submit">
-                Search
+                <label for="site-search" class="sr-only">
+                    Search
+                </label>
+
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    placeholder="Search products or services"
+                >
+
+            </form>
+
+            <!-- Account Actions -->
+            <div class="header-actions">
+
+                <a
+                    href="login.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Login
+                </a>
+
+                <a
+                    href="register.html"
+                    class="btn btn-primary btn-sm"
+                >
+                    Register
+                </a>
+
+                <a
+                    href="profile.html"
+                    class="btn btn-outline btn-sm"
+                >
+                    Profile
+                </a>
+
+                <a
+                    href="cart.html"
+                    class="btn btn-icon"
+                    aria-label="Shopping cart"
+                >
+                    Cart
+                </a>
+
+            </div>
+
+            <!-- Mobile Menu -->
+            <button
+                class="nav-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+            >
+                ☰
             </button>
 
-        </form>
-
-        <!-- Account Navigation -->
-        <nav aria-label="Account navigation">
-            <ul>
-
-                <li>
-                    <a href="login.html">Login</a>
-                </li>
-
-                <li>
-                    <a href="register.html">Register</a>
-                </li>
-
-                <li>
-                    <a href="profile.html">Profile</a>
-                </li>
-
-                <li>
-                    <a href="cart.html">Cart</a>
-                </li>
-
-            </ul>
-        </nav>
+        </div>
 
     </header>
 
@@ -107,11 +120,23 @@
 
             <div class="container">
 
-                <h1>Find Trusted Professionals</h1>
+                <div class="breadcrumbs">
 
-                <p>
-                    Connect with skilled professionals for your home
-                    repair and maintenance needs.
+                    <a href="../index.html">
+                        Home
+                    </a>
+
+                    <span> / Professionals</span>
+
+                </div>
+
+                <h1>
+                    Find Trusted Professionals
+                </h1>
+
+                <p class="text-secondary">
+                    Connect with skilled professionals for your
+                    home repair and maintenance needs.
                 </p>
 
             </div>
@@ -119,7 +144,7 @@
         </section>
 
 
-        <!-- Professionals Section -->
+        <!-- ================= PROFESSIONALS ================= -->
         <section class="section">
 
             <div class="container">
@@ -132,9 +157,14 @@
                         class="filters-panel"
                     >
 
-                        <h2>Find a Professional</h2>
+                        <h2>
+                            Find a Professional
+                        </h2>
 
-                        <form aria-label="Professional filters">
+                        <form
+                            id="professional-filter-form"
+                            aria-label="Professional filters"
+                        >
 
                             <!-- Profession -->
                             <div class="form-group">
@@ -240,9 +270,7 @@
 
 
                     <!-- ================= PROFESSIONAL LIST ================= -->
-                    <section
-                        id="professional-list"
-                    >
+                    <section id="professional-list">
 
                         <div class="section-heading">
 
@@ -250,7 +278,7 @@
                                 Available Professionals
                             </h2>
 
-                            <p>
+                            <p class="text-secondary">
                                 Choose a professional based on their
                                 skills, experience and ratings.
                             </p>
@@ -260,12 +288,13 @@
 
                         <div class="grid-3">
 
-                            <!-- Professional 1 -->
+
+                            <!-- ================= PROFESSIONAL 1 ================= -->
                             <article class="card professional-card">
 
                                 <img
                                     src="../assets/images/placeholder-professional.png"
-                                    alt="Professional profile photo"
+                                    alt="Rajesh Kumar profile photo"
                                 >
 
                                 <div class="card-content">
@@ -280,11 +309,11 @@
                                         </a>
                                     </h3>
 
-                                    <p>
+                                    <p class="text-primary">
                                         Plumber
                                     </p>
 
-                                    <p>
+                                    <p class="text-secondary">
                                         Experienced in pipe repair,
                                         leakage fixing and bathroom
                                         plumbing.
@@ -307,12 +336,12 @@
                             </article>
 
 
-                            <!-- Professional 2 -->
+                            <!-- ================= PROFESSIONAL 2 ================= -->
                             <article class="card professional-card">
 
                                 <img
                                     src="../assets/images/placeholder-professional.png"
-                                    alt="Professional profile photo"
+                                    alt="Amit Sharma profile photo"
                                 >
 
                                 <div class="card-content">
@@ -327,11 +356,11 @@
                                         </a>
                                     </h3>
 
-                                    <p>
+                                    <p class="text-primary">
                                         Electrician
                                     </p>
 
-                                    <p>
+                                    <p class="text-secondary">
                                         Specializes in wiring,
                                         electrical repairs and
                                         appliance installation.
@@ -354,12 +383,12 @@
                             </article>
 
 
-                            <!-- Professional 3 -->
+                            <!-- ================= PROFESSIONAL 3 ================= -->
                             <article class="card professional-card">
 
                                 <img
                                     src="../assets/images/placeholder-professional.png"
-                                    alt="Professional profile photo"
+                                    alt="Vikram Singh profile photo"
                                 >
 
                                 <div class="card-content">
@@ -374,11 +403,11 @@
                                         </a>
                                     </h3>
 
-                                    <p>
+                                    <p class="text-primary">
                                         Carpenter
                                     </p>
 
-                                    <p>
+                                    <p class="text-secondary">
                                         Furniture repair, door
                                         installation and custom
                                         carpentry services.
@@ -401,12 +430,12 @@
                             </article>
 
 
-                            <!-- Professional 4 -->
+                            <!-- ================= PROFESSIONAL 4 ================= -->
                             <article class="card professional-card">
 
                                 <img
                                     src="../assets/images/placeholder-professional.png"
-                                    alt="Professional profile photo"
+                                    alt="Mohit Verma profile photo"
                                 >
 
                                 <div class="card-content">
@@ -421,11 +450,11 @@
                                         </a>
                                     </h3>
 
-                                    <p>
+                                    <p class="text-primary">
                                         Mechanic
                                     </p>
 
-                                    <p>
+                                    <p class="text-secondary">
                                         Vehicle servicing, repairs
                                         and general maintenance.
                                     </p>
@@ -447,12 +476,12 @@
                             </article>
 
 
-                            <!-- Professional 5 -->
+                            <!-- ================= PROFESSIONAL 5 ================= -->
                             <article class="card professional-card">
 
                                 <img
                                     src="../assets/images/placeholder-professional.png"
-                                    alt="Professional profile photo"
+                                    alt="Suresh Yadav profile photo"
                                 >
 
                                 <div class="card-content">
@@ -467,11 +496,11 @@
                                         </a>
                                     </h3>
 
-                                    <p>
+                                    <p class="text-primary">
                                         Painter
                                     </p>
 
-                                    <p>
+                                    <p class="text-secondary">
                                         Interior and exterior painting
                                         and wall finishing services.
                                     </p>
@@ -493,12 +522,12 @@
                             </article>
 
 
-                            <!-- Professional 6 -->
+                            <!-- ================= PROFESSIONAL 6 ================= -->
                             <article class="card professional-card">
 
                                 <img
                                     src="../assets/images/placeholder-professional.png"
-                                    alt="Professional profile photo"
+                                    alt="Arjun Mehta profile photo"
                                 >
 
                                 <div class="card-content">
@@ -513,11 +542,11 @@
                                         </a>
                                     </h3>
 
-                                    <p>
+                                    <p class="text-primary">
                                         AC Technician
                                     </p>
 
-                                    <p>
+                                    <p class="text-secondary">
                                         AC installation, servicing,
                                         cleaning and repair.
                                     </p>
@@ -578,29 +607,33 @@
 
 
     <!-- ================= FOOTER ================= -->
-    <footer>
+    <footer class="site-footer">
 
-        <div class="footer-inner">
+        <div class="container">
 
-            <!-- Brand -->
-            <section class="footer-brand">
+            <div class="footer-inner">
 
-                <h2>FixKart</h2>
+                <!-- Brand -->
+                <div>
 
-                <p>
-                    Hardware marketplace and on-demand home services,
-                    all in one place.
-                </p>
+                    <div class="footer-brand">
+                        FixKart
+                    </div>
 
-            </section>
+                    <p>
+                        Hardware marketplace and on-demand
+                        home services, in one place.
+                    </p>
+
+                </div>
 
 
-            <!-- Quick Links -->
-            <section>
+                <!-- Quick Links -->
+                <div class="footer-col">
 
-                <h3>Quick Links</h3>
-
-                <nav aria-label="Footer navigation">
+                    <h4>
+                        Quick Links
+                    </h4>
 
                     <ul>
 
@@ -630,17 +663,15 @@
 
                     </ul>
 
-                </nav>
-
-            </section>
+                </div>
 
 
-            <!-- Support -->
-            <section>
+                <!-- Company -->
+                <div class="footer-col">
 
-                <h3>Support</h3>
-
-                <nav aria-label="Support navigation">
+                    <h4>
+                        Company
+                    </h4>
 
                     <ul>
 
@@ -656,6 +687,58 @@
                             </a>
                         </li>
 
+                    </ul>
+
+                </div>
+
+
+                <!-- Account -->
+                <div class="footer-col">
+
+                    <h4>
+                        Account
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="login.html">
+                                Login
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="register.html">
+                                Register
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profile.html">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="cart.html">
+                                Cart
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Legal -->
+                <div class="footer-col">
+
+                    <h4>
+                        Legal
+                    </h4>
+
+                    <ul>
+
                         <li>
                             <a href="privacy.html">
                                 Privacy Policy
@@ -670,16 +753,21 @@
 
                     </ul>
 
-                </nav>
+                </div>
 
-            </section>
+            </div>
+
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+
+                <p>
+                    &copy; 2026 FixKart. All rights reserved.
+                </p>
+
+            </div>
 
         </div>
-
-
-        <p id="footer-copyright">
-            &copy; 2026 FixKart. All rights reserved.
-        </p>
 
     </footer>
 
