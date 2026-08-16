@@ -289,203 +289,33 @@ where not exists (
 -- ---------------------------------------------------------------------------
 -- 4. Professionals
 -- ---------------------------------------------------------------------------
+--
+-- Professional ACCOUNTS are created through the app's register endpoint
+-- (email + password), which is the supported, version-proof way to create
+-- auth users - inserting into auth.users directly can fail on newer Supabase
+-- schemas (see backend/scripts/seed-professionals.sql and the README).
+-- The two inserts below just fill in profile details and professional rows,
+-- matching users by email, so they are safe to re-run.
 
--- IMPORTANT:
--- The IDs below are explicitly converted to UUID using ::uuid.
--- This prevents PostgreSQL from treating them as TEXT.
+-- 4a. Profile rows (avatar, phone, role)
 
-
--- ---------------------------------------------------------------------------
--- 4a. Auth users
--- ---------------------------------------------------------------------------
-
-insert into auth.users
-  (
-    instance_id,
-    id,
-    aud,
-    role,
-    email,
-    encrypted_password,
-    email_confirmed_at,
-    raw_app_meta_data,
-    raw_user_meta_data,
-    created_at,
-    updated_at,
-    confirmation_token
-  )
+insert into profiles (id, full_name, avatar_url, phone, role)
 select
-  '00000000-0000-0000-0000-000000000000'::uuid,
-  v.id::uuid,
-  'authenticated',
-  'authenticated',
-  v.email,
-  crypt('FixkartSeed123!', gen_salt('bf')),
-  now(),
-  '{"provider":"email","providers":["email"]}'::jsonb,
-  jsonb_build_object('full_name', v.full_name),
-  now(),
-  now(),
-  ''
+  u.id,
+  v.full_name,
+  v.avatar_url,
+  v.phone,
+  'professional'
 from (
   values
-    (
-      'a0000000-0000-4000-8000-000000000001',
-      'pro.plumber@fixkart.dev',
-      'Rajesh Kumar'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000002',
-      'pro.electrician@fixkart.dev',
-      'Suresh Reddy'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000003',
-      'pro.carpenter@fixkart.dev',
-      'Amit Verma'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000004',
-      'pro.ac@fixkart.dev',
-      'Deepak Sharma'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000005',
-      'pro.painter@fixkart.dev',
-      'Vikram Singh'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000006',
-      'pro.mechanic@fixkart.dev',
-      'Mohan Das'
-    )
-) as v(id, email, full_name)
-where not exists (
-  select 1
-  from auth.users u
-  where u.email = v.email
-);
-
-
--- ---------------------------------------------------------------------------
--- 4b. Identity rows
--- ---------------------------------------------------------------------------
-
-insert into auth.identities
-  (
-    id,
-    user_id,
-    provider_id,
-    identity_data,
-    provider,
-    last_sign_in_at,
-    created_at,
-    updated_at
-  )
-select
-  gen_random_uuid(),
-  v.id::uuid,
-  gen_random_uuid(),
-  jsonb_build_object(
-    'sub', v.id,
-    'email', v.email,
-    'email_verified', true,
-    'phone_verified', false
-  ),
-  'email',
-  now(),
-  now(),
-  now()
-from (
-  values
-    (
-      'a0000000-0000-4000-8000-000000000001',
-      'pro.plumber@fixkart.dev'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000002',
-      'pro.electrician@fixkart.dev'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000003',
-      'pro.carpenter@fixkart.dev'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000004',
-      'pro.ac@fixkart.dev'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000005',
-      'pro.painter@fixkart.dev'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000006',
-      'pro.mechanic@fixkart.dev'
-    )
-) as v(id, email)
-where not exists (
-  select 1
-  from auth.identities i
-  where i.user_id = v.id::uuid
-    and i.provider = 'email'
-);
-
-
--- ---------------------------------------------------------------------------
--- 4c. Profile rows
--- ---------------------------------------------------------------------------
-
-insert into profiles
-  (
-    id,
-    full_name,
-    avatar_url,
-    phone,
-    role
-  )
-values
-  (
-    'a0000000-0000-4000-8000-000000000001'::uuid,
-    'Rajesh Kumar',
-    'https://picsum.photos/seed/fixkart-rajesh/200/200',
-    '+91 98765 40001',
-    'professional'
-  ),
-  (
-    'a0000000-0000-4000-8000-000000000002'::uuid,
-    'Suresh Reddy',
-    'https://picsum.photos/seed/fixkart-suresh/200/200',
-    '+91 98765 40002',
-    'professional'
-  ),
-  (
-    'a0000000-0000-4000-8000-000000000003'::uuid,
-    'Amit Verma',
-    'https://picsum.photos/seed/fixkart-amit/200/200',
-    '+91 98765 40003',
-    'professional'
-  ),
-  (
-    'a0000000-0000-4000-8000-000000000004'::uuid,
-    'Deepak Sharma',
-    'https://picsum.photos/seed/fixkart-deepak/200/200',
-    '+91 98765 40004',
-    'professional'
-  ),
-  (
-    'a0000000-0000-4000-8000-000000000005'::uuid,
-    'Vikram Singh',
-    'https://picsum.photos/seed/fixkart-vikram/200/200',
-    '+91 98765 40005',
-    'professional'
-  ),
-  (
-    'a0000000-0000-4000-8000-000000000006'::uuid,
-    'Mohan Das',
-    'https://picsum.photos/seed/fixkart-mohan/200/200',
-    '+91 98765 40006',
-    'professional'
-  )
+    ('pro.plumber@fixkart.dev', 'Rajesh Kumar', 'https://picsum.photos/seed/fixkart-rajesh/200/200', '+91 98765 40001'),
+    ('pro.electrician@fixkart.dev', 'Suresh Reddy', 'https://picsum.photos/seed/fixkart-suresh/200/200', '+91 98765 40002'),
+    ('pro.carpenter@fixkart.dev', 'Amit Verma', 'https://picsum.photos/seed/fixkart-amit/200/200', '+91 98765 40003'),
+    ('pro.ac@fixkart.dev', 'Deepak Sharma', 'https://picsum.photos/seed/fixkart-deepak/200/200', '+91 98765 40004'),
+    ('pro.painter@fixkart.dev', 'Vikram Singh', 'https://picsum.photos/seed/fixkart-vikram/200/200', '+91 98765 40005'),
+    ('pro.mechanic@fixkart.dev', 'Mohan Das', 'https://picsum.photos/seed/fixkart-mohan/200/200', '+91 98765 40006')
+) as v(email, full_name, avatar_url, phone)
+join auth.users u on u.email = v.email
 on conflict (id) do update
 set
   full_name = excluded.full_name,
@@ -495,69 +325,29 @@ set
 
 
 -- ---------------------------------------------------------------------------
--- 4d. Professional rows
+-- 4b. Professional rows
 -- ---------------------------------------------------------------------------
 
-insert into professionals
-  (
-    user_id,
-    experience_years,
-    rating,
-    bio
-  )
+insert into professionals (user_id, experience_years, rating, bio)
 select
-  v.id::uuid,
+  u.id,
   v.experience_years,
   v.rating,
   v.bio
 from (
   values
-    (
-      'a0000000-0000-4000-8000-000000000001',
-      12,
-      4.9,
-      'Certified plumber specialising in bathroom fittings, leak repairs, pipe installation and water heater setup across the city.'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000002',
-      8,
-      4.8,
-      'Licensed electrician for house wiring, switchboard upgrades, appliance circuits and safety inspections.'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000003',
-      15,
-      4.7,
-      'Carpenter for custom furniture, door fitting, modular kitchens and precise flat-pack assembly.'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000004',
-      10,
-      4.9,
-      'AC technician offering installation, gas refills, deep cleaning and annual maintenance contracts for all brands.'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000005',
-      9,
-      4.6,
-      'Painter for interior and exterior work, putty and primer coats, and premium texture finishes.'
-    ),
-    (
-      'a0000000-0000-4000-8000-000000000006',
-      14,
-      4.8,
-      'Two-wheeler and car mechanic for regular servicing, engine repairs, brake work and roadside assistance.'
-    )
-) as v(
-  id,
-  experience_years,
-  rating,
-  bio
-)
+    ('pro.plumber@fixkart.dev', 12, 4.9, 'Certified plumber specialising in bathroom fittings, leak repairs, pipe installation and water heater setup across the city.'),
+    ('pro.electrician@fixkart.dev', 8, 4.8, 'Licensed electrician for house wiring, switchboard upgrades, appliance circuits and safety inspections.'),
+    ('pro.carpenter@fixkart.dev', 15, 4.7, 'Carpenter for custom furniture, door fitting, modular kitchens and precise flat-pack assembly.'),
+    ('pro.ac@fixkart.dev', 10, 4.9, 'AC technician offering installation, gas refills, deep cleaning and annual maintenance contracts for all brands.'),
+    ('pro.painter@fixkart.dev', 9, 4.6, 'Painter for interior and exterior work, putty and primer coats, and premium texture finishes.'),
+    ('pro.mechanic@fixkart.dev', 14, 4.8, 'Two-wheeler and car mechanic for regular servicing, engine repairs, brake work and roadside assistance.')
+) as v(email, experience_years, rating, bio)
+join auth.users u on u.email = v.email
 where not exists (
   select 1
   from professionals p
-  where p.user_id = v.id::uuid
+  where p.user_id = u.id
 );
 
 

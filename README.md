@@ -86,10 +86,34 @@ options (both idempotent - safe to re-run):
 
 **Option A - Supabase SQL editor (no keys needed):** open your project's
 Dashboard → **SQL Editor**, paste the contents of `backend/scripts/seed.sql`,
-and run it. It seeds 8 categories, 14 products, 8 services and 6 professionals
-(creating their auth users so bookings link to real accounts).
+and run it. It seeds 8 categories, 14 products, 8 services. The professionals
+section only fills in profile details and professional rows for *existing*
+auth users (it matches them by email) — the accounts themselves must be
+created through the app, since inserting into `auth.users` directly is not
+version-proof. So, to also seed professionals:
 
-**Option B - seed script (service role key):**
+1. Register the six accounts against the running backend (or via your site's
+   sign-up form):
+
+   ```bash
+   for email in pro.plumber pro.electrician pro.carpenter pro.ac pro.painter pro.mechanic; do
+     curl -s -X POST http://localhost:5000/api/auth/register \
+       -H "Content-Type: application/json" \
+       -d "{\"name\":\"Seed Pro\",\"email\":\"$email@fixkart.dev\",\"password\":\"FixkartSeed123!\"}"
+   done
+   ```
+
+2. Run `backend/scripts/seed-professionals.sql` in the SQL editor to attach
+   avatars, phones, and the professional rows.
+
+> If an older seed left broken `pro.*@fixkart.dev` auth users behind (the
+> sign-up endpoint will fail with "Database error finding user"), run **PART 1**
+> of `backend/scripts/seed-professionals.sql` first to delete them, re-register,
+> then run **PART 2**.
+
+**Option B - seed script (service role key):** `npm run seed` in `backend/`
+creates everything including the professional accounts via the admin API, so
+no extra steps are needed.
 
 ```bash
 # backend/.env - Supabase dashboard -> Project Settings -> API
