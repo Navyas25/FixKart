@@ -1,0 +1,10 @@
+.git
+.freebuff
+node_modules
+backend/node_modules
+modern-frontend/node_modules
+modern-frontend/dist
+*.log
+.env
+.env.*
+!docker/.env.example

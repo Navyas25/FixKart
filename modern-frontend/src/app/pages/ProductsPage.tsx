@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router";
 import { Search } from "lucide-react";
 import { apiGet } from "../../lib/api";
+import { DEMO_PRODUCTS } from "../../lib/demoData";
 import { PageHeader, LoadingGrid, EmptyState } from "../components/PageHeader";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
+import { DemoNotice, DemoProductGrid } from "../components/DemoCards";
 
 const PRICE_FILTERS = [
   { label: "Any Price", value: "" },
@@ -94,6 +96,11 @@ export default function ProductsPage() {
     e.preventDefault();
     update({ q: searchInput.trim() });
   };
+
+  // Show sample data only when the catalog is empty AND no filters/search are
+  // active - filtered empty results stay honest.
+  const hasFilters = Boolean(q || category || maxPrice);
+  const showingDemo = !loading && !error && products.length === 0 && !hasFilters;
 
   const categories = [
     ...new Set([...FALLBACK_CATEGORIES, ...products.map((p) => p.category).filter(Boolean) as string[]]),
@@ -192,7 +199,11 @@ export default function ProductsPage() {
               </button>
             )}
             <div className="ml-auto text-sm font-bold text-[#64748B] dark:text-slate-400">
-              {loading ? "Loading…" : `${total} product${total === 1 ? "" : "s"} available`}
+              {loading
+                ? "Loading…"
+                : showingDemo
+                ? `Showing ${DEMO_PRODUCTS.length} sample products`
+                : `${total} product${total === 1 ? "" : "s"} available`}
             </div>
           </div>
 
@@ -205,10 +216,17 @@ export default function ProductsPage() {
           ) : loading ? (
             <LoadingGrid />
           ) : products.length === 0 ? (
-            <EmptyState
-              title="No products found"
-              message="We couldn't find any products matching your filters. Try clearing the filters or check back soon."
-            />
+            showingDemo ? (
+              <>
+                <DemoNotice kind="products" />
+                <DemoProductGrid />
+              </>
+            ) : (
+              <EmptyState
+                title="No products found"
+                message="We couldn't find any products matching your filters. Try clearing the filters or check back soon."
+              />
+            )
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

@@ -7,7 +7,7 @@ FixKart is a platform combining:
 ## Architecture
 
 ```
-Frontend (React app in modern-frontend/ + classic static site in pages/ + js/)
+Frontend (React app in modern-frontend/)
     │  fetch() → /api (proxied to http://localhost:5000)
     ▼
 Backend (Express + Supabase in backend/)
@@ -16,19 +16,12 @@ Backend (Express + Supabase in backend/)
 Supabase (Postgres + Auth + RLS)
 ```
 
-- **Modern frontend (`modern-frontend/`)** — React + Vite + Tailwind v4. This is
-  the main site: home, search (products + services + professionals), product /
+- **Frontend (`modern-frontend/`)** — React + Vite + Tailwind v4. The one and
+  only site: home, search (products + services + professionals), product /
   service / professional pages, cart, checkout, orders, bookings, booking form,
   profile with saved addresses, and login/register. It has a dark-mode toggle,
-  Google-Maps location detection (optional key), a working cart shared with the
-  classic site via `localStorage`, and real search backed by the API. The Vite
-  dev server proxies `/api` to the backend.
-- **Classic frontend (root `pages/` + `js/`)** — the original static HTML/JS
-  site, kept for the older components: the admin portal (`admin/index.html`),
-  the professional portal (`professional/index.html`), and informational pages.
-  The React navbar has a "Classic Site" link across to it. It shares the same
-  cart (`fixkart_cart`) and session (`fixkart_session`) storage keys, so a login
-  or cart on one site carries over to the other.
+  Google-Maps location detection (optional key), a localStorage cart, and real
+  search backed by the API. The Vite dev server proxies `/api` to the backend.
 - **Backend:** Express server in `backend/` exposes `/api/*` routes. Public
   endpoints (products, services, professionals) are read-only; user data
   (profile, addresses, orders, bookings) is scoped to the signed-in user's JWT
@@ -44,30 +37,17 @@ Supabase (Postgres + Auth + RLS)
    npm run dev            # http://localhost:5000/api
    ```
 
-2. **Modern frontend** (main site):
+2. **Frontend** (from `modern-frontend/`):
 
    ```bash
-   cd modern-frontend
    npm install
    npm run dev            # http://127.0.0.1:5173
    ```
 
    The Vite dev server proxies `/api` to `http://localhost:5000`, so no CORS
-   config is needed. Point `VITE_LEGACY_URL` at your classic static-server
-   origin if it differs from `http://127.0.0.1:5500`.
+   config is needed.
 
-3. **Classic frontend** (admin/professional portals + legacy pages) — serve the
-   project root with any static server:
-
-   ```bash
-   python3 -m http.server 5500 --bind 127.0.0.1
-   # open http://127.0.0.1:5500
-   ```
-
-   > Note: pages use ES modules, so the frontend must be served over HTTP
-   > (opening `index.html` directly from the file system will not work).
-
-4. Browse the flows (all in the React app unless noted):
+3. Browse the flows:
 
    - **Marketplace:** Home → Products → Product Details → Cart → Checkout →
      Order Confirmation → Orders
@@ -76,14 +56,60 @@ Supabase (Postgres + Auth + RLS)
    - **Account:** Register → Login → Profile (saved addresses) → Orders →
      Bookings
 
+## Running with Docker (one stack)
+
+A `docker-compose.yml` at the repo root runs the whole stack:
+
+| Service  | Image built from        | URL                          |
+| -------- | ----------------------- | ---------------------------- |
+| `backend`| `backend/Dockerfile`    | http://localhost:5000/api    |
+| `modern` | `docker/modern.Dockerfile`  | http://localhost:5173     |
+
+```bash
+cp docker/.env.example .env   # fill in SUPABASE_URL / SUPABASE_ANON_KEY
+# or export SUPABASE_URL and SUPABASE_ANON_KEY in your shell
+docker compose up --build
+```
+
+- **`modern`** serves the compiled React app behind nginx and proxies `/api` to
+  the `backend` container, so no CORS setup is needed.
+- The backend healthcheck (`GET /api/health`) gates the frontend via
+  `depends_on: condition: service_healthy`.
+- Stop everything with `docker compose down`. `docker compose config` checks
+  the file without starting anything.
+
+## Seeding sample data
+
+The storefront lists read from Supabase, and RLS blocks the app's keys from
+writing, so the tables need seeding from a privileged context. Two equivalent
+options (both idempotent - safe to re-run):
+
+**Option A - Supabase SQL editor (no keys needed):** open your project's
+Dashboard → **SQL Editor**, paste the contents of `backend/scripts/seed.sql`,
+and run it. It seeds 8 categories, 14 products, 8 services and 6 professionals
+(creating their auth users so bookings link to real accounts).
+
+**Option B - seed script (service role key):**
+
+```bash
+# backend/.env - Supabase dashboard -> Project Settings -> API
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-secret
+
+cd backend
+npm run seed
+```
+
+After seeding, refresh the site. The seeded professional logins
+(`pro.plumber@fixkart.dev`, …) use password `FixkartSeed123!` for local/dev
+testing.
+
 ## Google Maps location detection
 
-Both frontends detect the user's location. With no API key they fall back to
-browser geolocation; with a key they get Places autocomplete + reverse
+The React app detects the user's location. With no API key it falls back to
+browser geolocation; with a key it gets Places autocomplete + reverse
 geocoding:
 
-- Classic site: `GOOGLE_MAPS_API_KEY` in `js/config.js`
-- React app: `VITE_GOOGLE_MAPS_API_KEY` in `modern-frontend/.env` (see
+- `VITE_GOOGLE_MAPS_API_KEY` in `modern-frontend/.env` (see
   `modern-frontend/.env.example`)
 
 Enable the **Places API** and **Geocoding API** on the Google Cloud key, then

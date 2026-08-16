@@ -21,7 +21,7 @@ import addressesRoutes from "./routes/addresses.routes.js";
 const app = express();
 
 const PORT = process.env.PORT || 5000;
-const CLIENT_URL = process.env.CLIENT_URL || "http://127.0.0.1:5500";
+const CLIENT_URL = process.env.CLIENT_URL || "http://127.0.0.1:5173";
 
 app.use(helmet());
 

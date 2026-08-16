@@ -3,7 +3,9 @@ import { useSearchParams, Link } from "react-router";
 import { Search, Star, MapPin, CheckCircle, ArrowRight } from "lucide-react";
 import { apiGet } from "../../lib/api";
 import { PLACEHOLDER_IMG } from "../../lib/format";
+import { DEMO_PROFESSIONALS } from "../../lib/demoData";
 import { PageHeader, EmptyState } from "../components/PageHeader";
+import { DemoNotice, DemoProGrid } from "../components/DemoCards";
 
 interface ProRow {
   id: string;
@@ -57,6 +59,9 @@ export default function ProfessionalsPage() {
     setParams(merged);
   };
 
+  const hasFilters = Boolean(q);
+  const showingDemo = !loading && !error && pros.length === 0 && !hasFilters;
+
   return (
     <>
       <PageHeader
@@ -88,7 +93,11 @@ export default function ProfessionalsPage() {
       <section className="py-10 lg:py-14 bg-[#F8FAFC] dark:bg-[#0B1220] min-h-[50vh]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-right text-sm font-bold text-[#64748B] dark:text-slate-400 mb-8">
-            {loading ? "Loading…" : `${pros.length} professional${pros.length === 1 ? "" : "s"} available`}
+            {loading
+              ? "Loading…"
+              : showingDemo
+              ? `Showing ${DEMO_PROFESSIONALS.length} sample professionals`
+              : `${pros.length} professional${pros.length === 1 ? "" : "s"} available`}
           </div>
 
           {error ? (
@@ -109,10 +118,17 @@ export default function ProfessionalsPage() {
               ))}
             </div>
           ) : pros.length === 0 ? (
-            <EmptyState
-              title="No professionals found"
-              message="We couldn't find any professionals matching your search. Try a different term or check back soon."
-            />
+            showingDemo ? (
+              <>
+                <DemoNotice kind="professionals" />
+                <DemoProGrid />
+              </>
+            ) : (
+              <EmptyState
+                title="No professionals found"
+                message="We couldn't find any professionals matching your search. Try a different term or check back soon."
+              />
+            )
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {pros.map((pro) => {

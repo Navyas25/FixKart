@@ -23,7 +23,6 @@ import {
 import { ThemeProvider, useTheme } from "../lib/theme";
 import { CartProvider, useCart } from "../lib/cart";
 import { AuthProvider, useAuth } from "../lib/auth";
-import { legacy, LEGACY_URL } from "../lib/legacy";
 
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
@@ -103,12 +102,6 @@ function Navbar() {
             {navLink("/services", "Services")}
             {navLink("/professionals", "Professionals")}
             {navLink("/bookings", "My Bookings")}
-            <a
-              href={legacy.home}
-              className="text-white/40 hover:text-white/70 text-sm font-semibold transition-colors"
-            >
-              Classic Site
-            </a>
           </div>
 
           {/* Desktop search */}
@@ -217,12 +210,6 @@ function Navbar() {
             >
               {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
             </button>
-            <a
-              href={legacy.home}
-              className="flex-1 border border-white/20 text-white/70 text-sm font-semibold py-2.5 rounded-xl hover:border-white/40 transition-colors text-center"
-            >
-              Classic Site
-            </a>
           </div>
         </div>
       </div>
@@ -234,19 +221,14 @@ function Navbar() {
 
 function Footer() {
   const footerLinks: Record<string, string[]> = {
-    Company: ["About Us", "Careers", "Blog", "Press Kit"],
+    Company: ["Careers", "Blog", "Press Kit"],
     Services: ["Plumbing", "Electrical", "Carpentry", "AC Repair", "Painting"],
     Hardware: ["Tools", "Plumbing", "Electrical", "Safety", "Automotive"],
-    Support: ["Help Center", "Contact Us", "Track Order", "Return Policy"],
+    Support: ["Track Order", "Return Policy"],
   };
 
   const hrefFor = (link: string): string => {
     switch (link) {
-      case "About Us":
-        return legacy.about;
-      case "Contact Us":
-      case "Help Center":
-        return legacy.contact;
       case "Plumbing":
       case "Electrical":
       case "Carpentry":
@@ -320,18 +302,13 @@ function Footer() {
             © 2026 FixKart Technologies Pvt. Ltd. All rights reserved.
           </p>
           <div className="flex gap-5">
-            {[
-              { label: "Privacy Policy", href: `${LEGACY_URL}/pages/privacy.html` },
-              { label: "Terms of Service", href: `${LEGACY_URL}/pages/terms.html` },
-              { label: "Cookie Policy", href: legacy.home },
-            ].map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-white/25 text-xs font-medium hover:text-white/45 transition-colors"
+            {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((label) => (
+              <span
+                key={label}
+                className="text-white/25 text-xs font-medium cursor-default"
               >
-                {item.label}
-              </a>
+                {label}
+              </span>
             ))}
           </div>
         </div>

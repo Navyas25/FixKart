@@ -3,7 +3,9 @@ import { useSearchParams, Link } from "react-router";
 import { Search, Star, ArrowRight } from "lucide-react";
 import { apiGet } from "../../lib/api";
 import { formatINR } from "../../lib/format";
+import { DEMO_SERVICES } from "../../lib/demoData";
 import { PageHeader, EmptyState } from "../components/PageHeader";
+import { DemoNotice, DemoServiceGrid } from "../components/DemoCards";
 
 import {
   Wrench, Droplets, Zap, Hammer, Car, Paintbrush, Wind, Settings,
@@ -90,6 +92,9 @@ export default function ServicesPage() {
     update({ q: searchInput.trim() });
   };
 
+  const hasFilters = Boolean(q || category);
+  const showingDemo = !loading && !error && services.length === 0 && !hasFilters;
+
   const selectClass =
     "bg-white dark:bg-[#111827] border border-gray-200 dark:border-white/15 text-[#0F172A] dark:text-white text-sm font-semibold px-3.5 py-2.5 rounded-xl outline-none focus:border-[#2563EB]";
 
@@ -150,7 +155,11 @@ export default function ServicesPage() {
               </button>
             )}
             <div className="ml-auto text-sm font-bold text-[#64748B] dark:text-slate-400">
-              {loading ? "Loading…" : `${services.length} service${services.length === 1 ? "" : "s"} available`}
+              {loading
+                ? "Loading…"
+                : showingDemo
+                ? `Showing ${DEMO_SERVICES.length} sample services`
+                : `${services.length} service${services.length === 1 ? "" : "s"} available`}
             </div>
           </div>
 
@@ -168,10 +177,17 @@ export default function ServicesPage() {
               ))}
             </div>
           ) : services.length === 0 ? (
-            <EmptyState
-              title="No services found"
-              message="We couldn't find any services matching your search. Try a different term or browse all categories."
-            />
+            showingDemo ? (
+              <>
+                <DemoNotice kind="services" />
+                <DemoServiceGrid />
+              </>
+            ) : (
+              <EmptyState
+                title="No services found"
+                message="We couldn't find any services matching your search. Try a different term or browse all categories."
+              />
+            )
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {services.map((svc) => {
