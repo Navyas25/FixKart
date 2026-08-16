@@ -1,0 +1,55 @@
+/* Dark-mode overrides for the FixKart React app.
+ *
+ * The landing sections and pages use hardcoded light hex colors (bg-white,
+ * bg-[#F8FAFC], text-[#0F172A], …). Rather than rewriting every class with
+ * dark: variants, this stylesheet remaps those utility classes when the `.dark`
+ * class is present on <html>. The dark sections (hero, how-it-works, footer)
+ * are already dark and need no override.
+ */
+
+.dark {
+  color-scheme: dark;
+}
+
+/* Section backgrounds */
+.dark .bg-\[\#F8FAFC\] { background-color: #0B1220; }
+.dark .bg-\[\#F1F5F9\] { background-color: rgba(255, 255, 255, 0.05); }
+.dark .bg-\[\#EFF6FF\] { background-color: rgba(37, 99, 235, 0.16); }
+.dark .bg-\[\#FFFBEB\] { background-color: rgba(245, 158, 11, 0.14); }
+.dark .bg-\[\#F0FDF4\] { background-color: rgba(22, 163, 74, 0.14); }
+.dark .bg-\[\#FDF4FF\] { background-color: rgba(236, 72, 153, 0.14); }
+.dark .bg-\[\#F5F3FF\] { background-color: rgba(124, 58, 237, 0.16); }
+
+/* Cards & surfaces */
+.dark .bg-white { background-color: #111827; }
+.dark .bg-gray-50 { background-color: rgba(255, 255, 255, 0.04); }
+.dark .bg-gray-100 { background-color: rgba(255, 255, 255, 0.06); }
+.dark .bg-slate-50 { background-color: rgba(255, 255, 255, 0.05); }
+.dark .bg-slate-100 { background-color: rgba(255, 255, 255, 0.07); }
+
+/* Text */
+.dark .text-\[\#0F172A\] { color: #F1F5F9; }
+.dark .text-\[\#111827\] { color: #F8FAFC; }
+.dark .text-\[\#64748B\] { color: #94A3B8; }
+.dark .text-gray-700 { color: #E2E8F0; }
+.dark .text-gray-900 { color: #F8FAFC; }
+.dark .text-gray-400 { color: #94A3B8; }
+.dark .placeholder-gray-400::placeholder { color: #64748B; }
+
+/* Borders */
+.dark .border-gray-100 { border-color: rgba(255, 255, 255, 0.08); }
+.dark .border-gray-200 { border-color: rgba(255, 255, 255, 0.14); }
+.dark .border-slate-100 { border-color: rgba(255, 255, 255, 0.08); }
+.dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.14); }
+
+/* The white search bar on the dark hero stays white in light mode only. */
+.dark .hero-search-bar { background-color: #1E293B; }
+
+/* Hover states that relied on light shadows/backgrounds */
+.dark .hover\:bg-gray-50:hover { background-color: rgba(255, 255, 255, 0.06); }
+.dark .hover\:bg-gray-100:hover { background-color: rgba(255, 255, 255, 0.08); }
+.dark .hover\:border-gray-300:hover { border-color: rgba(255, 255, 255, 0.25); }
+.dark .hover\:border-gray-200:hover { border-color: rgba(255, 255, 255, 0.18); }
+
+/* Shadow on cards is fine in both modes; soften the light glow. */
+.dark .shadow-sm { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }

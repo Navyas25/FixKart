@@ -17,8 +17,12 @@ export const validate = (schema) => (req, res, next) => {
 
 export const createBookingSchema = z.object({
   professional_id: z.string().uuid('Invalid professional id'),
-  service_id: z.string().uuid('Invalid service id'),
-  scheduled_date: z.string().datetime({ message: 'scheduled_date must be a valid ISO date' }),
-  address: z.string().min(5, 'Address is required'),
+  // A booking can be placed straight from a professional's profile without
+  // choosing a specific service, so service_id is optional.
+  service_id: z.string().uuid('Invalid service id').optional(),
+  scheduled_at: z
+    .string()
+    .datetime({ message: 'scheduled_at must be a valid ISO date-time' }),
+  address: z.string().min(5, 'Address is required').optional(),
   notes: z.string().max(1000).optional(),
 });

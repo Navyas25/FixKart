@@ -111,6 +111,7 @@
                     <!-- Professional Image -->
                     <div class="profile-image">
                         <img
+                            id="professional-detail-image"
                             src="../assets/images/placeholder-professional.png"
                             alt="Professional profile photo"
                         >
@@ -120,19 +121,19 @@
                     <!-- Professional Information -->
                     <div class="profile-content">
 
-                        <span class="eyebrow">
+                        <span class="eyebrow" id="professional-detail-eyebrow">
                             Verified Professional
                         </span>
 
-                        <h2>
+                        <h2 id="professional-detail-name">
                             Professional Name
                         </h2>
 
-                        <p class="profile-role">
+                        <p class="profile-role" id="professional-detail-role">
                             Plumber
                         </p>
 
-                        <p>
+                        <p id="professional-detail-bio">
                             Experienced FixKart professional providing
                             reliable and affordable home services.
                             Available for plumbing, repair and maintenance
@@ -143,23 +144,24 @@
 
                             <div>
                                 <strong>Experience</strong>
-                                <span>5+ Years</span>
+                                <span id="professional-detail-experience">5+ Years</span>
                             </div>
 
                             <div>
                                 <strong>Rating</strong>
-                                <span>4.8 / 5</span>
+                                <span id="professional-detail-rating">4.8 / 5</span>
                             </div>
 
                             <div>
                                 <strong>Jobs Completed</strong>
-                                <span>150+</span>
+                                <span id="professional-detail-jobs">150+</span>
                             </div>
 
                         </div>
 
                         <div class="profile-actions">
                             <a
+                                id="professional-detail-book"
                                 href="booking.html"
                                 class="btn btn-primary"
                             >
@@ -416,7 +418,8 @@
 
 
     <!-- JavaScript -->
-    <script src="../js/professional-profile.js"></script>
+    <script type="module" src="../js/professional-profile.js"></script>
 
+<script type="module" src="../js/main.js"></script>
 </body>
 </html>

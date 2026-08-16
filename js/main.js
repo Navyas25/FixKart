@@ -1,15 +1,41 @@
-import {
-    animate,
-    onScroll,
-    stagger
-} from "https://cdn.jsdelivr.net/npm/animejs@4.0.2/+esm";
-
+import { updateCartBadge } from "./cart.js";
+import { getSession } from "./auth.js";
+import { initLocationControls } from "./location.js";
 
 /* =========================================
    FIXKART MAIN JAVASCRIPT
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+    /* =========================================
+       ANIMATION ENGINE (optional, from CDN)
+    ========================================= */
+
+    let animate = null;
+    let onScroll = null;
+    let stagger = null;
+
+    try {
+        const anime = await import(
+            "https://cdn.jsdelivr.net/npm/animejs@4.0.2/+esm"
+        );
+        animate = anime.animate;
+        onScroll = anime.onScroll;
+        stagger = anime.stagger;
+    } catch (error) {
+        console.warn(
+            "[FixKart] AnimeJS could not be loaded from CDN - animations disabled.",
+            error
+        );
+    }
+
+    const animateIf = (targets, params) => {
+        if (animate && targets && targets.length !== 0) {
+            animate(targets, params);
+        }
+    };
+
 
     /* =========================================
        MOBILE NAVIGATION
@@ -38,6 +64,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================
+       CART BADGE
+    ========================================= */
+
+    updateCartBadge();
+
+
+    /* =========================================
+       AUTH-AWARE HEADER
+    ========================================= */
+
+    const session = getSession();
+    const user = session?.user;
+    const profileLink = document.querySelector(
+        'a[aria-label="Profile"], a[title="Profile"]'
+    );
+
+    if (user && profileLink) {
+        const initial = user.email?.charAt(0).toUpperCase() || "U";
+        profileLink.textContent = initial;
+        profileLink.title = user.email || "Profile";
+    }
+
+
+    /* =========================================
        HERO ANIMATION
     ========================================= */
 
@@ -46,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (heroContent) {
 
-        animate(heroContent, {
+        animateIf(heroContent, {
             opacity: [0, 1],
             x: [-60, 0],
             duration: 900,
@@ -65,10 +115,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (statCards.length) {
 
-        animate(statCards, {
+        animateIf(statCards, {
             opacity: [0, 1],
             y: [40, 0],
-            delay: stagger(150),
+            delay: stagger ? stagger(150) : 0,
             duration: 800,
             ease: "out(4)"
         });
@@ -85,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (circularBadge) {
 
-        animate(circularBadge, {
+        animateIf(circularBadge, {
             rotate: "1turn",
             duration: 12000,
             loop: true,
@@ -111,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     scrollElements.forEach((element) => {
 
-        animate(element, {
+        animateIf(element, {
 
             opacity: [0, 1],
 
@@ -121,11 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ease: "out(4)",
 
-            autoplay: onScroll({
+            autoplay: onScroll ? onScroll({
                 target: element,
                 enter: "bottom top",
                 leave: "top bottom"
-            })
+            }) : true
 
         });
 
@@ -143,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.addEventListener("mouseenter", () => {
 
-            animate(card, {
+            animateIf(card, {
                 y: -8,
                 duration: 300,
                 ease: "out(3)"
@@ -153,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.addEventListener("mouseleave", () => {
 
-            animate(card, {
+            animateIf(card, {
                 y: 0,
                 duration: 300,
                 ease: "out(3)"
@@ -175,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.addEventListener("mouseenter", () => {
 
-            animate(card, {
+            animateIf(card, {
                 y: -8,
                 scale: 1.02,
                 duration: 300,
@@ -186,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.addEventListener("mouseleave", () => {
 
-            animate(card, {
+            animateIf(card, {
                 y: 0,
                 scale: 1,
                 duration: 300,
@@ -209,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.addEventListener("mouseenter", () => {
 
-            animate(card, {
+            animateIf(card, {
                 y: -8,
                 duration: 300,
                 ease: "out(3)"
@@ -219,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         card.addEventListener("mouseleave", () => {
 
-            animate(card, {
+            animateIf(card, {
                 y: 0,
                 duration: 300,
                 ease: "out(3)"
@@ -239,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (rotatingText) {
 
-        animate(rotatingText, {
+        animateIf(rotatingText, {
 
             opacity: [0, 1],
 
@@ -263,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     trustItems.forEach((item, index) => {
 
-        animate(item, {
+        animateIf(item, {
 
             opacity: [0, 1],
 
@@ -275,11 +325,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ease: "out(4)",
 
-            autoplay: onScroll({
+            autoplay: onScroll ? onScroll({
                 target: item,
                 enter: "bottom top",
                 leave: "top bottom"
-            })
+            }) : true
 
         });
 
@@ -295,7 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     steps.forEach((step, index) => {
 
-        animate(step, {
+        animateIf(step, {
 
             opacity: [0, 1],
 
@@ -307,11 +357,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ease: "out(4)",
 
-            autoplay: onScroll({
+            autoplay: onScroll ? onScroll({
                 target: step,
                 enter: "bottom top",
                 leave: "top bottom"
-            })
+            }) : true
 
         });
 
@@ -327,7 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (ctaBand) {
 
-        animate(ctaBand, {
+        animateIf(ctaBand, {
 
             opacity: [0, 1],
 
@@ -337,11 +387,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ease: "out(4)",
 
-            autoplay: onScroll({
+            autoplay: onScroll ? onScroll({
                 target: ctaBand,
                 enter: "bottom top",
                 leave: "top bottom"
-            })
+            }) : true
 
         });
 
@@ -349,57 +399,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================
-       LOCATION DETECTION
+       LOCATION DETECTION (Google Maps Platform)
+    =========================================
+       Uses the Google Maps Geocoding + Places APIs when a key is configured
+       in js/config.js, otherwise falls back to browser geolocation (lat/lng).
     ========================================= */
 
-    const detectLocation =
-        document.getElementById("detect-location");
-
-    const locationInput =
-        document.getElementById("location-input");
-
-    if (detectLocation && locationInput) {
-
-        detectLocation.addEventListener("click", () => {
-
-            if (!navigator.geolocation) {
-
-                locationInput.value =
-                    "Location not supported";
-
-                return;
-
-            }
-
-            locationInput.value =
-                "Detecting location...";
-
-            navigator.geolocation.getCurrentPosition(
-
-                (position) => {
-
-                    const latitude =
-                        position.coords.latitude;
-
-                    const longitude =
-                        position.coords.longitude;
-
-                    locationInput.value =
-                        `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-
-                },
-
-                () => {
-
-                    locationInput.value =
-                        "Unable to detect location";
-
-                }
-
-            );
-
-        });
-
-    }
+    initLocationControls();
 
 });

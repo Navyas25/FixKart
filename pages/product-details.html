@@ -183,6 +183,7 @@
                         >
 
                             <img
+                                id="product-detail-image"
                                 src="../assets/images/placeholder-product.png"
                                 alt="Product Name"
                                 style="
@@ -200,11 +201,11 @@
                     <!-- Product Information -->
                     <div class="card">
 
-                        <span class="eyebrow">
+                        <span class="eyebrow" id="product-detail-category">
                             Hardware
                         </span>
 
-                        <h1>
+                        <h1 id="product-detail-name">
                             Product Name
                         </h1>
 
@@ -219,6 +220,7 @@
                         >
 
                             <span
+                                id="product-detail-price"
                                 style="
                                     font-size: 1.7rem;
                                     font-weight: 700;
@@ -228,6 +230,7 @@
                             </span>
 
                             <span
+                                id="product-detail-stock"
                                 style="
                                     padding: 0.35rem 0.7rem;
                                     border-radius: 999px;
@@ -242,7 +245,7 @@
                         </div>
 
 
-                        <p>
+                        <p id="product-detail-description">
                             High-quality hardware product designed for
                             reliable everyday use. Suitable for home
                             repairs, maintenance, and professional work.
@@ -304,7 +307,7 @@
 
                                     <input
                                         type="number"
-                                        id="quantity"
+                                        id="product-detail-quantity"
                                         name="quantity"
                                         min="1"
                                         max="99"
@@ -319,6 +322,7 @@
 
                                 <button
                                     type="submit"
+                                    id="product-detail-add"
                                     class="btn btn-primary btn-lg"
                                 >
                                     Add to Cart
@@ -758,8 +762,8 @@
 
 
     <!-- JavaScript -->
-    <script src="../js/product-details.js"></script>
-    <script src="../js/main.js"></script>
+    <script type="module" src="../js/product-details.js"></script>
+    <script type="module" src="../js/main.js"></script>
 
 </body>
 </html>

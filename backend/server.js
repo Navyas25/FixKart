@@ -16,6 +16,7 @@ import professionalsRoutes from "./routes/professionals.routes.js";
 import ordersRoutes from "./routes/orders.routes.js";
 import bookingsRoutes from "./routes/bookings.routes.js";
 import usersRoutes from "./routes/users.routes.js";
+import addressesRoutes from "./routes/addresses.routes.js";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/api/professionals", professionalsRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/bookings", bookingsRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/addresses", addressesRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

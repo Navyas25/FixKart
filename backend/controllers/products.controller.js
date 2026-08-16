@@ -1,12 +1,111 @@
 import { supabase } from '../config/supabase.js';
-import { successResponse } from '../utils/response.js';
+import { successResponse, errorResponse } from '../utils/response.js';
+import { isUuid } from '../utils/ids.js';
+
+// Fields returned for every product. Category is embedded via the FK.
+const PRODUCT_SELECT = `
+  id, name, description, price, stock, unit, brand, image_url,
+  category:categories(id, name),
+  created_at
+`;
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // GET /api/products
 export const getAllProducts = async (req, res, next) => {
   try {
-    // TODO: query the `products` table in Supabase, with support for
-    // pagination (page/limit) and filtering via req.query.
-    return successResponse(res, { products: [] });
+    const {
+      category,
+      q,
+      min_price,
+      max_price,
+      sort = 'featured',
+      page = 1,
+      limit = 100,
+      ids,
+    } = req.query;
+
+    const pageNum = Math.max(parseInt(page, 10) || 1, 1);
+    const limitNum = Math.min(Math.max(parseInt(limit, 10) || 100, 1), 100);
+    const from = (pageNum - 1) * limitNum;
+    const to = from + limitNum - 1;
+
+    let query = supabase
+      .from('products')
+      .select(PRODUCT_SELECT, { count: 'exact' });
+
+    // Fetch specific products by id, e.g. for the cart page (?ids=a,b,c).
+    if (ids) {
+      const idList = String(ids)
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (idList.length) {
+        query = query.in('id', idList);
+      }
+    }
+
+    // Filter by category - accepts either a category id or a display name
+    // (case-insensitive, e.g. "tools" or "Plumbing Supplies").
+    if (category) {
+      if (UUID_RE.test(category)) {
+        query = query.eq('category_id', category);
+      } else {
+        const { data: categories } = await supabase
+          .from('categories')
+          .select('id')
+          .ilike('name', category);
+
+        const categoryIds = (categories || []).map((c) => c.id);
+
+        if (!categoryIds.length) {
+          return successResponse(res, {
+            products: [],
+            total: 0,
+            page: pageNum,
+            limit: limitNum,
+          });
+        }
+
+        query = query.in('category_id', categoryIds);
+      }
+    }
+
+    if (min_price !== undefined && min_price !== '') {
+      query = query.gte('price', Number(min_price));
+    }
+
+    if (max_price !== undefined && max_price !== '') {
+      query = query.lte('price', Number(max_price));
+    }
+
+    if (q) {
+      query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
+    }
+
+    if (sort === 'price-low') {
+      query = query.order('price', { ascending: true });
+    } else if (sort === 'price-high') {
+      query = query.order('price', { ascending: false });
+    } else if (sort === 'name') {
+      query = query.order('name', { ascending: true });
+    } else {
+      // featured / default - newest first
+      query = query.order('created_at', { ascending: false });
+    }
+
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
+
+    if (error) throw error;
+
+    return successResponse(res, {
+      products: data || [],
+      total: count ?? 0,
+      page: pageNum,
+      limit: limitNum,
+    });
   } catch (err) {
     return next(err);
   }
@@ -16,9 +115,24 @@ export const getAllProducts = async (req, res, next) => {
 export const getProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    // TODO: query the `products` table in Supabase for a single row by id
-    // and return 404 via errorResponse if it does not exist.
-    return successResponse(res, { product: null });
+
+    if (!isUuid(id)) {
+      return errorResponse(res, 'Product not found', 404);
+    }
+
+    const { data, error } = await supabase
+      .from('products')
+      .select(PRODUCT_SELECT)
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      return errorResponse(res, 'Product not found', 404);
+    }
+
+    return successResponse(res, { product: data });
   } catch (err) {
     return next(err);
   }

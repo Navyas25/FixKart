@@ -26,7 +26,7 @@ export const register = async (req, res, next) => {
         const {
             email,
             password,
-            full_name,
+            name,
         } = result.data;
 
         const { data, error } = await supabase.auth.signUp({
@@ -34,7 +34,7 @@ export const register = async (req, res, next) => {
             password,
             options: {
                 data: {
-                    full_name,
+                    full_name: name,
                 },
             },
         });
@@ -44,6 +44,35 @@ export const register = async (req, res, next) => {
                 success: false,
                 message: error.message,
             });
+        }
+
+        // Best-effort: create a matching row in `profiles` so the profile,
+        // orders and bookings flows have somewhere to store user data.
+        // Only possible when signUp returns a session (email confirmation off).
+        if (data?.user && data?.session) {
+            try {
+                const userSupabase = createClient(
+                    process.env.SUPABASE_URL,
+                    process.env.SUPABASE_ANON_KEY,
+                    {
+                        global: {
+                            headers: {
+                                Authorization: `Bearer ${data.session.access_token}`,
+                            },
+                        },
+                    }
+                );
+
+                await userSupabase.from("profiles").insert({
+                    id: data.user.id,
+                    full_name: name,
+                    role: "customer",
+                });
+            } catch (profileError) {
+                // Non-fatal: a DB trigger or post-email-confirmation hook
+                // may create the profile row instead.
+                console.error("[auth] Could not create profile:", profileError);
+            }
         }
 
         return res.status(201).json({
