@@ -1,8 +1,10 @@
 // Google Maps Platform helpers for the React landing page.
 //
 // Set VITE_GOOGLE_MAPS_API_KEY in modern-frontend/.env to enable Places
-// autocomplete + reverse geocoding. Without a key, location detection falls
-// back to the browser's raw latitude/longitude.
+// autocomplete + Google reverse geocoding. Google reverse geocoding needs a
+// billing-enabled key; when it is missing or denied, reverseGeocode falls
+// back to OpenStreetMap's free Nominatim service so the detect button can
+// still show a place name (never just raw coordinates).
 
 const MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
 
@@ -46,22 +48,65 @@ export async function reverseGeocode(
   latitude: number,
   longitude: number
 ): Promise<string | null> {
-  if (!MAPS_API_KEY) return null;
+  // 1) Google Geocoding API (needs a billing-enabled key)
+  if (MAPS_API_KEY) {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json` +
+          `?latlng=${latitude},${longitude}` +
+          `&key=${encodeURIComponent(MAPS_API_KEY)}`
+      );
 
+      if (response.ok) {
+        const data = await response.json();
+        if (data.status === "OK" && data.results?.length) {
+          return data.results[0].formatted_address;
+        }
+      }
+    } catch {
+      // fall through to the free geocoder
+    }
+  }
+
+  // 2) BigDataCloud - free, no key, no rate limit, CORS-enabled. Returns a
+  //    clean "Bengaluru, India" style place name.
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json` +
-        `?latlng=${latitude},${longitude}` +
-        `&key=${encodeURIComponent(MAPS_API_KEY)}`
+      `https://api.bigdatacloud.net/data/reverse-geocode-client` +
+        `?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      const place =
+        data?.city || data?.locality || data?.principalSubdivision || "";
+      const country = data?.countryName || "";
+      if (place || country) {
+        return [place, country].filter(Boolean).join(", ");
+      }
+    }
+  } catch {
+    // fall through to the next geocoder
+  }
+
+  // 3) OpenStreetMap Nominatim - last resort, free, no key, but rate-limited
+  //    to ~1 request/second so it can return 429 under quick retries.
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse` +
+        `?format=jsonv2&lat=${latitude}&lon=${longitude}`
     );
 
     if (!response.ok) return null;
 
     const data = await response.json();
+    if (!data?.display_name) return null;
 
-    if (data.status !== "OK" || !data.results?.length) return null;
-
-    return data.results[0].formatted_address;
+    const parts = String(data.display_name)
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    return parts.slice(0, 3).join(", ");
   } catch {
     return null;
   }
