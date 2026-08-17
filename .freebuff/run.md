@@ -6,8 +6,8 @@ so there are no env files to copy. Steps a fresh checkout needs:
 
 1. Backend (API the frontend proxies to):
    - `cp backend/.env.example backend/.env` and fill in `SUPABASE_URL` /
-     `SUPABASE_ANON_KEY` (the checked-in `.env.example` already contains the
-     project values).
+     `SUPABASE_ANON_KEY` from the Supabase dashboard (Project Settings -> API);
+     the checked-in `.env.example` only has placeholders.
    - `cd backend && npm install`
 2. Frontend:
    - `cd modern-frontend && npm install`
@@ -16,6 +16,10 @@ so there are no env files to copy. Steps a fresh checkout needs:
 
 ## Run the server
 - Backend: `cd backend && npm run dev` → http://localhost:5000/api (health: `/api/health`)
+  - ⚠️ If the API logs `listening on http://localhost:0`, an env var `PORT=0` is
+    leaking into the shell (e.g. from the agent environment). Restart with an
+    explicit port: `set PORT=5000 && npm run dev` (Windows) or
+    `PORT=5000 npm run dev` (bash).
 - Frontend (the preview): `cd modern-frontend && npm run dev` →
   http://127.0.0.1:5173 (Vite dev server, `strictPort: true`; proxies `/api`
   to `localhost:5000`)

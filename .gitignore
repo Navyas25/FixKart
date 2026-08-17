@@ -1,0 +1,9 @@
+# Environment files - never commit real keys.
+# docker-compose.yml reads a root .env (see docker/.env.example).
+.env
+.env.*
+!.env.example
+
+# Freebuff preview/backend logs
+.freebuff/*.log
+.freebuff/*.err
