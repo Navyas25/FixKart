@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import LoadingScreen from "./LoadingScreen";
 
 // Dark hero band used at the top of every sub-page, matching the home hero.
 export function PageHeader({
@@ -46,15 +47,8 @@ export function PageHeader({
 
 export function LoadingGrid() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="bg-white dark:bg-[#111827] rounded-2xl border border-gray-100 p-4 animate-pulse">
-          <div className="aspect-[4/3] rounded-xl bg-slate-100 mb-4" />
-          <div className="h-3 bg-slate-100 rounded-full w-1/3 mb-2" />
-          <div className="h-4 bg-slate-100 rounded-full w-3/4 mb-4" />
-          <div className="h-5 bg-slate-100 rounded-full w-1/3" />
-        </div>
-      ))}
+    <div className="bg-white dark:bg-[#111827] rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm">
+      <LoadingScreen compact />
     </div>
   );
 }

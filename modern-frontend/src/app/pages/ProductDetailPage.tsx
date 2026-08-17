@@ -6,6 +6,7 @@ import { formatINR, PLACEHOLDER_IMG } from "../../lib/format";
 import { useCart } from "../../lib/cart";
 import { PageHeader, EmptyState } from "../components/PageHeader";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
+import { ReviewsSection } from "../components/ReviewsSection";
 
 const toProduct = (p: any): ProductCardData => ({
   id: p.id,
@@ -217,6 +218,9 @@ export default function ProductDetailPage() {
               </div>
             </div>
           </div>
+
+          {/* Reviews */}
+          {id && <ReviewsSection itemType="product" itemId={id} />}
 
           {/* Related */}
           {related.length > 0 && (

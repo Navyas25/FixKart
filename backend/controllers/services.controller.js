@@ -27,7 +27,9 @@ export const getAllServices = async (req, res, next) => {
       .select(SERVICE_SELECT, { count: 'exact' });
 
     if (category) {
-      query = query.eq('category', category);
+      // Case-insensitive so slugs ('plumbing') and display names ('Plumbing')
+      // both match - the seeded data stores display names.
+      query = query.ilike('category', category);
     }
 
     if (q) {

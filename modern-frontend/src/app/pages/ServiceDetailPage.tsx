@@ -6,6 +6,7 @@ import {
 import { apiGet } from "../../lib/api";
 import { formatINR } from "../../lib/format";
 import { PageHeader } from "../components/PageHeader";
+import { ReviewsSection } from "../components/ReviewsSection";
 
 interface ServiceRow {
   id: string;
@@ -18,6 +19,7 @@ interface ServiceRow {
 export default function ServiceDetailPage() {
   const { id } = useParams();
   const [service, setService] = useState<ServiceRow | null>(null);
+  const [related, setRelated] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -50,6 +52,37 @@ export default function ServiceDetailPage() {
       cancelled = true;
     };
   }, [id]);
+
+  // Related services from the same category (recommendations below the page).
+  useEffect(() => {
+    if (!service?.category) return;
+    let cancelled = false;
+    apiGet<{ services: any[] }>(
+      `/services?category=${encodeURIComponent(service.category)}&limit=6`
+    )
+      .then((data) => {
+        if (!cancelled) {
+          setRelated(
+            (data.services || [])
+              .filter((s) => s.id !== id)
+              .slice(0, 3)
+              .map((s) => ({
+                id: s.id,
+                name: s.name || "Service",
+                category: s.category || "",
+                description: s.description || "",
+                base_price: Number(s.base_price) || 0,
+              }))
+          );
+        }
+      })
+      .catch(() => {
+        // Related services are optional.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [service?.category, id]);
 
   if (loading) {
     return (
@@ -130,6 +163,48 @@ export default function ServiceDetailPage() {
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+
+          {/* Reviews */}
+          {id && <ReviewsSection itemType="service" itemId={id} />}
+
+          {/* Related services */}
+          {related.length > 0 && (
+            <div className="mt-16">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-extrabold text-[#0F172A] dark:text-white">You might also like</h2>
+                <Link
+                  to={`/services?category=${encodeURIComponent(service.category)}`}
+                  className="flex items-center gap-1 text-sm font-bold text-[#2563EB] hover:text-blue-600 transition-colors"
+                >
+                  More in {service.category} <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {related.map((svc) => (
+                  <div key={svc.id} className="bg-white dark:bg-[#111827] rounded-2xl p-6 border border-gray-100 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                    <span className="inline-block bg-[#EFF6FF] dark:bg-[#2563EB]/20 text-[#2563EB] text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full mb-3">
+                      {svc.category}
+                    </span>
+                    <h3 className="font-bold text-[#0F172A] dark:text-slate-100 text-sm mb-1">{svc.name}</h3>
+                    <p className="text-[#64748B] dark:text-slate-400 text-xs leading-relaxed mb-4 line-clamp-2">
+                      {svc.description}
+                    </p>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-extrabold text-[#0F172A] dark:text-white">
+                        From {formatINR(svc.base_price)}
+                      </span>
+                      <Link
+                        to={`/booking?service_id=${svc.id}`}
+                        className="bg-[#2563EB] text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-blue-500 active:scale-95 transition-all"
+                      >
+                        Book
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="text-center mt-10">
             <Link to="/services" className="text-sm font-bold text-[#2563EB] hover:text-blue-600 transition-colors">

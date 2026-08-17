@@ -9,7 +9,23 @@ const PRODUCT_SELECT = `
   created_at
 `;
 
+// Extra fields added when the engagement migration (002) has been applied.
+const ENGAGEMENT_FIELDS = `
+  featured, discount_price
+`;
+
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// Cached capability check: the migration adds featured/discount_price. Until
+// it is applied, keep serving the catalog with the base fields so the site
+// never breaks - the featured/offers filters are simply ignored.
+let engagementCapable = null;
+async function hasEngagementFields() {
+  if (engagementCapable !== null) return engagementCapable;
+  const { error } = await supabase.from('products').select('featured').limit(1);
+  engagementCapable = !error;
+  return engagementCapable;
+}
 
 // GET /api/products
 export const getAllProducts = async (req, res, next) => {
@@ -20,6 +36,8 @@ export const getAllProducts = async (req, res, next) => {
       min_price,
       max_price,
       sort = 'featured',
+      featured,
+      offers,
       page = 1,
       limit = 100,
       ids,
@@ -30,9 +48,25 @@ export const getAllProducts = async (req, res, next) => {
     const from = (pageNum - 1) * limitNum;
     const to = from + limitNum - 1;
 
+    const capable = await hasEngagementFields();
+
     let query = supabase
       .from('products')
-      .select(PRODUCT_SELECT, { count: 'exact' });
+      .select(
+        capable ? `${PRODUCT_SELECT}, ${ENGAGEMENT_FIELDS}` : PRODUCT_SELECT,
+        { count: 'exact' }
+      );
+
+    // Featured / offers filters only apply once the engagement migration has
+    // added the columns.
+    if (capable) {
+      if (featured === 'true') {
+        query = query.eq('featured', true);
+      }
+      if (offers === 'true') {
+        query = query.not('discount_price', 'is', null);
+      }
+    }
 
     // Fetch specific products by id, e.g. for the cart page (?ids=a,b,c).
     if (ids) {
@@ -89,6 +123,11 @@ export const getAllProducts = async (req, res, next) => {
       query = query.order('price', { ascending: false });
     } else if (sort === 'name') {
       query = query.order('name', { ascending: true });
+    } else if (capable && featured === 'true') {
+      // Featured first, then newest.
+      query = query
+        .order('featured', { ascending: false })
+        .order('created_at', { ascending: false });
     } else {
       // featured / default - newest first
       query = query.order('created_at', { ascending: false });

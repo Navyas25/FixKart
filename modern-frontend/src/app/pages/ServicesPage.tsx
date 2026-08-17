@@ -8,28 +8,35 @@ import { PageHeader, EmptyState } from "../components/PageHeader";
 import { DemoNotice, DemoServiceGrid } from "../components/DemoCards";
 
 import {
-  Wrench, Droplets, Zap, Hammer, Car, Paintbrush, Wind, Settings,
+  Wrench, Droplets, Zap, Hammer, Car, Paintbrush, Wind, Settings, Sparkles,
 } from "lucide-react";
 
+// Icons keyed by normalized category name (lowercased) - covers both the
+// display names stored in the DB and the legacy slugs.
 const serviceStyle: Record<string, { Icon: typeof Wrench; color: string }> = {
   plumbing: { Icon: Droplets, color: "#2563EB" },
   electrical: { Icon: Zap, color: "#D97706" },
   carpentry: { Icon: Hammer, color: "#92400E" },
   automotive: { Icon: Car, color: "#6B7280" },
   painting: { Icon: Paintbrush, color: "#EC4899" },
+  hvac: { Icon: Wind, color: "#0EA5E9" },
   "ac-repair": { Icon: Wind, color: "#0EA5E9" },
-  appliance: { Icon: Settings, color: "#7C3AED" },
+  appliances: { Icon: Settings, color: "#7C3AED" },
+  cleaning: { Icon: Sparkles, color: "#14B8A6" },
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  plumbing: "Plumbing",
-  electrical: "Electrical",
-  carpentry: "Carpentry",
-  automotive: "Automotive",
-  painting: "Painting",
-  "ac-repair": "AC Repair",
-  appliance: "Appliances",
-};
+// The seeded catalog stores display names - keep these in sync with the
+// values in the services/professionals tables so filters always hit.
+const SERVICE_CATEGORIES = [
+  "Plumbing",
+  "Electrical",
+  "Carpentry",
+  "Automotive",
+  "Painting",
+  "HVAC",
+  "Appliances",
+  "Cleaning",
+];
 
 interface ServiceRow {
   id: string;
@@ -95,6 +102,15 @@ export default function ServicesPage() {
   const hasFilters = Boolean(q || category);
   const showingDemo = !loading && !error && services.length === 0 && !hasFilters;
 
+  // Dropdown options = categories present in the loaded data, plus the full
+  // seeded list so every option exists even on an empty/partial page.
+  const loadedCategories = [
+    ...new Set(services.map((s) => s.category).filter(Boolean) as string[]),
+  ];
+  const categories = [
+    ...new Set([...SERVICE_CATEGORIES, ...loadedCategories]),
+  ].sort();
+
   const selectClass =
     "bg-white dark:bg-[#111827] border border-gray-200 dark:border-white/15 text-[#0F172A] dark:text-white text-sm font-semibold px-3.5 py-2.5 rounded-xl outline-none focus:border-[#2563EB]";
 
@@ -139,14 +155,14 @@ export default function ServicesPage() {
                 className={selectClass}
               >
                 <option value="">All Categories</option>
-                {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
                   </option>
                 ))}
               </select>
             </div>
-            {q && (
+            {hasFilters && (
               <button
                 onClick={() => setParams(new URLSearchParams())}
                 className="text-sm font-bold text-[#2563EB] hover:text-blue-600 transition-colors py-2.5"
@@ -195,7 +211,7 @@ export default function ServicesPage() {
                   Icon: Wrench,
                   color: "#2563EB",
                 };
-                const label = CATEGORY_LABELS[svc.category] || svc.category || "Service";
+                const label = svc.category || "Service";
                 return (
                   <div
                     key={svc.id}

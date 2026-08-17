@@ -1,6 +1,46 @@
 import { successResponse, errorResponse } from '../utils/response.js';
 import { getUserSupabase } from '../utils/supabaseUser.js';
 
+// GET /api/orders/frequent
+// Returns the products the authenticated user orders most often, with the
+// number of times ordered, for "Frequently ordered" / "Order again" sections.
+export const getFrequentProducts = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const db = getUserSupabase(req);
+
+    const { data, error } = await db
+      .from('orders')
+      .select(
+        'items:order_items(product_id, quantity, product:products(id, name, price, image_url))'
+      )
+      .eq('user_id', userId);
+
+    if (error) throw error;
+
+    const counts = new Map();
+    for (const order of data || []) {
+      for (const item of order.items || []) {
+        const entry = counts.get(item.product_id) || {
+          product: item.product,
+          count: 0,
+        };
+        entry.count += Number(item.quantity) || 0;
+        counts.set(item.product_id, entry);
+      }
+    }
+
+    const products = [...counts.values()]
+      .filter((entry) => entry.product)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+
+    return successResponse(res, { products });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 // GET /api/orders
 // Returns orders belonging to the authenticated user only.
 export const getMyOrders = async (req, res, next) => {
@@ -30,7 +70,7 @@ export const getMyOrders = async (req, res, next) => {
 export const createOrder = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { items, address_id } = req.body;
+    const { items, address_id, points_redeemed = 0 } = req.body;
     const db = getUserSupabase(req);
 
     const productIds = items.map((item) => item.product_id);
@@ -74,19 +114,35 @@ export const createOrder = async (req, res, next) => {
       });
     }
 
+    // Points redemption (1 point = Rs 1). The database trigger verifies the
+    // wallet actually has the balance and deducts it - a client can never
+    // redeem more than they own.
+    const redeemed = Math.min(
+      Math.max(0, Math.floor(Number(points_redeemed) || 0)),
+      total
+    );
+
     // Create the order (server-calculated total only - never trust the client).
     const { data: order, error: orderError } = await db
       .from('orders')
       .insert({
         user_id: userId,
         address_id,
-        total_amount: total,
+        total_amount: total - redeemed,
+        points_redeemed: redeemed,
         status: 'confirmed',
       })
       .select()
       .single();
 
-    if (orderError) throw orderError;
+    if (orderError) {
+      // Surface the wallet trigger's "insufficient points" exception cleanly.
+      const message = String(orderError.message || '');
+      if (/insufficient wallet points/i.test(message)) {
+        return errorResponse(res, 'You do not have enough FixKart points for this redemption.', 400);
+      }
+      throw orderError;
+    }
 
     // Insert line items.
     const { error: itemsError } = await db

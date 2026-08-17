@@ -18,11 +18,16 @@ import {
   User,
   Search,
   Calendar,
+  Settings,
+  Heart,
 } from "lucide-react";
 
 import { ThemeProvider, useTheme } from "../lib/theme";
 import { CartProvider, useCart } from "../lib/cart";
+import { WishlistProvider, useWishlist } from "../lib/wishlist";
 import { AuthProvider, useAuth } from "../lib/auth";
+import { SmoothScroll, scrollToTop } from "../lib/smoothScroll";
+import LoadingScreen from "./components/LoadingScreen";
 
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
@@ -39,7 +44,18 @@ import OrdersPage from "./pages/OrdersPage";
 import BookingsPage from "./pages/BookingsPage";
 import BookingPage from "./pages/BookingPage";
 import ProfilePage from "./pages/ProfilePage";
-import { LoginPage, RegisterPage } from "./pages/AuthPages";
+import SettingsPage from "./pages/SettingsPage";
+import WishlistPage from "./pages/WishlistPage";
+import ProfessionalLandingPage from "./pages/ProfessionalLandingPage";
+import ProfessionalRegisterPage from "./pages/ProfessionalRegisterPage";
+import ProfessionalDashboardPage from "./pages/ProfessionalDashboardPage";
+import AdminProfessionalsPage from "./pages/AdminProfessionalsPage";
+import {
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+} from "./pages/AuthPages";
 import NotFoundPage from "./pages/NotFoundPage";
 
 /* ─── Navbar ───────────────────────────────────────────────────────────────── */
@@ -52,7 +68,9 @@ function Navbar() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { count } = useCart();
-  const { isLoggedIn } = useAuth();
+  const { count: wishlistCount } = useWishlist();
+  const { isLoggedIn, user, isAdmin } = useAuth();
+  const isProfessional = user?.user_metadata?.role === "professional";
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 24);
@@ -102,6 +120,7 @@ function Navbar() {
             {navLink("/services", "Services")}
             {navLink("/professionals", "Professionals")}
             {navLink("/bookings", "My Bookings")}
+            {isAdmin && navLink("/admin/professionals", "Admin")}
           </div>
 
           {/* Desktop search */}
@@ -130,11 +149,34 @@ function Navbar() {
               {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             <Link
-              to={isLoggedIn ? "/profile" : "/login"}
+              to={isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login"}
               className="p-2 text-white/60 hover:text-white transition-colors"
               aria-label="My account"
             >
               <User className="w-5 h-5" />
+            </Link>
+            {isLoggedIn && (
+              <Link
+                to="/settings"
+                className="p-2 text-white/60 hover:text-white transition-colors"
+                aria-label="Settings"
+                title="Settings"
+              >
+                <Settings className="w-5 h-5" />
+              </Link>
+            )}
+            <Link
+              to="/wishlist"
+              className="relative p-2 text-white/60 hover:text-white transition-colors"
+              aria-label="Wishlist"
+              title="Wishlist"
+            >
+              <Heart className="w-5 h-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-[#DC2626] text-white rounded-full text-[10px] font-extrabold flex items-center justify-center ring-2 ring-[#0F172A]">
+                  {wishlistCount}
+                </span>
+              )}
             </Link>
             <Link
               to="/cart"
@@ -147,6 +189,12 @@ function Navbar() {
                   {count}
                 </span>
               )}
+            </Link>
+            <Link
+              to="/professional"
+              className="ml-1 bg-[#F59E0B] text-[#0F172A] text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-amber-400 transition-colors shadow-md shadow-amber-500/30"
+            >
+              Become a Pro
             </Link>
             <Link
               to="/services"
@@ -189,7 +237,11 @@ function Navbar() {
             { to: "/services", label: "Services" },
             { to: "/professionals", label: "Professionals" },
             { to: "/bookings", label: "My Bookings" },
-            { to: isLoggedIn ? "/profile" : "/login", label: isLoggedIn ? "My Account" : "Sign In" },
+            { to: isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login", label: isLoggedIn ? "My Account" : "Sign In" },
+            ...(isLoggedIn ? [{ to: "/settings", label: "Settings" }] : []),
+            { to: "/wishlist", label: `Wishlist${wishlistCount ? ` (${wishlistCount})` : ""}` },
+            ...(isAdmin ? [{ to: "/admin/professionals", label: "Admin" }] : []),
+            { to: "/professional", label: "Become a Pro" },
             { to: "/cart", label: `Cart${count ? ` (${count})` : ""}` },
           ].map((item) => (
             <Link
@@ -322,14 +374,14 @@ function Footer() {
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    scrollToTop();
   }, [pathname]);
   return null;
 }
 
 function Layout() {
   return (
-    <div className="min-h-screen overflow-x-hidden scroll-smooth bg-[#F8FAFC]">
+    <div className="min-h-screen overflow-x-clip bg-[#F8FAFC]">
       <Navbar />
       <main>
         <Outlet />
@@ -342,10 +394,20 @@ function Layout() {
 /* ─── App ──────────────────────────────────────────────────────────────────── */
 
 export default function App() {
+  // Brief branded boot loader (tools + "Fixing Things…" bar).
+  const [booting, setBooting] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setBooting(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <ThemeProvider>
+      {booting && <LoadingScreen />}
       <AuthProvider>
         <CartProvider>
+          <WishlistProvider>
+          <SmoothScroll>
           <BrowserRouter>
             <ScrollToTop />
             <Routes>
@@ -365,12 +427,22 @@ export default function App() {
                 <Route path="/bookings" element={<BookingsPage />} />
                 <Route path="/booking" element={<BookingPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/wishlist" element={<WishlistPage />} />
+                <Route path="/professional" element={<ProfessionalLandingPage />} />
+                <Route path="/professional/dashboard" element={<ProfessionalDashboardPage />} />
+                <Route path="/register/professional" element={<ProfessionalRegisterPage />} />
+                <Route path="/admin/professionals" element={<AdminProfessionalsPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>
           </BrowserRouter>
+          </SmoothScroll>
+          </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </ThemeProvider>

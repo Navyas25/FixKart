@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { Loader2, ShieldCheck } from "lucide-react";
-import { apiPost } from "../../lib/api";
+import { Loader2, ShieldCheck, Coins } from "lucide-react";
+import { apiGet, apiPost } from "../../lib/api";
 import { useCart } from "../../lib/cart";
 import { useAuth } from "../../lib/auth";
 import { formatINR, PLACEHOLDER_IMG } from "../../lib/format";
 import { PageHeader } from "../components/PageHeader";
+
+const POINTS_VALUE = 1; // 1 point = Rs 1
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
@@ -21,6 +23,30 @@ export default function CheckoutPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // Wallet / points state. If the wallet API is unavailable (migration not
+  // run yet) we simply hide the redemption box and never send points.
+  const [walletPoints, setWalletPoints] = useState<number | null>(null);
+  const [pointsUsed, setPointsUsed] = useState(0);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    let cancelled = false;
+    apiGet<{ wallet: { points: number } }>("/wallet")
+      .then((data) => {
+        if (!cancelled) setWalletPoints(Number(data.wallet?.points) || 0);
+      })
+      .catch(() => {
+        // Wallet not set up - redemption stays hidden.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn]);
+
+  const maxPoints = walletPoints == null ? 0 : Math.min(walletPoints, subtotal / POINTS_VALUE);
+  const pointsDiscount = pointsUsed * POINTS_VALUE;
+  const total = Math.max(0, subtotal - pointsDiscount);
 
   // Auth guard: bounce to login preserving the destination.
   useEffect(() => {
@@ -75,13 +101,16 @@ export default function CheckoutPage() {
         is_default: false,
       });
 
-      // 2. Create the order with server-side pricing.
+      // 2. Create the order with server-side pricing. Points are only sent
+      // when the wallet is actually available - otherwise the column may not
+      // exist yet and the order would fail.
       const orderData = await apiPost<{ order: { id: string; total_amount: number } }>("/orders", {
         items: items.map((item) => ({
           product_id: item.product_id,
           quantity: item.quantity,
         })),
         address_id: addressData.address.id,
+        ...(walletPoints != null ? { points_redeemed: pointsUsed } : {}),
       });
 
       const order = orderData.order;
@@ -188,7 +217,7 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    <ShieldCheck className="w-4 h-4" /> Place Order · {formatINR(subtotal)}
+                    <ShieldCheck className="w-4 h-4" /> Place Order · {formatINR(total)}
                   </>
                 )}
               </button>
@@ -222,11 +251,52 @@ export default function CheckoutPage() {
                   <span className="text-[#64748B] dark:text-slate-400">Delivery</span>
                   <span className="font-bold text-[#16A34A]">Free</span>
                 </div>
+                {pointsDiscount > 0 && (
+                  <div className="flex justify-between text-[#16A34A]">
+                    <span className="flex items-center gap-1">
+                      <Coins className="w-3.5 h-3.5" /> FixKart points ({pointsUsed})
+                    </span>
+                    <span className="font-bold">−{formatINR(pointsDiscount)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-baseline pt-2">
                   <span className="font-extrabold text-[#0F172A] dark:text-white">Total</span>
-                  <span className="text-xl font-extrabold text-[#0F172A] dark:text-white">{formatINR(subtotal)}</span>
+                  <span className="text-xl font-extrabold text-[#0F172A] dark:text-white">{formatINR(total)}</span>
                 </div>
               </div>
+
+              {/* Points redemption */}
+              {walletPoints != null && walletPoints > 0 && subtotal > 0 && (
+                <div className="mt-6 pt-5 border-t border-gray-100 dark:border-white/10">
+                  <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                    Use FixKart points
+                  </label>
+                  <p className="text-[11px] text-[#64748B] dark:text-slate-400 mb-2">
+                    You have {walletPoints.toLocaleString()} points · 1 point = {formatINR(POINTS_VALUE)} off
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min={0}
+                      max={Math.floor(maxPoints)}
+                      value={pointsUsed}
+                      onChange={(e) => {
+                        const value = Math.max(0, Math.min(Math.floor(maxPoints), Number(e.target.value) || 0));
+                        setPointsUsed(value);
+                      }}
+                      placeholder="0"
+                      className="w-28 bg-[#F8FAFC] dark:bg-[#0B1220] border border-gray-200 dark:border-white/15 text-[#0F172A] dark:text-white text-sm font-semibold px-3.5 py-2.5 rounded-xl outline-none focus:border-[#2563EB]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPointsUsed(Math.floor(maxPoints))}
+                      className="text-xs font-bold text-[#2563EB] hover:text-blue-600 transition-colors"
+                    >
+                      Use max
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

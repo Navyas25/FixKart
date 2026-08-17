@@ -22,7 +22,16 @@ const SORTS = [
   { label: "Name", value: "name" },
 ];
 
-const FALLBACK_CATEGORIES = ["Tools", "Plumbing Supplies", "Electrical Supplies", "Automotive"];
+const FALLBACK_CATEGORIES = [
+  "Tools & Equipment",
+  "Hand Tools",
+  "Electrical",
+  "Plumbing",
+  "Paint & Decor",
+  "Automotive",
+  "Hardware & Fasteners",
+  "Safety & Protection",
+];
 
 const toProduct = (p: any): ProductCardData => ({
   id: p.id,
@@ -31,6 +40,8 @@ const toProduct = (p: any): ProductCardData => ({
   price: Number(p.price) || 0,
   image_url: p.image_url || "",
   stock: p.stock,
+  discount_price: p.discount_price != null ? Number(p.discount_price) : undefined,
+  featured: Boolean(p.featured),
 });
 
 export default function ProductsPage() {
@@ -46,6 +57,27 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchInput, setSearchInput] = useState(q);
+  const [allCategories, setAllCategories] = useState<string[]>(FALLBACK_CATEGORIES);
+
+  // Real category list from the API so the filter dropdown always matches the
+  // database (falls back to the seeded list if the endpoint is unavailable).
+  useEffect(() => {
+    let cancelled = false;
+    apiGet<{ categories: { id: string; name: string; product_count: number }[] }>(
+      "/categories"
+    )
+      .then((data) => {
+        if (cancelled) return;
+        const names = (data.categories || [])
+          .map((c) => c.name)
+          .filter(Boolean) as string[];
+        if (names.length) setAllCategories(names);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     setSearchInput(q);
@@ -103,7 +135,7 @@ export default function ProductsPage() {
   const showingDemo = !loading && !error && products.length === 0 && !hasFilters;
 
   const categories = [
-    ...new Set([...FALLBACK_CATEGORIES, ...products.map((p) => p.category).filter(Boolean) as string[]]),
+    ...new Set([...allCategories, ...products.map((p) => p.category).filter(Boolean) as string[]]),
   ];
 
   const selectClass =

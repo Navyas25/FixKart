@@ -5,6 +5,9 @@ import {
     login,
     logout,
     getCurrentUser,
+    forgotPassword,
+    resetPassword,
+    changePassword,
 } from "../controllers/auth.controller.js";
 
 import { authenticate } from "../middleware/auth.middleware.js";
@@ -16,6 +19,12 @@ router.post("/register", register);
 router.post("/login", login);
 
 router.get("/me", getCurrentUser);
+
+router.post("/forgot-password", forgotPassword);
+
+router.post("/reset-password", resetPassword);
+
+router.post("/change-password", authenticate, changePassword);
 
 router.get("/protected", authenticate, (req, res) => {
     return res.status(200).json({

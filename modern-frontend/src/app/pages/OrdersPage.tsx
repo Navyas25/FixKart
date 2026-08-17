@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
-import { Package, ArrowRight } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { Package, ArrowRight, RotateCcw } from "lucide-react";
 import { apiGet } from "../../lib/api";
 import { useAuth } from "../../lib/auth";
+import { useCart } from "../../lib/cart";
 import { formatINR, formatDate, shortId, PLACEHOLDER_IMG } from "../../lib/format";
 import { PageHeader, EmptyState } from "../components/PageHeader";
 
@@ -16,9 +17,25 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function OrdersPage() {
   const { isLoggedIn } = useAuth();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const reorder = (order: any) => {
+    (order.items || []).forEach((item: any) => {
+      if (item.product_id) {
+        addToCart({
+          id: item.product_id,
+          name: item.product?.name || "",
+          price: item.product?.price ?? item.unit_price,
+          image_url: item.product?.image_url,
+        });
+      }
+    });
+    navigate("/cart");
+  };
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -117,6 +134,15 @@ export default function OrdersPage() {
                       </span>
                     )}
                   </div>
+                  {(order.items || []).length > 0 && (
+                    <button
+                      onClick={() => reorder(order)}
+                      className="mt-4 flex items-center gap-1.5 text-xs font-bold text-[#2563EB] hover:text-blue-600 transition-colors"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      Order again
+                    </button>
+                  )}
                 </div>
               ))}
               <div className="text-center pt-4">

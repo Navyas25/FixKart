@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { Package, Calendar, MapPin, Trash2, Plus, Check, Loader2 } from "lucide-react";
+import { Package, Calendar, MapPin, Trash2, Plus, Check, Loader2, Settings, Coins, ArrowDownRight, ArrowUpRight, Heart } from "lucide-react";
 import { apiGet, apiPost, apiPatch, apiDelete } from "../../lib/api";
 import { useAuth } from "../../lib/auth";
 import { PageHeader, EmptyState } from "../components/PageHeader";
@@ -27,6 +27,11 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
 
+  // Wallet
+  const [wallet, setWallet] = useState<{ points: number; lifetime_points: number } | null>(null);
+  const [walletTx, setWalletTx] = useState<any[]>([]);
+  const [walletUnavailable, setWalletUnavailable] = useState(false);
+
   useEffect(() => {
     if (!isLoggedIn) return;
     let cancelled = false;
@@ -36,10 +41,17 @@ export default function ProfilePage() {
     Promise.allSettled([
       apiGet<{ profile: any }>("/users/profile"),
       apiGet<{ addresses: Address[] }>("/addresses"),
-    ]).then(([profileRes, addressesRes]) => {
+      apiGet<{ wallet: { points: number; lifetime_points: number }; transactions: any[] }>("/wallet"),
+    ]).then(([profileRes, addressesRes, walletRes]) => {
       if (cancelled) return;
       if (profileRes.status === "fulfilled") setProfile(profileRes.value.profile);
       if (addressesRes.status === "fulfilled") setAddresses(addressesRes.value.addresses || []);
+      if (walletRes.status === "fulfilled") {
+        setWallet(walletRes.value.wallet || { points: 0, lifetime_points: 0 });
+        setWalletTx(walletRes.value.transactions || []);
+      } else {
+        setWalletUnavailable(true);
+      }
       setLoading(false);
     });
 
@@ -133,7 +145,7 @@ export default function ProfilePage() {
           )}
 
           {/* Quick links */}
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Link
               to="/orders"
               className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-gray-100 dark:border-white/10 hover:shadow-md transition-shadow flex items-center gap-4"
@@ -156,6 +168,30 @@ export default function ProfilePage() {
               <div>
                 <p className="font-extrabold text-[#0F172A] dark:text-white text-sm">My Bookings</p>
                 <p className="text-xs text-[#64748B] dark:text-slate-400">Scheduled services</p>
+              </div>
+            </Link>
+            <Link
+              to="/settings"
+              className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-gray-100 dark:border-white/10 hover:shadow-md transition-shadow flex items-center gap-4"
+            >
+              <div className="w-11 h-11 rounded-xl bg-[#F0FDF4] dark:bg-[#16A34A]/20 flex items-center justify-center">
+                <Settings className="w-5 h-5 text-[#16A34A]" />
+              </div>
+              <div>
+                <p className="font-extrabold text-[#0F172A] dark:text-white text-sm">Settings</p>
+                <p className="text-xs text-[#64748B] dark:text-slate-400">Privacy & logout</p>
+              </div>
+            </Link>
+            <Link
+              to="/wishlist"
+              className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-gray-100 dark:border-white/10 hover:shadow-md transition-shadow flex items-center gap-4"
+            >
+              <div className="w-11 h-11 rounded-xl bg-[#FEF2F2] dark:bg-[#DC2626]/20 flex items-center justify-center">
+                <Heart className="w-5 h-5 text-[#DC2626]" />
+              </div>
+              <div>
+                <p className="font-extrabold text-[#0F172A] dark:text-white text-sm">Wishlist</p>
+                <p className="text-xs text-[#64748B] dark:text-slate-400">Saved products</p>
               </div>
             </Link>
           </div>
@@ -189,6 +225,79 @@ export default function ProfilePage() {
               </div>
             )}
           </div>
+
+          {/* Wallet / points */}
+          {!walletUnavailable && (
+            <div className="bg-white dark:bg-[#111827] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-white/10 mb-8">
+              <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FFF7ED] dark:bg-[#F59E0B]/15 flex items-center justify-center">
+                    <Coins className="w-6 h-6 text-[#D97706]" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-extrabold text-[#0F172A] dark:text-white">
+                      FixKart Points
+                    </h2>
+                    <p className="text-xs text-[#64748B] dark:text-slate-400">
+                      1 point = ₹1 off at checkout
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-extrabold text-[#0F172A] dark:text-white">
+                    {Number(wallet?.points || 0).toLocaleString()}
+                  </p>
+                  <p className="text-[11px] text-[#64748B] dark:text-slate-400">
+                    {Number(wallet?.lifetime_points || 0).toLocaleString()} earned all-time
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-[#F8FAFC] dark:bg-white/5 rounded-xl px-4 py-3 mb-5 text-xs text-[#64748B] dark:text-slate-400 leading-relaxed">
+                Earn <strong className="text-[#D97706]">1 point per ₹10</strong> on every order and a{" "}
+                <strong className="text-[#16A34A]">50-point bonus</strong> when a service booking is completed.
+                Redeem them at checkout.
+              </div>
+
+              {walletTx.length > 0 && (
+                <div className="space-y-2">
+                  {walletTx.slice(0, 5).map((tx) => (
+                    <div
+                      key={tx.id}
+                      className="flex items-center justify-between gap-3 border border-gray-100 dark:border-white/10 rounded-xl px-3.5 py-2.5"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {Number(tx.points) >= 0 ? (
+                          <ArrowDownRight className="w-4 h-4 text-[#16A34A] flex-shrink-0" />
+                        ) : (
+                          <ArrowUpRight className="w-4 h-4 text-[#DC2626] flex-shrink-0" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-[#0F172A] dark:text-white truncate">
+                            {tx.description || (Number(tx.points) >= 0 ? "Points earned" : "Points redeemed")}
+                          </p>
+                          <p className="text-[10px] text-[#64748B] dark:text-slate-400">
+                            {new Date(tx.created_at).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-sm font-extrabold flex-shrink-0 ${
+                          Number(tx.points) >= 0 ? "text-[#16A34A]" : "text-[#DC2626]"
+                        }`}
+                      >
+                        {Number(tx.points) >= 0 ? "+" : ""}
+                        {Number(tx.points).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Addresses */}
           <div className="bg-white dark:bg-[#111827] rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-white/10">

@@ -23,4 +23,5 @@ export const orderItemSchema = z.object({
 export const createOrderSchema = z.object({
   items: z.array(orderItemSchema).min(1, 'Order must contain at least one item'),
   address_id: z.string().uuid('Invalid address id'),
+  points_redeemed: z.number().int().min(0).max(1_000_000).optional().default(0),
 });

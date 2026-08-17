@@ -12,12 +12,27 @@ interface ProRow {
   experience_years?: number;
   rating?: number;
   bio?: string;
+  service_categories?: string[];
   profile?: { full_name?: string; avatar_url?: string; phone?: string };
 }
+
+// The seeded catalog stores display names - keep in sync with the
+// service_categories values in the professionals table.
+const SERVICE_CATEGORIES = [
+  "Plumbing",
+  "Electrical",
+  "Carpentry",
+  "Automotive",
+  "Painting",
+  "HVAC",
+  "Appliances",
+  "Cleaning",
+];
 
 export default function ProfessionalsPage() {
   const [params, setParams] = useSearchParams();
   const q = params.get("q") || "";
+  const category = params.get("category") || "";
 
   const [pros, setPros] = useState<ProRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +41,15 @@ export default function ProfessionalsPage() {
 
   useEffect(() => setSearchInput(q), [q]);
 
+  const update = (next: Record<string, string>) => {
+    const merged = new URLSearchParams(params);
+    Object.entries(next).forEach(([key, value]) => {
+      if (value) merged.set(key, value);
+      else merged.delete(key);
+    });
+    setParams(merged);
+  };
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -33,6 +57,7 @@ export default function ProfessionalsPage() {
 
     const query = new URLSearchParams();
     if (q) query.set("q", q);
+    if (category) query.set("category", category);
     query.set("limit", "100");
 
     apiGet<{ professionals: any[] }>(`/professionals?${query.toString()}`)
@@ -49,17 +74,23 @@ export default function ProfessionalsPage() {
     return () => {
       cancelled = true;
     };
-  }, [q]);
+  }, [q, category]);
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const merged = new URLSearchParams(params);
-    if (searchInput.trim()) merged.set("q", searchInput.trim());
-    else merged.delete("q");
-    setParams(merged);
+    update({ q: searchInput.trim() });
   };
 
-  const hasFilters = Boolean(q);
+  const hasFilters = Boolean(q || category);
+
+  // Dropdown options = categories present in the loaded pros plus the full
+  // seeded list, so every option matches real data.
+  const loadedCategories = [
+    ...new Set(
+      pros.flatMap((p) => p.service_categories || []).filter(Boolean) as string[]
+    ),
+  ];
+  const categories = [...new Set([...SERVICE_CATEGORIES, ...loadedCategories])].sort();
   const showingDemo = !loading && !error && pros.length === 0 && !hasFilters;
 
   return (
@@ -92,12 +123,39 @@ export default function ProfessionalsPage() {
 
       <section className="py-10 lg:py-14 bg-[#F8FAFC] dark:bg-[#0B1220] min-h-[50vh]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-right text-sm font-bold text-[#64748B] dark:text-slate-400 mb-8">
-            {loading
-              ? "Loading…"
-              : showingDemo
-              ? `Showing ${DEMO_PROFESSIONALS.length} sample professionals`
-              : `${pros.length} professional${pros.length === 1 ? "" : "s"} available`}
+          <div className="flex flex-wrap items-end gap-3 mb-8">
+            <div>
+              <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => update({ category: e.target.value })}
+                className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-white/15 text-[#0F172A] dark:text-white text-sm font-semibold px-3.5 py-2.5 rounded-xl outline-none focus:border-[#2563EB]"
+              >
+                <option value="">All Categories</option>
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {hasFilters && (
+              <button
+                onClick={() => setParams(new URLSearchParams())}
+                className="text-sm font-bold text-[#2563EB] hover:text-blue-600 transition-colors py-2.5"
+              >
+                Clear filters
+              </button>
+            )}
+            <div className="ml-auto text-sm font-bold text-[#64748B] dark:text-slate-400">
+              {loading
+                ? "Loading…"
+                : showingDemo
+                ? `Showing ${DEMO_PROFESSIONALS.length} sample professionals`
+                : `${pros.length} professional${pros.length === 1 ? "" : "s"} available`}
+            </div>
           </div>
 
           {error ? (
@@ -161,6 +219,18 @@ export default function ProfessionalsPage() {
                         <p className="text-xs text-[#64748B] dark:text-slate-400 font-medium mb-2.5 line-clamp-2">
                           {pro.bio || "Verified home service professional"}
                         </p>
+                        {pro.service_categories?.length ? (
+                          <div className="flex flex-wrap gap-1.5 mb-2.5">
+                            {pro.service_categories.slice(0, 3).map((cat) => (
+                              <span
+                                key={cat}
+                                className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#2563EB]/10 text-[#2563EB] dark:text-blue-300"
+                              >
+                                {cat}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
                         <div className="flex items-center gap-4 text-xs text-[#64748B] dark:text-slate-400">
                           <span className="flex items-center gap-1">
                             <Star className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />

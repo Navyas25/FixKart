@@ -8,6 +8,11 @@ so there are no env files to copy. Steps a fresh checkout needs:
    - `cp backend/.env.example backend/.env` and fill in `SUPABASE_URL` /
      `SUPABASE_ANON_KEY` from the Supabase dashboard (Project Settings -> API);
      the checked-in `.env.example` only has placeholders.
+   - Professional signup also needs `SUPABASE_SERVICE_ROLE_KEY` (same
+     dashboard page, "service_role" secret) - it is used server-side ONLY to
+     assign roles at registration and is never exposed to the frontend. Run
+     `backend/scripts/migrations/001_professional_verification.sql` in the SQL
+     editor once for the professional columns, storage bucket and RLS.
    - `cd backend && npm install`
 2. Frontend:
    - `cd modern-frontend && npm install`

@@ -1,21 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { motion, useInView } from "motion/react";
+import { motion, useInView, useScroll, useTransform } from "motion/react";
 import {
   Wrench, Zap, Droplets, Paintbrush, Shield, Car,
   Hammer, Wind, Star, MapPin, Search, Phone,
   CheckCircle, ArrowRight, ShoppingCart,
-  ChevronRight, Package, Truck, Headphones,
+  ChevronDown, ChevronRight, Package, Truck, Headphones,
   Settings, Home, Calendar, Battery,
   Lock, Activity, BadgeCheck,
 } from "lucide-react";
 import { apiGet } from "../../lib/api";
 import { attachAutocomplete, detectUserLocation } from "../../lib/location";
 import { useCart } from "../../lib/cart";
+import { useAuth } from "../../lib/auth";
+import { formatINR, formatDate, PLACEHOLDER_IMG } from "../../lib/format";
+import { ProductCard, type ProductCardData } from "../components/ProductCard";
 import { RotatingCurvedText } from "../components/RotatingCurvedText";
-
-const formatINR = (amount: number | string | undefined) =>
-  `₹${Number(amount || 0).toLocaleString("en-IN")}`;
 
 type LucideIcon = typeof Wrench;
 
@@ -46,16 +46,8 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
 };
 
-// ─── Hero Section ─────────────────────────────────────────────────────────────
-
-const floatingIcons = [
-  { Icon: Wrench, label: "Repair", color: "#F59E0B", x: "82%", y: "18%", delay: 0 },
-  { Icon: Droplets, label: "Plumbing", color: "#60A5FA", x: "78%", y: "62%", delay: 0.5 },
-  { Icon: Zap, label: "Electric", color: "#FCD34D", x: "8%", y: "28%", delay: 0.2 },
-  { Icon: Wind, label: "AC Repair", color: "#34D399", x: "12%", y: "68%", delay: 0.7 },
-  { Icon: Hammer, label: "Carpenter", color: "#A78BFA", x: "72%", y: "38%", delay: 0.3 },
-  { Icon: Paintbrush, label: "Painting", color: "#F87171", x: "18%", y: "48%", delay: 0.6 },
-];
+// ─── Hero Section ───────────────────────────────────────────────────────────
+// Simple static hero: workshop photo background, search bar, CTAs.
 
 function HeroSection() {
   const [loc, setLoc] = useState("");
@@ -88,59 +80,18 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center bg-[#0F172A] overflow-hidden">
-      {/* Ambient glows */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[20%] w-[480px] h-[480px] bg-[#2563EB]/25 rounded-full blur-[130px]" />
-        <div className="absolute bottom-[-5%] right-[15%] w-[380px] h-[380px] bg-[#F59E0B]/15 rounded-full blur-[110px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#1E40AF]/10 rounded-full blur-[160px]" />
-      </div>
-
-      {/* Grid overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
-          backgroundSize: "44px 44px",
-        }}
+    <section className="relative min-h-[85vh] flex items-center justify-center bg-[#0F172A] overflow-hidden">
+      {/* Workshop background image */}
+      <img
+        src="/workshop.png"
+        alt="FixKart workshop"
+        className="absolute inset-0 w-full h-full object-cover object-center"
       />
-
-      {/* Floating icons – desktop only */}
-      <div className="absolute inset-0 pointer-events-none hidden lg:block">
-        {floatingIcons.map(({ Icon, label, color, x, y, delay }, i) => (
-          <motion.div
-            key={i}
-            className="absolute flex flex-col items-center"
-            style={{ left: x, top: y }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 1 + delay }}
-          >
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{
-                duration: 3 + i * 0.4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: i * 0.15,
-              }}
-              className="w-14 h-14 rounded-2xl flex items-center justify-center backdrop-blur-sm"
-              style={{
-                background: `${color}18`,
-                border: `1px solid ${color}35`,
-                boxShadow: `0 4px 20px ${color}20`,
-              }}
-            >
-              <Icon className="w-6 h-6" style={{ color }} strokeWidth={1.8} />
-            </motion.div>
-            <span className="mt-1.5 text-[10px] text-white/35 font-medium">{label}</span>
-          </motion.div>
-        ))}
-      </div>
+      {/* Dark scrim for legibility */}
+      <div className="absolute inset-0 bg-[#0F172A]/55" />
 
       {/* Hero content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-0 lg:pt-36">
+      <div className="relative w-full max-w-3xl text-center px-4 py-20 z-10">
         {/* Rotating curved-text badge */}
         <div className="hidden xl:flex absolute right-4 lg:right-10 top-1/2 -translate-y-1/2">
           <RotatingCurvedText
@@ -148,146 +99,563 @@ function HeroSection() {
             size={158}
           />
         </div>
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Live badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 bg-[#2563EB]/20 border border-[#2563EB]/30 rounded-full px-4 py-1.5 mb-7"
-          >
-            <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-            <span className="text-sm text-blue-300 font-semibold">
-              Available 24/7 · 50+ Cities Covered
-            </span>
-          </motion.div>
 
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12 }}
-            className="text-[2.6rem] sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.08] tracking-tight mb-6"
-          >
-            Everything You Need.{" "}
-            <span
-              className="text-transparent bg-clip-text"
-              style={{
-                backgroundImage: "linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #FDE68A 100%)",
-              }}
-            >
-              Fixed Fast.
-            </span>
-          </motion.h1>
+        {/* Live badge */}
+        <div className="inline-flex items-center gap-2 bg-[#2563EB]/20 border border-[#2563EB]/30 rounded-full px-4 py-1.5 mb-7">
+          <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
+          <span className="text-sm text-blue-300 font-semibold">
+            Available 24/7 · 50+ Cities Covered
+          </span>
+        </div>
 
-          {/* Sub */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.26 }}
-            className="text-lg text-white/55 mb-10 max-w-xl mx-auto leading-relaxed"
-          >
-            Order hardware tools & supplies, or book verified professionals for any home fix —
-            delivered or at your doorstep in hours.
-          </motion.p>
+        {/* Headline */}
+        <h1 className="text-[2.6rem] sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.08] tracking-tight mb-6">
+          Everything You Need.{" "}
+          <span className="text-[#F59E0B]">Fixed Fast.</span>
+        </h1>
 
-          {/* Search bar */}
-          <motion.form
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.38 }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-            }}
-            className="hero-search-bar bg-white rounded-2xl p-2 flex flex-col sm:flex-row gap-2 mb-8 max-w-2xl mx-auto shadow-2xl shadow-black/30"
-          >
-            <div className="flex items-center gap-2 flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
-              <button
-                type="button"
-                onClick={handleDetectLocation}
-                title="Detect my location"
-                aria-label="Detect my location"
-                className="text-[#2563EB] flex-shrink-0 hover:scale-110 active:scale-95 transition-transform"
-              >
-                <MapPin className="w-4 h-4" strokeWidth={2.5} />
-              </button>
-              <input
-                ref={locationRef}
-                type="text"
-                placeholder={locating ? "Detecting location…" : "Your location…"}
-                value={loc}
-                onChange={(e) => setLoc(e.target.value)}
-                className="bg-transparent outline-none text-sm text-gray-700 w-full placeholder-gray-400 font-medium"
-              />
-            </div>
-            <div className="flex items-center gap-2 flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
-              <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <input
-                type="text"
-                placeholder="Search products or services…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="bg-transparent outline-none text-sm text-gray-700 w-full placeholder-gray-400"
-              />
-            </div>
+        {/* Sub */}
+        <p className="text-lg text-white/55 mb-10 max-w-xl mx-auto leading-relaxed">
+          Order hardware tools & supplies, or book verified professionals for any home fix —
+          delivered or at your doorstep in hours.
+        </p>
+
+        {/* Search bar */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+          }}
+          className="hero-search-bar bg-white rounded-2xl p-2 flex flex-col sm:flex-row gap-2 mb-8 max-w-2xl mx-auto shadow-2xl shadow-black/30"
+        >
+          <div className="flex items-center gap-2 flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
             <button
-              type="submit"
-              className="bg-[#2563EB] text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-blue-500 active:scale-95 transition-all whitespace-nowrap flex items-center gap-2 justify-center shadow-md shadow-blue-600/30"
+              type="button"
+              onClick={handleDetectLocation}
+              title="Detect my location"
+              aria-label="Detect my location"
+              className="text-[#2563EB] flex-shrink-0 hover:scale-110 active:scale-95 transition-transform"
             >
-              <Search className="w-4 h-4" />
-              Search
+              <MapPin className="w-4 h-4" strokeWidth={2.5} />
             </button>
-          </motion.form>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            <input
+              ref={locationRef}
+              type="text"
+              placeholder={locating ? "Detecting location…" : "Your location…"}
+              value={loc}
+              onChange={(e) => setLoc(e.target.value)}
+              className="bg-transparent outline-none text-sm text-gray-700 w-full placeholder-gray-400 font-medium"
+            />
+          </div>
+          <div className="flex items-center gap-2 flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
+            <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <input
+              type="text"
+              placeholder="Search products or services…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="bg-transparent outline-none text-sm text-gray-700 w-full placeholder-gray-400"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-[#2563EB] text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-blue-500 active:scale-95 transition-all whitespace-nowrap flex items-center gap-2 justify-center shadow-md shadow-blue-600/30"
           >
-            <Link
-              to="/products"
-              className="group flex items-center justify-center gap-2.5 bg-[#F59E0B] text-[#0F172A] font-extrabold text-base px-8 py-4 rounded-2xl hover:bg-amber-400 active:scale-95 transition-all shadow-lg shadow-amber-500/25"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              Shop Hardware
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              to="/services"
-              className="group flex items-center justify-center gap-2.5 border-2 border-white/20 text-white font-extrabold text-base px-8 py-4 rounded-2xl hover:border-white/40 hover:bg-white/5 active:scale-95 transition-all"
-            >
-              <Calendar className="w-5 h-5" />
-              Book a Service
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </motion.div>
+            <Search className="w-4 h-4" />
+            Search
+          </button>
+        </form>
+
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            to="/products"
+            className="group flex items-center justify-center gap-2.5 bg-[#F59E0B] text-[#0F172A] font-extrabold text-base px-8 py-4 rounded-2xl hover:bg-amber-400 active:scale-95 transition-all shadow-lg shadow-amber-500/25"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            Shop Hardware
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link
+            to="/services"
+            className="group flex items-center justify-center gap-2.5 border-2 border-white/20 text-white font-extrabold text-base px-8 py-4 rounded-2xl hover:border-white/40 hover:bg-white/5 active:scale-95 transition-all"
+          >
+            <Calendar className="w-5 h-5" />
+            Book a Service
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
+    </section>
+  );
+}
 
-      {/* Stats strip */}
+// Stats strip
+function HeroStatsStrip() {
+  return (
+    <section className="bg-[#0F172A] border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        {[
+          { val: "50,000+", label: "Orders Delivered" },
+          { val: "2,500+", label: "Verified Pros" },
+          { val: "4.8 ★", label: "Avg. Rating" },
+          { val: "< 60 min", label: "Avg. Response" },
+        ].map((s, i) => (
+          <div key={i}>
+            <div className="text-2xl lg:text-3xl font-extrabold text-white">{s.val}</div>
+            <div className="text-white/40 text-sm mt-0.5 font-medium">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Scrolling Text Marquee ───────────────────────────────────────────────────
+// Blocks of text drift horizontally as the page scrolls vertically (the
+// classic Motion + Ticker effect: useScroll mapped onto the lines' x position).
+
+function MarqueeSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  // Opposite directions for the two lines - one trails up, one trails down.
+  const lineA = useTransform(scrollYProgress, [0, 1], ["0%", "-42%"]);
+  const lineB = useTransform(scrollYProgress, [0, 1], ["-42%", "0%"]);
+
+  const text = "FIXKART • HARDWARE & HOME SERVICES • FIXED FAST • ";
+
+  return (
+    <section ref={ref} className="bg-[#0F172A] border-y border-white/10 overflow-hidden py-8 select-none">
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.9 }}
-        className="relative mt-14 border-t border-white/10 bg-white/[0.04] backdrop-blur-sm"
+        style={{ x: lineA }}
+        className="whitespace-nowrap text-3xl sm:text-5xl font-extrabold tracking-tight text-white/90"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { val: "50,000+", label: "Orders Delivered" },
-            { val: "2,500+", label: "Verified Pros" },
-            { val: "4.8 ★", label: "Avg. Rating" },
-            { val: "< 60 min", label: "Avg. Response" },
-          ].map((s, i) => (
-            <div key={i}>
-              <div className="text-2xl lg:text-3xl font-extrabold text-white">{s.val}</div>
-              <div className="text-white/40 text-sm mt-0.5 font-medium">{s.label}</div>
+        {text.repeat(6)}
+      </motion.div>
+      <motion.div
+        style={{ x: lineB }}
+        className="whitespace-nowrap text-3xl sm:text-5xl font-extrabold tracking-tight text-[#F59E0B]"
+      >
+        {text.repeat(6)}
+      </motion.div>
+    </section>
+  );
+}
+
+// ─── Personalized Section (order again / frequent) ───────────────────────────
+
+function PersonalizedSection() {
+  const { isLoggedIn } = useAuth();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+  const [lastOrder, setLastOrder] = useState<any>(null);
+  const [frequent, setFrequent] = useState<any[]>([]);
+  const [frequentServices, setFrequentServices] = useState<any[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    let cancelled = false;
+
+    Promise.allSettled([
+      apiGet<{ orders: any[] }>("/orders"),
+      apiGet<{ products: any[] }>("/orders/frequent"),
+      apiGet<{ bookings: any[] }>("/bookings"),
+    ]).then(([ordersRes, frequentRes, bookingsRes]) => {
+      if (cancelled) return;
+      if (ordersRes.status === "fulfilled") {
+        const orders = ordersRes.value.orders || [];
+        if (orders.length) setLastOrder(orders[0]);
+      }
+      if (frequentRes.status === "fulfilled") {
+        setFrequent((frequentRes.value.products || []).slice(0, 4));
+      }
+      if (bookingsRes.status === "fulfilled") {
+        const counts = new Map();
+        for (const booking of bookingsRes.value.bookings || []) {
+          const svc = booking.service;
+          if (!svc) continue;
+          const entry = counts.get(svc.id) || { service: svc, count: 0 };
+          entry.count += 1;
+          counts.set(svc.id, entry);
+        }
+        setFrequentServices(
+          [...counts.values()].sort((a, b) => b.count - a.count).slice(0, 4)
+        );
+      }
+      setLoaded(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn]);
+
+  if (!isLoggedIn || !loaded) return null;
+  if (!lastOrder && frequent.length === 0 && frequentServices.length === 0) return null;
+
+  const reorder = () => {
+    (lastOrder.items || []).forEach((item: any) => {
+      if (item.product_id) {
+        addToCart({
+          id: item.product_id,
+          name: item.product?.name || "",
+          price: item.product?.price ?? item.unit_price,
+          image_url: item.product?.image_url,
+        });
+      }
+    });
+    navigate("/cart");
+  };
+
+  const panel =
+    "bg-white dark:bg-[#111827] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-white/10";
+
+  return (
+    <section className="py-12 lg:py-16 bg-[#F8FAFC]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
+        >
+          <span className="inline-block bg-[#EFF6FF] text-[#2563EB] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
+            Welcome Back
+          </span>
+          <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A] leading-tight">
+            Quick re-order & favourites
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Order again */}
+          {lastOrder && (
+            <div className={panel}>
+              <h3 className="font-extrabold text-[#0F172A] text-sm mb-3 flex items-center gap-2">
+                <Package className="w-4 h-4 text-[#2563EB]" /> Order Again
+              </h3>
+              <div className="flex items-center gap-2 mb-3">
+                {(lastOrder.items || []).slice(0, 4).map((item: any) => (
+                  <img
+                    key={item.id}
+                    src={item.product?.image_url || PLACEHOLDER_IMG}
+                    alt={item.product?.name || "Product"}
+                    className="w-11 h-11 rounded-xl object-cover bg-slate-100 border border-gray-100"
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-[#64748B] mb-4">
+                {formatINR(lastOrder.total_amount)} · {formatDate(lastOrder.created_at)}
+              </p>
+              <button
+                onClick={reorder}
+                className="w-full bg-[#2563EB] text-white text-xs font-bold py-2.5 rounded-xl hover:bg-blue-500 active:scale-95 transition-all"
+              >
+                Add to cart & reorder
+              </button>
             </div>
+          )}
+
+          {/* Frequently ordered */}
+          {frequent.length > 0 && (
+            <div className={panel}>
+              <h3 className="font-extrabold text-[#0F172A] text-sm mb-3 flex items-center gap-2">
+                <ShoppingCart className="w-4 h-4 text-[#F59E0B]" /> Frequently Ordered
+              </h3>
+              <div className="space-y-2.5">
+                {frequent.map(({ product, count }: any) => (
+                  <div key={product.id} className="flex items-center justify-between gap-3">
+                    <Link
+                      to={`/product/${product.id}`}
+                      className="text-xs font-bold text-[#0F172A] truncate hover:text-[#2563EB] transition-colors"
+                    >
+                      {product.name}
+                    </Link>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-[10px] text-[#64748B]">×{count}</span>
+                      <button
+                        onClick={() =>
+                          addToCart({
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image_url: product.image_url,
+                          })
+                        }
+                        className="bg-[#0F172A] text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg hover:bg-[#2563EB] transition-colors"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Frequently booked services */}
+          {frequentServices.length > 0 && (
+            <div className={panel}>
+              <h3 className="font-extrabold text-[#0F172A] text-sm mb-3 flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-[#16A34A]" /> Frequently Booked
+              </h3>
+              <div className="space-y-2.5">
+                {frequentServices.map(({ service, count }: any) => (
+                  <div key={service.id} className="flex items-center justify-between gap-3">
+                    <Link
+                      to={`/booking?service_id=${service.id}`}
+                      className="text-xs font-bold text-[#0F172A] truncate hover:text-[#2563EB] transition-colors"
+                    >
+                      {service.name}
+                    </Link>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-[10px] text-[#64748B]">×{count}</span>
+                      <Link
+                        to={`/booking?service_id=${service.id}`}
+                        className="bg-[#16A34A] text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg hover:bg-emerald-500 transition-colors"
+                      >
+                        Book
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Featured & Deals Section ─────────────────────────────────────────────────
+
+function FeaturedAndDealsSection() {
+  const [featured, setFeatured] = useState<ProductCardData[]>([]);
+  const [offers, setOffers] = useState<ProductCardData[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.allSettled([
+      apiGet<{ products: any[] }>("/products?featured=true&limit=4"),
+      apiGet<{ products: any[] }>("/products?offers=true&limit=4"),
+    ]).then(([featuredRes, offersRes]) => {
+      if (cancelled) return;
+      const map = (p: any): ProductCardData => ({
+        id: p.id,
+        name: p.name || "Hardware product",
+        category: p.category?.name || p.category || "Hardware",
+        price: Number(p.price) || 0,
+        image_url: p.image_url || "",
+        stock: p.stock,
+        discount_price: p.discount_price != null ? Number(p.discount_price) : undefined,
+        featured: Boolean(p.featured),
+      });
+      if (featuredRes.status === "fulfilled") {
+        setFeatured((featuredRes.value.products || []).map(map));
+      }
+      if (offersRes.status === "fulfilled") {
+        // Only show genuine deals (a discounted price lower than the MRP).
+        const rows = (offersRes.value.products || [])
+          .map(map)
+          .filter(
+            (p) => p.discount_price != null && Number(p.discount_price) < Number(p.price)
+          );
+        setOffers(rows);
+      }
+      setLoaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!loaded) return null;
+  if (featured.length === 0 && offers.length === 0) return null;
+
+  return (
+    <section className="py-20 lg:py-28 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Featured products */}
+        {featured.length > 0 && (
+          <>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="flex items-end justify-between mb-6"
+            >
+              <div>
+                <span className="inline-block bg-[#EFF6FF] text-[#2563EB] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
+                  Handpicked
+                </span>
+                <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A]">
+                  Featured Products
+                </h2>
+              </div>
+              <Link
+                to="/products"
+                className="hidden sm:flex items-center gap-1 text-sm font-bold text-[#2563EB] hover:gap-2 transition-all"
+              >
+                View all <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+              {featured.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Deals & offers */}
+        {offers.length > 0 && (
+          <>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="flex items-end justify-between mb-6"
+            >
+              <div>
+                <span className="inline-block bg-[#FEF2F2] text-[#DC2626] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
+                  Limited Time
+                </span>
+                <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A]">
+                  Deals & Offers
+                </h2>
+              </div>
+              <Link
+                to="/products"
+                className="hidden sm:flex items-center gap-1 text-sm font-bold text-[#DC2626] hover:gap-2 transition-all"
+              >
+                View all <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {offers.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ─── Top Rated Professionals ─────────────────────────────────────────────────
+
+function TopProfessionalsSection() {
+  const [pros, setPros] = useState<ProCard[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    apiGet<{ professionals: any[] }>("/professionals?sort=rating&limit=4")
+      .then((data) => {
+        if (cancelled) return;
+        const rows = (data.professionals || [])
+          .filter((p) => Number(p.rating) > 0)
+          .slice(0, 4)
+          .map(toProCard);
+        setPros(rows);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoaded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!loaded || pros.length === 0) return null;
+
+  return (
+    <section className="py-20 lg:py-28 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex items-end justify-between mb-6"
+        >
+          <div>
+            <span className="inline-block bg-[#FFFBEB] text-[#D97706] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
+              Customer Favourites
+            </span>
+            <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A]">
+              Top Rated Professionals
+            </h2>
+          </div>
+          <Link
+            to="/professionals"
+            className="hidden sm:flex items-center gap-1 text-sm font-bold text-[#D97706] hover:gap-2 transition-all"
+          >
+            View all <ChevronRight className="w-4 h-4" />
+          </Link>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {pros.map((pro, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="bg-[#F8FAFC] dark:bg-[#0B1220] rounded-2xl p-6 border border-gray-100 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0">
+                  <img
+                    src={pro.img || PLACEHOLDER_IMG}
+                    alt={pro.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-extrabold text-[#0F172A] text-sm truncate">{pro.name}</p>
+                  <p className="text-[11px] text-[#64748B] line-clamp-1">{pro.specialty}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-xs text-[#64748B] mb-4">
+                <span className="flex items-center gap-1">
+                  <Star className="w-3.5 h-3.5 fill-[#F59E0B] text-[#F59E0B]" />
+                  <strong className="text-[#111827]">{pro.rating.toFixed(1)}</strong>
+                </span>
+                <span className="flex items-center gap-1">
+                  <BadgeCheck className="w-3.5 h-3.5 text-[#16A34A]" /> Verified
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <Link
+                  to={pro.id ? `/booking?professional_id=${pro.id}` : "/services"}
+                  className="flex-1 bg-[#2563EB] text-white text-xs font-bold py-2.5 rounded-xl hover:bg-blue-500 active:scale-95 transition-all text-center"
+                >
+                  Book Now
+                </Link>
+                <Link
+                  to={pro.id ? `/professional/${pro.id}` : "/professionals"}
+                  className="px-3.5 border border-gray-200 text-[#64748B] text-xs font-semibold py-2.5 rounded-xl hover:border-gray-300 hover:text-[#0F172A] transition-colors"
+                >
+                  Profile
+                </Link>
+              </div>
+            </motion.div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
@@ -593,7 +961,7 @@ function HowItWorksSection() {
             <motion.div
               className="h-full rounded-full"
               style={{
-                background: "linear-gradient(90deg, #2563EB, #F59E0B, #16A34A)",
+                background: "#F59E0B",
                 transformOrigin: "left center",
               }}
               initial={{ scaleX: 0 }}
@@ -1128,8 +1496,8 @@ function FinalCTASection() {
   return (
     <section className="py-24 lg:py-36 bg-[#0F172A] relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[30%] w-[500px] h-[500px] bg-[#2563EB]/20 rounded-full blur-[130px]" />
-        <div className="absolute bottom-[-15%] right-[25%] w-[400px] h-[400px] bg-[#F59E0B]/15 rounded-full blur-[110px]" />
+        <div className="absolute top-[-20%] left-[30%] w-[500px] h-[500px] bg-[#2563EB]/8 rounded-full blur-[140px]" />
+        <div className="absolute bottom-[-15%] right-[25%] w-[400px] h-[400px] bg-[#F59E0B]/6 rounded-full blur-[120px]" />
       </div>
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -1144,14 +1512,7 @@ function FinalCTASection() {
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-extrabold text-white leading-[1.1] tracking-tight mb-6">
             Your Fix Is Just a{" "}
-            <span
-              className="text-transparent bg-clip-text"
-              style={{
-                backgroundImage: "linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #FDE68A 100%)",
-              }}
-            >
-              Click Away.
-            </span>
+            <span className="text-[#F59E0B]">Click Away.</span>
           </h2>
           <p className="text-white/45 text-lg mb-11 max-w-2xl mx-auto leading-relaxed">
             Join 200,000+ satisfied customers who trust FixKart for hardware needs and on-demand home services. Start your first order now — no subscription required.
@@ -1192,12 +1553,17 @@ function FinalCTASection() {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen overflow-x-hidden scroll-smooth">
+    <div className="min-h-screen overflow-x-clip">
       <HeroSection />
+      <HeroStatsStrip />
+      <MarqueeSection />
+      <PersonalizedSection />
       <CategoriesSection />
+      <FeaturedAndDealsSection />
       <ServicesSection />
       <HowItWorksSection />
       <ProductsAndProfessionalsSection />
+      <TopProfessionalsSection />
       <TrustSection />
       <FinalCTASection />
     </div>
