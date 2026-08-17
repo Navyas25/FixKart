@@ -706,7 +706,18 @@ function CategoriesSection() {
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5"
         >
           {categories.map((cat, i) => (
-            <motion.div key={i} variants={fadeUp}>
+            <motion.div
+  key={i}
+  initial={{ opacity: 0, scale: 0.88 }}
+  whileInView={{ opacity: 1, scale: 1 }}
+  viewport={{ once: true, margin: "-50px" }}
+  transition={{
+    duration: 0.5,
+    ease: "easeOut",
+    delay: i * 0.09,
+  }}
+  className="group p-6 lg:p-7 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 bg-white cursor-default"
+>
               <Link
                 to={cat.slug ? `/products?category=${cat.slug}` : "/products"}
                 className="group block bg-white rounded-2xl p-5 lg:p-6 shadow-sm border border-gray-100/80 hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300"
@@ -798,6 +809,7 @@ const toServiceCard = (svc: any): ServiceCard => {
 };
 
 function ServicesSection() {
+  const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [services, setServices] = useState<ServiceCard[]>(fallbackServices);
@@ -851,7 +863,7 @@ function ServicesSection() {
           {services.map((svc, i) => (
             <motion.div
               key={i}
-              variants={i % 2 === 0 ? fadeLeft : fadeRight}
+              
               className="group"
             >
               <div
@@ -1193,7 +1205,7 @@ function ProductsAndProfessionalsSection() {
               {products.map((p, i) => (
                 <motion.div
                   key={i}
-                  variants={fadeLeft}
+                  
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, margin: "-40px" }}
@@ -1273,7 +1285,7 @@ function ProductsAndProfessionalsSection() {
               {pros.map((pro, i) => (
                 <motion.div
                   key={i}
-                  variants={fadeRight}
+                  
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, margin: "-40px" }}
@@ -1431,7 +1443,7 @@ function TrustSection() {
           {trustItems.map((item, i) => (
             <motion.div
               key={i}
-              variants={scaleIn}
+            
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
