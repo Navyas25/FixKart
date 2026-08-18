@@ -7,6 +7,7 @@ import { useCart } from "../../lib/cart";
 import { PageHeader, EmptyState } from "../components/PageHeader";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
 import { ReviewsSection } from "../components/ReviewsSection";
+import { WishlistHeart } from "../components/WishlistHeart";
 
 const toProduct = (p: any): ProductCardData => ({
   id: p.id,
@@ -135,9 +136,21 @@ export default function ProductDetailPage() {
               <span className="inline-block bg-[#EFF6FF] dark:bg-[#2563EB]/20 text-[#2563EB] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
                 {product.category || "Hardware"}
               </span>
-              <h1 className="text-2xl lg:text-4xl font-extrabold text-[#0F172A] dark:text-white leading-tight mb-4">
-                {product.name}
-              </h1>
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <h1 className="text-2xl lg:text-4xl font-extrabold text-[#0F172A] dark:text-white leading-tight">
+                  {product.name}
+                </h1>
+                <WishlistHeart
+                  item={{
+                    id: product.id,
+                    type: "product",
+                    name: product.name,
+                    price: Number(product.price) || 0,
+                    image_url: product.image_url,
+                    category: product.category,
+                  }}
+                />
+              </div>
 
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-4xl font-extrabold text-[#0F172A] dark:text-white">

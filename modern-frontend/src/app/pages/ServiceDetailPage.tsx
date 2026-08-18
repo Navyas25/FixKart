@@ -7,6 +7,7 @@ import { apiGet } from "../../lib/api";
 import { formatINR } from "../../lib/format";
 import { PageHeader } from "../components/PageHeader";
 import { ReviewsSection } from "../components/ReviewsSection";
+import { WishlistHeart } from "../components/WishlistHeart";
 
 interface ServiceRow {
   id: string;
@@ -131,9 +132,20 @@ export default function ServiceDetailPage() {
                   </span>
                 </div>
               </div>
-              <div className="text-left sm:text-right">
-                <p className="text-xs text-[#64748B] dark:text-slate-400 font-medium mb-0.5">Starting at</p>
-                <p className="text-4xl font-extrabold text-[#0F172A] dark:text-white">{formatINR(service.base_price)}</p>
+              <div className="flex items-center justify-between sm:justify-end gap-4">
+                <div className="text-left sm:text-right">
+                  <p className="text-xs text-[#64748B] dark:text-slate-400 font-medium mb-0.5">Starting at</p>
+                  <p className="text-4xl font-extrabold text-[#0F172A] dark:text-white">{formatINR(service.base_price)}</p>
+                </div>
+                <WishlistHeart
+                  item={{
+                    id: service.id,
+                    type: "service",
+                    name: service.name,
+                    price: Number(service.base_price) || 0,
+                    category: service.category,
+                  }}
+                />
               </div>
             </div>
 
@@ -181,7 +193,18 @@ export default function ServiceDetailPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {related.map((svc) => (
-                  <div key={svc.id} className="bg-white dark:bg-[#111827] rounded-2xl p-6 border border-gray-100 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                  <div key={svc.id} className="relative bg-white dark:bg-[#111827] rounded-2xl p-6 border border-gray-100 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                    <WishlistHeart
+                      className="absolute top-3 right-3"
+                      size="sm"
+                      item={{
+                        id: svc.id,
+                        type: "service",
+                        name: svc.name,
+                        price: Number(svc.base_price) || 0,
+                        category: svc.category,
+                      }}
+                    />
                     <span className="inline-block bg-[#EFF6FF] dark:bg-[#2563EB]/20 text-[#2563EB] text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full mb-3">
                       {svc.category}
                     </span>

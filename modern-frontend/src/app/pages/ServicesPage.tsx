@@ -6,6 +6,7 @@ import { formatINR } from "../../lib/format";
 import { DEMO_SERVICES } from "../../lib/demoData";
 import { PageHeader, EmptyState } from "../components/PageHeader";
 import { DemoNotice, DemoServiceGrid } from "../components/DemoCards";
+import { WishlistHeart } from "../components/WishlistHeart";
 
 import {
   Wrench, Droplets, Zap, Hammer, Car, Paintbrush, Wind, Settings, Sparkles,
@@ -217,6 +218,17 @@ export default function ServicesPage() {
                     key={svc.id}
                     className="relative bg-white dark:bg-[#111827] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 h-full"
                   >
+                    <WishlistHeart
+                      className="absolute top-3 right-3"
+                      size="sm"
+                      item={{
+                        id: svc.id,
+                        type: "service",
+                        name: svc.name,
+                        price: Number(svc.base_price) || 0,
+                        category: svc.category,
+                      }}
+                    />
                     <div
                       className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
                       style={{ backgroundColor: `${style.color}18` }}

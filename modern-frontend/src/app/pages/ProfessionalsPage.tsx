@@ -6,6 +6,7 @@ import { PLACEHOLDER_IMG } from "../../lib/format";
 import { DEMO_PROFESSIONALS } from "../../lib/demoData";
 import { PageHeader, EmptyState } from "../components/PageHeader";
 import { DemoNotice, DemoProGrid } from "../components/DemoCards";
+import { WishlistHeart } from "../components/WishlistHeart";
 
 interface ProRow {
   id: string;
@@ -194,8 +195,20 @@ export default function ProfessionalsPage() {
                 return (
                   <div
                     key={pro.id}
-                    className="bg-white dark:bg-[#111827] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-md transition-all duration-300"
+                    className="relative bg-white dark:bg-[#111827] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-md transition-all duration-300"
                   >
+                    <WishlistHeart
+                      className="absolute top-3 right-3"
+                      size="sm"
+                      item={{
+                        id: pro.id,
+                        type: "service",
+                        name: name,
+                        price: 0,
+                        image_url: pro.profile?.avatar_url,
+                        category: pro.service_categories?.[0],
+                      }}
+                    />
                     <div className="flex items-start gap-4">
                       <div className="relative flex-shrink-0">
                         <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100">

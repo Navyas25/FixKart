@@ -16,6 +16,7 @@ import { useAuth } from "../../lib/auth";
 import { formatINR, formatDate, PLACEHOLDER_IMG } from "../../lib/format";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
 import { RotatingCurvedText } from "../components/RotatingCurvedText";
+import { WishlistHeart } from "../components/WishlistHeart";
 
 type LucideIcon = typeof Wrench;
 
@@ -700,8 +701,20 @@ function TopProfessionalsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="bg-[#F8FAFC] dark:bg-[#0B1220] rounded-2xl p-6 border border-gray-100 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="relative bg-[#F8FAFC] dark:bg-[#0B1220] rounded-2xl p-6 border border-gray-100 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
+              <WishlistHeart
+                className="absolute top-3 right-3"
+                size="sm"
+                item={{
+                  id: pro.id || `pro-${pro.name}`,
+                  type: "service",
+                  name: pro.name,
+                  price: 0,
+                  image_url: pro.img,
+                  category: pro.specialty,
+                }}
+              />
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0">
                   <img
@@ -969,7 +982,18 @@ function ServicesSection() {
                 >
                   <svc.Icon className="w-7 h-7" style={{ color: svc.color }} strokeWidth={1.8} />
                 </div>
-                <h3 className="text-lg font-extrabold text-[#0F172A] mb-2">{svc.title}</h3>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <h3 className="text-lg font-extrabold text-[#0F172A]">{svc.title}</h3>
+                  <WishlistHeart
+                    size="sm"
+                    item={{
+                      id: svc.id || `svc-${svc.title}`,
+                      type: "service",
+                      name: svc.title,
+                      price: Number(String(svc.price).replace(/[^\d.]/g, "")) || 0,
+                    }}
+                  />
+                </div>
                 <div className="flex items-center gap-2 mb-5">
                   <Star className="w-3.5 h-3.5 fill-[#F59E0B] text-[#F59E0B]" />
                   <span className="text-sm font-bold text-[#111827]">{svc.rating}</span>
@@ -1296,8 +1320,20 @@ function ProductsAndProfessionalsSection() {
                   whileInView="visible"
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ delay: i * 0.1 }}
-                  className="group bg-white rounded-2xl p-4 flex gap-4 items-center shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 cursor-pointer"
+                  className="group relative bg-white rounded-2xl p-4 flex gap-4 items-center shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 cursor-pointer"
                 >
+                  <WishlistHeart
+                    className="absolute top-3 right-3"
+                    size="sm"
+                    item={{
+                      id: p.id || `p-${p.name}`,
+                      type: "product",
+                      name: p.name,
+                      price: Number(String(p.price).replace(/[^\d.]/g, "")) || 0,
+                      image_url: p.img,
+                      category: p.category,
+                    }}
+                  />
                   <div className="w-[76px] h-[76px] rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                     <img
                       src={p.img}
@@ -1376,8 +1412,20 @@ function ProductsAndProfessionalsSection() {
                   whileInView="visible"
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ delay: i * 0.12 }}
-                  className="group bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 cursor-pointer"
+                  className="group relative bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 cursor-pointer"
                 >
+                  <WishlistHeart
+                    className="absolute top-3 right-3"
+                    size="sm"
+                    item={{
+                      id: pro.id || `pro-${pro.name}`,
+                      type: "service",
+                      name: pro.name,
+                      price: 0,
+                      image_url: pro.img,
+                      category: pro.specialty,
+                    }}
+                  />
                   <div className="flex items-start gap-4">
                     <div className="relative flex-shrink-0">
                       <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100">

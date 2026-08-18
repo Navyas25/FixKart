@@ -1,9 +1,9 @@
 import { Link } from "react-router";
-import { Plus, Check, Heart } from "lucide-react";
+import { Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "../../lib/cart";
-import { useWishlist } from "../../lib/wishlist";
 import { formatINR, PLACEHOLDER_IMG } from "../../lib/format";
+import { WishlistHeart } from "./WishlistHeart";
 
 export interface ProductCardData {
   id: string;
@@ -26,11 +26,9 @@ const discountPercent = (product: ProductCardData) => {
 
 export function ProductCard({ product }: { product: ProductCardData }) {
   const { addToCart } = useCart();
-  const { isSaved, toggle } = useWishlist();
   const [added, setAdded] = useState(false);
   const out = Number(product.stock) <= 0;
   const pct = discountPercent(product);
-  const saved = isSaved(product.id);
   const sellingPrice = pct > 0 ? Number(product.discount_price) : Number(product.price);
 
   const handleAdd = () => {
@@ -65,28 +63,17 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           </span>
         )}
         {/* Wishlist heart */}
-        <button
-          type="button"
-          onClick={() =>
-            toggle({
-              id: product.id,
-              type: "product",
-              name: product.name,
-              price: sellingPrice,
-              image_url: product.image_url,
-              category: product.category,
-            })
-          }
-          aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
-          title={saved ? "Remove from wishlist" : "Add to wishlist"}
-          className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur transition-all active:scale-90 ${
-            saved
-              ? "bg-[#DC2626] text-white shadow-lg shadow-red-600/30"
-              : "bg-white/90 text-[#64748B] hover:text-[#DC2626] hover:bg-white"
-          }`}
-        >
-          <Heart className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
-        </button>
+        <WishlistHeart
+          className="absolute top-2.5 right-2.5"
+          item={{
+            id: product.id,
+            type: "product",
+            name: product.name,
+            price: sellingPrice,
+            image_url: product.image_url,
+            category: product.category,
+          }}
+        />
       </div>
       <div className="p-4">
         <span className="text-[10px] text-[#2563EB] font-extrabold uppercase tracking-wide">
