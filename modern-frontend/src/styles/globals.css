@@ -1,0 +1,34 @@
+/* Anime.js layout animation grid (HomePage — LayoutGridSection).
+   The container's data-grid attribute is cycled 1→4 by the animation; each
+   variant reshapes the grid and anime.js reflows the tiles smoothly. */
+.layout-container {
+  display: grid;
+  gap: 12px;
+}
+
+.layout-container .layout-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 104px;
+  border-radius: 16px;
+  padding: 14px 10px;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+}
+
+.layout-container[data-grid="1"] { grid-template-columns: repeat(4, 1fr); }
+.layout-container[data-grid="2"] { grid-template-columns: repeat(3, 1fr); }
+.layout-container[data-grid="3"] { grid-template-columns: repeat(6, 1fr); }
+.layout-container[data-grid="4"] { grid-template-columns: 1.5fr 1fr 1fr 1.5fr; }
+
+@media (max-width: 640px) {
+  .layout-container .layout-item { min-height: 88px; }
+  .layout-container[data-grid="1"] { grid-template-columns: repeat(2, 1fr); }
+  .layout-container[data-grid="2"] { grid-template-columns: repeat(2, 1fr); }
+  .layout-container[data-grid="3"] { grid-template-columns: repeat(3, 1fr); }
+  .layout-container[data-grid="4"] { grid-template-columns: 1fr 1fr; }
+}

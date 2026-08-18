@@ -17,6 +17,7 @@ import { formatINR, formatDate, PLACEHOLDER_IMG } from "../../lib/format";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
 import { RotatingCurvedText } from "../components/RotatingCurvedText";
 import { WishlistHeart } from "../components/WishlistHeart";
+import { LayoutGridAnimation } from "../components/LayoutGridAnimation";
 
 type LucideIcon = typeof Wrench;
 
@@ -101,16 +102,16 @@ function HeroSection() {
       img.style.transform = `scale(${(1.18 - 0.18 * p).toFixed(4)})`;
       storyRefs.current.forEach((el, i) => {
         if (!el) return;
-        const start = 0.04 + i * 0.14;
-        const fadeIn = clamp01((p - start) / 0.1);
-        const fadeOut = clamp01((p - 0.72) / 0.14);
+        const start = 0.02 + i * 0.08;
+        const fadeIn = clamp01((p - start) / 0.08);
+        const fadeOut = clamp01((p - 0.22) / 0.08);
         const o = fadeIn * (1 - fadeOut);
         el.style.opacity = o.toFixed(3);
         el.style.transform = `translateY(${((1 - o) * 32).toFixed(2)}px)`;
       });
       const content = contentRef.current;
       if (content) {
-        const o = clamp01((p - 0.8) / 0.16);
+        const o = clamp01((p - 0.3) / 0.16);
         content.style.opacity = o.toFixed(3);
         content.style.transform = `translateY(${((1 - o) * 48).toFixed(2)}px)`;
         content.style.pointerEvents = o > 0.1 ? "auto" : "none";
@@ -140,7 +141,7 @@ function HeroSection() {
   };
 
   return (
-    <section ref={heroRef} className="relative h-[300vh] bg-[#0F172A]">
+    <section ref={heroRef} className="relative h-[150vh] bg-[#0F172A]">
       {/* Pinned full-screen stage: image clears + story plays as the user scrolls */}
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Workshop background image — covers the whole screen, blurred → sharp */}
@@ -153,6 +154,8 @@ function HeroSection() {
         />
         {/* Dark scrim for legibility */}
         <div className="absolute inset-0 bg-[#0F172A]/55" />
+
+
 
         {/* Scroll story: sentences about FixKart appear one by one */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 sm:gap-7 px-4">
@@ -328,6 +331,30 @@ function MarqueeSection() {
       >
         {text.repeat(6)}
       </motion.div>
+    </section>
+  );
+}
+
+// ─── Animated Layout Grid (anime.js) ─────────────────────────────────────────
+
+function LayoutGridSection() {
+  return (
+    <section className="py-20 lg:py-28 bg-[#0F172A] border-y border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <span className="inline-block bg-[#2563EB]/20 border border-[#2563EB]/30 text-blue-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+            Animated Grid
+          </span>
+          <h2 className="text-3xl lg:text-[3.25rem] font-extrabold text-white leading-tight mb-4">
+            Everything in Motion
+          </h2>
+          <p className="text-white/55 text-lg max-w-xl mx-auto leading-relaxed">
+            The grid reshapes itself every second — smooth, staggered layout
+            animation on each cycle.
+          </p>
+        </div>
+        <LayoutGridAnimation />
+      </div>
     </section>
   );
 }
@@ -1703,6 +1730,7 @@ export default function HomePage() {
       <HeroSection />
       <HeroStatsStrip />
       <MarqueeSection />
+      <LayoutGridSection />
       <PersonalizedSection />
       <CategoriesSection />
       <FeaturedAndDealsSection />
