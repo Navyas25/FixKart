@@ -17,7 +17,6 @@ import { formatINR, formatDate, PLACEHOLDER_IMG } from "../../lib/format";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
 import { RotatingCurvedText } from "../components/RotatingCurvedText";
 import { WishlistHeart } from "../components/WishlistHeart";
-import { LayoutGridAnimation } from "../components/LayoutGridAnimation";
 
 type LucideIcon = typeof Wrench;
 
@@ -102,16 +101,16 @@ function HeroSection() {
       img.style.transform = `scale(${(1.18 - 0.18 * p).toFixed(4)})`;
       storyRefs.current.forEach((el, i) => {
         if (!el) return;
-        const start = 0.02 + i * 0.08;
-        const fadeIn = clamp01((p - start) / 0.08);
-        const fadeOut = clamp01((p - 0.22) / 0.08);
+        const start = 0.01 + i * 0.05;
+        const fadeIn = clamp01((p - start) / 0.06);
+        const fadeOut = clamp01((p - 0.14) / 0.06);
         const o = fadeIn * (1 - fadeOut);
         el.style.opacity = o.toFixed(3);
         el.style.transform = `translateY(${((1 - o) * 32).toFixed(2)}px)`;
       });
       const content = contentRef.current;
       if (content) {
-        const o = clamp01((p - 0.3) / 0.16);
+        const o = clamp01((p - 0.2) / 0.15);
         content.style.opacity = o.toFixed(3);
         content.style.transform = `translateY(${((1 - o) * 48).toFixed(2)}px)`;
         content.style.pointerEvents = o > 0.1 ? "auto" : "none";
@@ -141,7 +140,7 @@ function HeroSection() {
   };
 
   return (
-    <section ref={heroRef} className="relative h-[150vh] bg-[#0F172A]">
+    <section ref={heroRef} className="relative h-[250vh] bg-[#0F172A]">
       {/* Pinned full-screen stage: image clears + story plays as the user scrolls */}
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Workshop background image — covers the whole screen, blurred → sharp */}
@@ -337,28 +336,6 @@ function MarqueeSection() {
 
 // ─── Animated Layout Grid (anime.js) ─────────────────────────────────────────
 
-function LayoutGridSection() {
-  return (
-    <section className="py-20 lg:py-28 bg-[#0F172A] border-y border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <span className="inline-block bg-[#2563EB]/20 border border-[#2563EB]/30 text-blue-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            Animated Grid
-          </span>
-          <h2 className="text-3xl lg:text-[3.25rem] font-extrabold text-white leading-tight mb-4">
-            Everything in Motion
-          </h2>
-          <p className="text-white/55 text-lg max-w-xl mx-auto leading-relaxed">
-            The grid reshapes itself every second — smooth, staggered layout
-            animation on each cycle.
-          </p>
-        </div>
-        <LayoutGridAnimation />
-      </div>
-    </section>
-  );
-}
-
 // ─── Personalized Section (order again / frequent) ───────────────────────────
 
 function PersonalizedSection() {
@@ -438,9 +415,6 @@ function PersonalizedSection() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <span className="inline-block bg-[#EFF6FF] text-[#2563EB] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
-            Welcome Back
-          </span>
           <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A] leading-tight">
             Quick re-order & favourites
           </h2>
@@ -607,9 +581,6 @@ function FeaturedAndDealsSection() {
               className="flex items-end justify-between mb-6"
             >
               <div>
-                <span className="inline-block bg-[#EFF6FF] text-[#2563EB] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
-                  Handpicked
-                </span>
                 <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A]">
                   Featured Products
                 </h2>
@@ -640,9 +611,6 @@ function FeaturedAndDealsSection() {
               className="flex items-end justify-between mb-6"
             >
               <div>
-                <span className="inline-block bg-[#FEF2F2] text-[#DC2626] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
-                  Limited Time
-                </span>
                 <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A]">
                   Deals & Offers
                 </h2>
@@ -705,9 +673,6 @@ function TopProfessionalsSection() {
           className="flex items-end justify-between mb-6"
         >
           <div>
-            <span className="inline-block bg-[#FFFBEB] text-[#D97706] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
-              Customer Favourites
-            </span>
             <h2 className="text-2xl lg:text-3xl font-extrabold text-[#0F172A]">
               Top Rated Professionals
             </h2>
@@ -813,9 +778,6 @@ function CategoriesSection() {
           transition={{ duration: 0.55 }}
           className="text-center mb-14"
         >
-          <span className="inline-block bg-[#EFF6FF] text-[#2563EB] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            Browse Categories
-          </span>
           <h2 className="text-3xl lg:text-[3.25rem] font-extrabold text-[#0F172A] leading-tight mb-4">
             Shop by Category
           </h2>
@@ -968,9 +930,6 @@ function ServicesSection() {
           transition={{ duration: 0.55 }}
           className="text-center mb-14"
         >
-          <span className="inline-block bg-[#FFFBEB] text-[#D97706] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            On-Demand Professionals
-          </span>
           <h2 className="text-3xl lg:text-[3.25rem] font-extrabold text-[#0F172A] leading-tight mb-4">
             Need a Professional?
           </h2>
@@ -1093,9 +1052,6 @@ function HowItWorksSection() {
           transition={{ duration: 0.55 }}
           className="text-center mb-16"
         >
-          <span className="inline-block bg-[#2563EB]/20 text-[#93C5FD] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            Simple Process
-          </span>
           <h2 className="text-3xl lg:text-[3.25rem] font-extrabold text-white leading-tight mb-4">
             How It Works
           </h2>
@@ -1730,7 +1686,6 @@ export default function HomePage() {
       <HeroSection />
       <HeroStatsStrip />
       <MarqueeSection />
-      <LayoutGridSection />
       <PersonalizedSection />
       <CategoriesSection />
       <FeaturedAndDealsSection />

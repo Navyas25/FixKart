@@ -120,9 +120,6 @@ export default function ServiceDetailPage() {
           <div className="bg-white dark:bg-[#111827] rounded-3xl p-8 lg:p-10 border border-gray-100 dark:border-white/10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
               <div>
-                <span className="inline-block bg-[#EFF6FF] dark:bg-[#2563EB]/20 text-[#2563EB] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
-                  {service.category || "Service"}
-                </span>
                 <div className="flex items-center gap-4 text-sm text-[#64748B] dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <Star className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" /> 4.8 average rating
@@ -205,9 +202,6 @@ export default function ServiceDetailPage() {
                         category: svc.category,
                       }}
                     />
-                    <span className="inline-block bg-[#EFF6FF] dark:bg-[#2563EB]/20 text-[#2563EB] text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full mb-3">
-                      {svc.category}
-                    </span>
                     <h3 className="font-bold text-[#0F172A] dark:text-slate-100 text-sm mb-1">{svc.name}</h3>
                     <p className="text-[#64748B] dark:text-slate-400 text-xs leading-relaxed mb-4 line-clamp-2">
                       {svc.description}

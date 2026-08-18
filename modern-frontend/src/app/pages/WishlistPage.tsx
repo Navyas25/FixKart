@@ -68,11 +68,6 @@ export default function WishlistPage() {
                         className="relative bg-white dark:bg-[#111827] rounded-2xl p-6 border border-gray-100 dark:border-white/10 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                       >
                         <WishlistHeart className="absolute top-3 right-3" size="sm" item={item} />
-                        {item.category && (
-                          <span className="inline-block bg-[#EFF6FF] dark:bg-[#2563EB]/20 text-[#2563EB] text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full mb-3">
-                            {item.category}
-                          </span>
-                        )}
                         <h3 className="font-extrabold text-[#0F172A] dark:text-white text-base mb-2 pr-8">
                           {item.name}
                         </h3>

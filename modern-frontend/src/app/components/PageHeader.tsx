@@ -8,7 +8,7 @@ export function PageHeader({
   subtitle,
   children,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   subtitle?: string;
   children?: ReactNode;
@@ -28,9 +28,6 @@ export function PageHeader({
         }}
       />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span className="inline-block bg-[#2563EB]/20 text-[#93C5FD] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-          {eyebrow}
-        </span>
         <h1 className="text-3xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-3">
           {title}
         </h1>
