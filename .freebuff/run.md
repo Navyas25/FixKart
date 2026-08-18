@@ -24,7 +24,10 @@ so there are no env files to copy. Steps a fresh checkout needs:
   - ⚠️ If the API logs `listening on http://localhost:0`, an env var `PORT=0` is
     leaking into the shell (e.g. from the agent environment). Restart with an
     explicit port: `set PORT=5000 && npm run dev` (Windows) or
-    `PORT=5000 npm run dev` (bash).
+    `PORT=5000 npm run dev` (bash). When starting detached via PowerShell
+    `Start-Process`, set the env var in the PowerShell session first:
+    `$env:PORT='5000'; Start-Process -FilePath 'npm.cmd' -ArgumentList 'run','dev' ...`
+    (the child inherits it).
 - Frontend (the preview): `cd modern-frontend && npm run dev` →
   http://127.0.0.1:5173 (Vite dev server, `strictPort: true`; proxies `/api`
   to `localhost:5000`)

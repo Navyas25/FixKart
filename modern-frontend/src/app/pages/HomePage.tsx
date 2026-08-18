@@ -47,7 +47,18 @@ const stagger = {
 };
 
 // ─── Hero Section ───────────────────────────────────────────────────────────
-// Simple static hero: workshop photo background, search bar, CTAs.
+// Full-screen scroll story: the workshop photo covers the whole viewport and
+// starts blurred. As the user scrolls it clears into focus while sentences
+// about FixKart appear, then the search/CTA hero content reveals at the end.
+
+const storyLines: { icon: LucideIcon; text: string }[] = [
+  { icon: Truck, text: "Order hardware tools & supplies — delivered to your door in hours." },
+  { icon: BadgeCheck, text: "Book verified, background-checked professionals for any home fix." },
+  { icon: Wrench, text: "Plumbing, electrical, carpentry & more — across 50+ cities." },
+  { icon: Star, text: "Trusted by 200,000+ customers with a 4.8★ rating." },
+];
+
+const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
 
 function HeroSection() {
   const [loc, setLoc] = useState("");
@@ -56,6 +67,14 @@ function HeroSection() {
   const locationRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  // Scroll story driver: writes the image blur/scale, the story sentences and
+  // the final hero content directly from the pinned section's position. Direct
+  // style writes keep it deterministic with Lenis' native scrolling.
+  const heroRef = useRef<HTMLElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const storyRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const contentRef = useRef<HTMLDivElement>(null);
+
   // Google Places autocomplete on the location field (VITE_GOOGLE_MAPS_API_KEY).
   useEffect(() => {
     const input = locationRef.current;
@@ -63,6 +82,46 @@ function HeroSection() {
     attachAutocomplete(input, (formattedAddress) => {
       setLoc(formattedAddress);
     });
+  }, []);
+
+  // Scroll-linked reveal: progress p goes 0→1 across the pinned window (from
+  // the section top at the viewport top until the section bottom reaches the
+  // viewport top). Drives: image blur 16→0px + scale 1.18→1, the story
+  // sentences fading in one by one, and the search/CTA content revealing at
+  // the end once the image is fully clear.
+  useEffect(() => {
+    const section = heroRef.current;
+    const img = imgRef.current;
+    if (!section || !img) return;
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const p = clamp01(-rect.top / rect.height);
+      img.style.filter = `blur(${((1 - p) * 16).toFixed(2)}px)`;
+      img.style.transform = `scale(${(1.18 - 0.18 * p).toFixed(4)})`;
+      storyRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const start = 0.04 + i * 0.14;
+        const fadeIn = clamp01((p - start) / 0.1);
+        const fadeOut = clamp01((p - 0.72) / 0.14);
+        const o = fadeIn * (1 - fadeOut);
+        el.style.opacity = o.toFixed(3);
+        el.style.transform = `translateY(${((1 - o) * 32).toFixed(2)}px)`;
+      });
+      const content = contentRef.current;
+      if (content) {
+        const o = clamp01((p - 0.8) / 0.16);
+        content.style.opacity = o.toFixed(3);
+        content.style.transform = `translateY(${((1 - o) * 48).toFixed(2)}px)`;
+        content.style.pointerEvents = o > 0.1 ? "auto" : "none";
+      }
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   const handleDetectLocation = async () => {
@@ -80,32 +139,57 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center bg-[#0F172A] overflow-hidden">
-      {/* Workshop background image */}
-      <img
-        src="/workshop.png"
-        alt="FixKart workshop"
-        className="absolute inset-0 w-full h-full object-cover object-center"
-      />
-      {/* Dark scrim for legibility */}
-      <div className="absolute inset-0 bg-[#0F172A]/55" />
+    <section ref={heroRef} className="relative h-[300vh] bg-[#0F172A]">
+      {/* Pinned full-screen stage: image clears + story plays as the user scrolls */}
+      <div className="sticky top-0 h-screen overflow-hidden">
+        {/* Workshop background image — covers the whole screen, blurred → sharp */}
+        <img
+          ref={imgRef}
+          src="/workshop.png"
+          alt="FixKart workshop"
+          style={{ filter: "blur(16px)", transform: "scale(1.18)" }}
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* Dark scrim for legibility */}
+        <div className="absolute inset-0 bg-[#0F172A]/55" />
 
-      {/* Hero content */}
-      <div className="relative w-full max-w-3xl text-center px-4 py-20 z-10">
+        {/* Scroll story: sentences about FixKart appear one by one */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 sm:gap-7 px-4">
+          {storyLines.map((line, i) => {
+            const Icon = line.icon;
+            return (
+              <div
+                key={line.text}
+                ref={(el) => {
+                  storyRefs.current[i] = el;
+                }}
+                style={{ opacity: 0, transform: "translateY(32px)" }}
+                className="flex items-center gap-3 sm:gap-4 max-w-2xl"
+              >
+                <span className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F59E0B]/15 border border-[#F59E0B]/30 text-[#F59E0B] flex-shrink-0">
+                  <Icon className="w-5 h-5" />
+                </span>
+                <p className="text-white text-lg sm:text-2xl font-semibold text-left leading-snug">
+                  {line.text}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Hero content — reveals once the image is fully clear */}
+        <div
+          ref={contentRef}
+          style={{ opacity: 0, transform: "translateY(48px)", pointerEvents: "none" }}
+          className="absolute inset-0 z-10 flex items-center justify-center"
+        >
+          <div className="relative w-full max-w-3xl text-center px-4 py-20">
         {/* Rotating curved-text badge */}
         <div className="hidden xl:flex absolute right-4 lg:right-10 top-1/2 -translate-y-1/2">
           <RotatingCurvedText
             text="FIX KART • HARDWARE & HOME SERVICES • EST. 2026 • "
             size={158}
           />
-        </div>
-
-        {/* Live badge */}
-        <div className="inline-flex items-center gap-2 bg-[#2563EB]/20 border border-[#2563EB]/30 rounded-full px-4 py-1.5 mb-7">
-          <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-          <span className="text-sm text-blue-300 font-semibold">
-            Available 24/7 · 50+ Cities Covered
-          </span>
         </div>
 
         {/* Headline */}
@@ -184,6 +268,8 @@ function HeroSection() {
             Book a Service
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
+        </div>
+        </div>
         </div>
       </div>
     </section>
