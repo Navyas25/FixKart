@@ -152,7 +152,7 @@ export default function ServiceDetailPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
               {[
-                { Icon: Clock, label: "Arrives in < 60 min" },
+                { Icon: Clock, label: "Same-day availability" },
                 { Icon: ShieldCheck, label: "100% satisfaction" },
                 { Icon: Wrench, label: "Certified experts" },
               ].map(({ Icon, label }) => (

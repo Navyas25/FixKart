@@ -17,6 +17,7 @@ import { formatINR, formatDate, PLACEHOLDER_IMG } from "../../lib/format";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
 import { RotatingCurvedText } from "../components/RotatingCurvedText";
 import { WishlistHeart } from "../components/WishlistHeart";
+import { LayoutGridAnimation } from "../components/LayoutGridAnimation";
 
 type LucideIcon = typeof Wrench;
 
@@ -53,10 +54,10 @@ const stagger = {
 // about FixKart appear, then the search/CTA hero content reveals at the end.
 
 const storyLines: { icon: LucideIcon; text: string }[] = [
-  { icon: Truck, text: "Order hardware tools & supplies — delivered to your door in hours." },
-  { icon: BadgeCheck, text: "Book verified, background-checked professionals for any home fix." },
-  { icon: Wrench, text: "Plumbing, electrical, carpentry & more — across 50+ cities." },
-  { icon: Star, text: "Trusted by 200,000+ customers with a 4.8★ rating." },
+  { icon: Truck, text: "Order hardware tools & supplies — delivered to your door." },
+  { icon: BadgeCheck, text: "Book verified professionals for any home fix." },
+  { icon: Wrench, text: "Plumbing, electrical, carpentry & more — all in one place." },
+  { icon: Star, text: "Quality service you can count on, every time." },
 ];
 
 const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
@@ -97,20 +98,24 @@ function HeroSection() {
     const update = () => {
       const rect = section.getBoundingClientRect();
       const p = clamp01(-rect.top / rect.height);
-      img.style.filter = `blur(${((1 - p) * 16).toFixed(2)}px)`;
+      // Image clears gradually, fully sharp only at the very end
+      const blurAmount = 16 * Math.pow(1 - p, 1.6);
+      img.style.filter = `blur(${blurAmount.toFixed(2)}px)`;
       img.style.transform = `scale(${(1.18 - 0.18 * p).toFixed(4)})`;
+      // Story lines appear and stay visible longer before fading
       storyRefs.current.forEach((el, i) => {
         if (!el) return;
-        const start = 0.01 + i * 0.05;
+        const start = 0.02 + i * 0.08;
         const fadeIn = clamp01((p - start) / 0.06);
-        const fadeOut = clamp01((p - 0.14) / 0.06);
+        const fadeOut = clamp01((p - 0.55) / 0.1);
         const o = fadeIn * (1 - fadeOut);
         el.style.opacity = o.toFixed(3);
         el.style.transform = `translateY(${((1 - o) * 32).toFixed(2)}px)`;
       });
+      // Hero content reveals after stories fade out
       const content = contentRef.current;
       if (content) {
-        const o = clamp01((p - 0.2) / 0.15);
+        const o = clamp01((p - 0.6) / 0.15);
         content.style.opacity = o.toFixed(3);
         content.style.transform = `translateY(${((1 - o) * 48).toFixed(2)}px)`;
         content.style.pointerEvents = o > 0.1 ? "auto" : "none";
@@ -140,7 +145,7 @@ function HeroSection() {
   };
 
   return (
-    <section ref={heroRef} className="relative h-[250vh] bg-[#0F172A]">
+    <section ref={heroRef} className="relative h-[650vh] bg-[#0F172A]">
       {/* Pinned full-screen stage: image clears + story plays as the user scrolls */}
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* Workshop background image — covers the whole screen, blurred → sharp */}
@@ -285,10 +290,10 @@ function HeroStatsStrip() {
     <section className="bg-[#0F172A] border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         {[
-          { val: "50,000+", label: "Orders Delivered" },
-          { val: "2,500+", label: "Verified Pros" },
-          { val: "4.8 ★", label: "Avg. Rating" },
-          { val: "< 60 min", label: "Avg. Response" },
+          { val: "50+", label: "Product Categories" },
+          { val: "100%", label: "Verified Professionals" },
+          { val: "24/7", label: "Customer Support" },
+          { val: "Same Day", label: "Service Booking" },
         ].map((s, i) => (
           <div key={i}>
             <div className="text-2xl lg:text-3xl font-extrabold text-white">{s.val}</div>
@@ -335,6 +340,16 @@ function MarqueeSection() {
 }
 
 // ─── Animated Layout Grid (anime.js) ─────────────────────────────────────────
+
+function LayoutGridSection() {
+  return (
+    <section className="py-20 lg:py-28 bg-[#0F172A] border-y border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <LayoutGridAnimation />
+      </div>
+    </section>
+  );
+}
 
 // ─── Personalized Section (order again / frequent) ───────────────────────────
 
@@ -870,12 +885,12 @@ const serviceStyle: Record<string, { Icon: LucideIcon; color: string }> = {
 // Shown when the backend has no services yet (or is unreachable), so the
 // landing page still looks complete.
 const fallbackServices: ServiceCard[] = [
-  { Icon: Droplets, title: "Plumber", rating: 4.9, reviews: 2340, price: "₹299", tag: "Most Booked", color: "#2563EB" },
-  { Icon: Zap, title: "Electrician", rating: 4.8, reviews: 1820, price: "₹349", tag: "Top Rated", color: "#D97706" },
-  { Icon: Hammer, title: "Carpenter", rating: 4.7, reviews: 1240, price: "₹399", tag: "", color: "#92400E" },
-  { Icon: Settings, title: "Mechanic", rating: 4.8, reviews: 980, price: "₹449", tag: "", color: "#6B7280" },
-  { Icon: Wind, title: "AC Repair", rating: 4.9, reviews: 3100, price: "₹499", tag: "Express", color: "#0EA5E9" },
-  { Icon: Paintbrush, title: "Painter", rating: 4.6, reviews: 860, price: "₹299", tag: "", color: "#EC4899" },
+  { Icon: Droplets, title: "Plumber", rating: 0, reviews: 0, price: "₹299", tag: "", color: "#2563EB" },
+  { Icon: Zap, title: "Electrician", rating: 0, reviews: 0, price: "₹349", tag: "", color: "#D97706" },
+  { Icon: Hammer, title: "Carpenter", rating: 0, reviews: 0, price: "₹399", tag: "", color: "#92400E" },
+  { Icon: Settings, title: "Mechanic", rating: 0, reviews: 0, price: "₹449", tag: "", color: "#6B7280" },
+  { Icon: Wind, title: "AC Repair", rating: 0, reviews: 0, price: "₹499", tag: "", color: "#0EA5E9" },
+  { Icon: Paintbrush, title: "Painter", rating: 0, reviews: 0, price: "₹299", tag: "", color: "#EC4899" },
 ];
 
 // Maps an API service row onto the card shape.
@@ -1189,22 +1204,22 @@ const fallbackProducts: ProductCard[] = [
 const fallbackPros: ProCard[] = [
   {
     name: "Rajesh Kumar",
-    specialty: "Senior Electrician · 8 yrs exp",
-    rating: 4.9,
-    jobs: 1240,
-    city: "Mumbai",
+    specialty: "Senior Electrician",
+    rating: 0,
+    jobs: 0,
+    city: "",
     img: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=200&h=200&fit=crop&auto=format",
-    badge: "Top Pro",
+    badge: "",
     color: "#F59E0B",
   },
   {
     name: "Suresh Patel",
-    specialty: "Expert Plumber · 6 yrs exp",
-    rating: 4.8,
-    jobs: 980,
-    city: "Delhi",
+    specialty: "Expert Plumber",
+    rating: 0,
+    jobs: 0,
+    city: "",
     img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&h=200&fit=crop&auto=format",
-    badge: "Verified",
+    badge: "",
     color: "#16A34A",
   },
 ];
@@ -1528,7 +1543,7 @@ const trustItems = [
   {
     Icon: Truck,
     title: "Fast Delivery",
-    desc: "Same-day and next-day delivery on hardware products across 50+ cities.",
+    desc: "Fast, reliable delivery on hardware products — direct to your doorstep.",
     color: "#0F172A",
     bg: "#F1F5F9",
   },
@@ -1545,9 +1560,6 @@ function TrustSection() {
           transition={{ duration: 0.55 }}
           className="text-center mb-14"
         >
-          <span className="inline-block bg-[#F0FDF4] text-[#16A34A] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            Why FixKart
-          </span>
           <h2 className="text-3xl lg:text-[3.25rem] font-extrabold text-[#0F172A] leading-tight mb-4">
             Built on Trust & Safety
           </h2>
@@ -1591,10 +1603,10 @@ function TrustSection() {
         >
           <div className="text-center lg:text-left">
             <h3 className="text-2xl font-extrabold text-[#0F172A] mb-1">
-              Join 200,000+ Happy Customers
+              Ready to Get Started?
             </h3>
             <p className="text-[#64748B] text-sm font-medium">
-              Rated 4.8★ on App Store & Google Play
+              Join FixKart and discover a better way to fix your home.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -1636,15 +1648,12 @@ function FinalCTASection() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <span className="inline-block bg-[#F59E0B]/20 text-[#F59E0B] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-7">
-            Get Started Today
-          </span>
           <h2 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-extrabold text-white leading-[1.1] tracking-tight mb-6">
             Your Fix Is Just a{" "}
             <span className="text-[#F59E0B]">Click Away.</span>
           </h2>
           <p className="text-white/45 text-lg mb-11 max-w-2xl mx-auto leading-relaxed">
-            Join 200,000+ satisfied customers who trust FixKart for hardware needs and on-demand home services. Start your first order now — no subscription required.
+            FixKart brings hardware supplies and on-demand home services together in one place. Start your first order now — no subscription required.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -1686,6 +1695,7 @@ export default function HomePage() {
       <HeroSection />
       <HeroStatsStrip />
       <MarqueeSection />
+      <LayoutGridSection />
       <PersonalizedSection />
       <CategoriesSection />
       <FeaturedAndDealsSection />
