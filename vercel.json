@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd modern-frontend && npm install && npm run build",
+  "outputDirectory": "modern-frontend/dist",
+  "installCommand": "cd modern-frontend && npm install",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+  ]
+}
