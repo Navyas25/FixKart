@@ -7,7 +7,7 @@ import {
   type FixKartSession,
 } from "./api";
 
-export type UserRole = "customer" | "professional" | "admin" | null;
+export type UserRole = "customer" | "professional" | "vendor" | "admin" | null;
 
 interface AuthContextValue {
   session: FixKartSession | null;
@@ -17,6 +17,7 @@ interface AuthContextValue {
   role: UserRole;
   isAdmin: boolean;
   isProfessional: boolean;
+  isVendor: boolean;
   login: (session: FixKartSession) => void;
   logout: () => void;
   refreshRole: () => Promise<void>;
@@ -68,6 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       role,
       isAdmin: role === "admin",
       isProfessional: role === "professional",
+      isVendor: role === "vendor",
       login: (next) => {
         persistSession(next);
         setSessionState(next);

@@ -34,7 +34,7 @@ export const registerSchema = z
   .object({
     ...baseFields,
 
-    role: z.enum(["customer", "professional"]).default("customer"),
+    role: z.enum(["customer", "professional", "vendor"]).default("customer"),
 
     service_category: z
       .string()
@@ -63,6 +63,28 @@ export const registerSchema = z
       .min(10, "Bio must be at least 10 characters")
       .max(1000)
       .optional(),
+
+    // Vendor-specific fields
+    shop_name: z
+      .string()
+      .trim()
+      .min(2, "Shop name must be at least 2 characters")
+      .max(100)
+      .optional(),
+
+    shop_description: z
+      .string()
+      .trim()
+      .min(2, "Shop description must be at least 2 characters")
+      .max(1000)
+      .optional(),
+
+    shop_location: z
+      .string()
+      .trim()
+      .min(2, "Shop location is required")
+      .max(120)
+      .optional(),
   })
   .superRefine((val, ctx) => {
     if (val.role === "professional" && !val.service_category) {
@@ -71,6 +93,29 @@ export const registerSchema = z
         path: ["service_category"],
         message: "Service category is required for professional registration",
       });
+    }
+    if (val.role === "vendor") {
+      if (!val.shop_name) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shop_name"],
+          message: "Shop name is required for vendor registration",
+        });
+      }
+      if (!val.shop_description) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shop_description"],
+          message: "Shop description is required for vendor registration",
+        });
+      }
+      if (!val.shop_location) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["shop_location"],
+          message: "Shop location is required for vendor registration",
+        });
+      }
     }
   });
 

@@ -49,6 +49,8 @@ import WishlistPage from "./pages/WishlistPage";
 import ProfessionalLandingPage from "./pages/ProfessionalLandingPage";
 import ProfessionalRegisterPage from "./pages/ProfessionalRegisterPage";
 import ProfessionalDashboardPage from "./pages/ProfessionalDashboardPage";
+import VendorRegisterPage from "./pages/VendorRegisterPage";
+import VendorDashboardPage from "./pages/VendorDashboardPage";
 import AdminProfessionalsPage from "./pages/AdminProfessionalsPage";
 import {
   LoginPage,
@@ -432,6 +434,8 @@ export default function App() {
                 <Route path="/professional" element={<ProfessionalLandingPage />} />
                 <Route path="/professional/dashboard" element={<ProfessionalDashboardPage />} />
                 <Route path="/register/professional" element={<ProfessionalRegisterPage />} />
+                <Route path="/register/vendor" element={<VendorRegisterPage />} />
+                <Route path="/vendor/dashboard" element={<VendorDashboardPage />} />
                 <Route path="/admin/professionals" element={<AdminProfessionalsPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />

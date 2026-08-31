@@ -70,8 +70,16 @@ async function request<T = any>(
   }
 
   if (!response.ok) {
-    const message =
+    let message =
       json?.error?.message || json?.message || `API request failed (${response.status})`;
+    // Surface field-specific validation errors from Zod
+    if (json?.errors && typeof json.errors === "object") {
+      const fieldMsgs = Object.entries(json.errors)
+        .filter(([, msgs]) => Array.isArray(msgs) && msgs.length > 0)
+        .map(([field, msgs]) => `${field.replace(/_/g, " ")}: ${msgs[0]}`)
+        .join("; ");
+      if (fieldMsgs) message = fieldMsgs;
+    }
     const err = new Error(message) as Error & { status?: number };
     err.status = response.status;
     throw err;

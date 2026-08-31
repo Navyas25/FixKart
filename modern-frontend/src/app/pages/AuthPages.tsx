@@ -72,7 +72,7 @@ export function LoginPage() {
       // the backend re-verifies it from the database on every protected call.
       const requested = params.get("next");
       const role = data.user?.user_metadata?.role;
-      const fallback = role === "professional" ? "/professional/dashboard" : "/";
+      const fallback = role === "professional" ? "/professional/dashboard" : role === "vendor" ? "/vendor/dashboard" : "/";
       navigate(requested?.startsWith("/") ? requested : fallback);
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
@@ -287,16 +287,29 @@ export function RegisterPage() {
             Sign in
           </Link>
         </p>
-        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/10 text-center">
-          <p className="text-xs text-[#64748B] dark:text-slate-400 mb-2">
-            A professional looking to earn?{" "}
-          </p>
-          <Link
-            to="/register/professional"
-            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#D97706] hover:text-amber-600 transition-colors"
-          >
-            Apply as a professional <span aria-hidden>→</span>
-          </Link>
+        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/10 text-center space-y-3">
+          <div>
+            <p className="text-xs text-[#64748B] dark:text-slate-400 mb-2">
+              A professional looking to earn?{" "}
+            </p>
+            <Link
+              to="/register/professional"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-[#D97706] hover:text-amber-600 transition-colors"
+            >
+              Apply as a professional <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <div>
+            <p className="text-xs text-[#64748B] dark:text-slate-400 mb-2">
+              Want to sell products on FixKart?{" "}
+            </p>
+            <Link
+              to="/register/vendor"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-[#2563EB] hover:text-blue-600 transition-colors"
+            >
+              Apply as a vendor <span aria-hidden>→</span>
+            </Link>
+          </div>
         </div>
       </div>
     </AuthShell>

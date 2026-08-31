@@ -46,6 +46,9 @@ export const register = async (req, res, next) => {
       experience_years,
       service_location,
       bio,
+      shop_name,
+      shop_description,
+      shop_location,
     } = result.data;
 
     const { data, error } = await supabase.auth.signUp({
@@ -69,15 +72,15 @@ export const register = async (req, res, next) => {
     // A session is returned when email confirmation is disabled. Only then
     // can we create rows. When email confirmation is on, a trigger or admin
     // hook should create the profile.
-    // Assigning a professional role is a privileged write - RLS must not
+    // Assigning a professional or vendor role is a privileged write - RLS must not
     // trust a client-supplied role, so it requires the server-side
     // service-role key. Without it we refuse rather than create a broken
     // account whose role never sticks.
-    if (role === "professional" && !hasAdmin) {
+    if ((role === "professional" || role === "vendor") && !hasAdmin) {
       return res.status(503).json({
         success: false,
         message:
-          "Professional registration needs SUPABASE_SERVICE_ROLE_KEY set in backend/.env (server-side only - never expose it to the frontend).",
+          "${role === 'professional' ? 'Professional' : 'Vendor'} registration needs SUPABASE_SERVICE_ROLE_KEY set in backend/.env (server-side only - never expose it to the frontend).",
       });
     }
 
@@ -150,6 +153,26 @@ export const register = async (req, res, next) => {
             console.error(
               "[auth] Could not create professional row:",
               professionalError.message
+            );
+          }
+        }
+
+        // Vendor row with pending verification.
+        if (role === "vendor") {
+          const { error: vendorError } = await writer
+            .from("vendors")
+            .insert({
+              user_id: data.user.id,
+              shop_name: shop_name || "",
+              shop_description: shop_description || "",
+              shop_location: shop_location || "",
+              verification_status: "pending",
+            });
+
+          if (vendorError) {
+            console.error(
+              "[auth] Could not create vendor row:",
+              vendorError.message
             );
           }
         }

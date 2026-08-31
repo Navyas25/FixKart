@@ -11,7 +11,7 @@ import { isAdminEmail } from '../config/admins.js';
 // body or even with their own auth metadata - the DB is the source of
 // truth, and RLS scopes the read to the authenticated user's own row.
 
-const ROLE_ALIASES = ['customer', 'professional', 'admin'];
+const ROLE_ALIASES = ['customer', 'professional', 'vendor', 'admin'];
 
 const loadDbRole = async (req) => {
   if (req.dbRole !== undefined) return req.dbRole;
@@ -92,6 +92,7 @@ export const requireRole = (...allowedRoles) => {
 // Convenience aliases
 export const requireCustomer = requireRole('customer');
 export const requireProfessional = requireRole('professional');
+export const requireVendor = requireRole('vendor');
 export const requireAdmin = requireRole('admin');
 
 // Backward-compatible alias for existing code that imports authorizeRoles.
