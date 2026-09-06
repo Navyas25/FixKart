@@ -30,11 +30,22 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://127.0.0.1:5173";
 
+// Accept comma-separated list of allowed origins (Vercel preview deploys,
+// custom domains, localhost, etc.)
+const allowedOrigins = CLIENT_URL.split(",").map((o) => o.trim());
+
 app.use(helmet());
 
 app.use(
     cors({
-        origin: CLIENT_URL,
+        origin: (origin, callback) => {
+            // Allow requests with no origin (server-to-server, curl, mobile apps)
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.includes(origin)) return callback(null, true);
+            // Allow all Vercel preview deployments
+            if (origin && origin.includes(".vercel.app")) return callback(null, true);
+            callback(null, false);
+        },
         credentials: true,
     })
 );
