@@ -343,6 +343,8 @@ function Footer() {
         return "/products?category=automotive";
       case "Track Order":
         return "/orders";
+      case "Return Policy":
+        return "/terms-of-service#cancellations";
       default:
         return "#";
     }
@@ -365,16 +367,7 @@ function Footer() {
             <p className="text-white/35 text-sm leading-relaxed mb-6 max-w-xs">
               Quick-commerce for hardware products + on-demand home services. Fixed fast, every time, everywhere.
             </p>
-            <div className="flex gap-2.5">
-              {["📱 App Store", "🤖 Play Store"].map((btn) => (
-                <button
-                  key={btn}
-                  className="text-[11px] text-white/50 border border-white/12 px-3 py-1.5 rounded-lg hover:border-white/25 hover:text-white/70 transition-colors"
-                >
-                  {btn}
-                </button>
-              ))}
-            </div>
+
           </div>
 
           {/* Link cols */}
@@ -405,6 +398,7 @@ function Footer() {
             {[
                 { label: "Privacy Policy", to: "/privacy-policy" },
                 { label: "Terms of Service", to: "/terms-of-service" },
+                { label: "Return Policy", to: "/terms-of-service#cancellations" },
                 { label: "Cookie Policy", to: "/cookie-policy" },
               ].map((item) => (
               <Link

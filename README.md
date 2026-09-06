@@ -1,149 +1,728 @@
-# FixKart
+<div align="center">
 
-FixKart is a platform combining:
-1. A hardware marketplace (tools, plumbing, electrical, automotive supplies, etc.)
-2. An on-demand services platform (plumbers, electricians, carpenters, mechanics, painters, AC technicians, etc.)
+# 🔧 FixKart
+
+### Quick-commerce for hardware + on-demand home services
+
+**Fixed fast, every time, everywhere.**
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-green.svg)](https://nodejs.org)
+[![React](https://img.shields.io/badge/react-18.3-61DAFB.svg)](https://react.dev)
+[![Supabase](https://img.shields.io/badge/supabase-green.svg)](https://supabase.com)
+
+[Live Demo](#deployment) · [Report Bug](https://github.com/Navyas25/FixKart/issues) · [Request Feature](https://github.com/Navyas25/FixKart/issues)
+
+</div>
+
+---
+
+## 📖 Table of Contents
+
+- [What is FixKart?](#what-is-fixkart)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Database Setup](#database-setup)
+- [API Reference](#api-reference)
+- [Docker Setup](#docker-setup)
+- [Deployment](#deployment)
+- [Seeding Sample Data](#seeding-sample-data)
+- [User Roles & Access](#user-roles--access)
+- [Contributing](#contributing)
+
+---
+
+## What is FixKart?
+
+FixKart is a **d-sided marketplace platform** that combines:
+
+1. **Hardware Marketplace** — Browse and purchase tools, plumbing supplies, electrical equipment, automotive parts, safety gear, paint, and more from verified vendors.
+2. **On-Demand Services** — Book verified professionals (plumbers, electricians, carpenters, mechanics, painters, AC technicians) for home and business services.
+
+The platform serves **four distinct user roles**, each with their own dedicated dashboard:
+
+| Role | What they do |
+|------|-------------|
+| **Customer** | Browse products, book services, manage orders & bookings |
+| **Professional** | Accept service requests, manage schedule, track earnings & FixCoins |
+| **Vendor** | List products, manage inventory, fulfill orders, run offers |
+| **Admin** | Oversee all operations, verify professionals/vendors, manage support |
+
+---
+
+## Key Features
+
+### 🛒 Customer Experience
+- **Product Catalog** — Browse hardware products with categories, filters, search, and wishlists
+- **Service Booking** — Find and book verified professionals by service type, location, and rating
+- **Shopping Cart & Checkout** — Full e-commerce flow with address management and order tracking
+- **Booking Management** — Track service bookings through their lifecycle (Pending → In Progress → Completed)
+- **AI Support Chatbot** — Instant answers for common questions, with escalation to live support
+- **Professional Profiles** — View ratings, reviews, experience, and certifications before booking
+
+### 🔨 Professional Dashboard
+- **Dashboard Overview** — Today's earnings, upcoming jobs, completed jobs, and rating at a glance
+- **Job Requests** — Accept or decline incoming service requests with customer details and distance
+- **Calendar** — Month/week/day views with booking visualization and availability management
+- **Booking Lifecycle** — Full workflow: Accept → Start Travel → Start Job → Complete
+- **Earnings & Payments** — Total earnings, available balance, pending payments, transaction history
+- **FixCoins Rewards** — Loyalty points earned for completing jobs, getting 5-star ratings, milestones
+- **My Services** — Manage services offered with pricing, duration, and availability
+- **Reviews & Ratings** — View and respond to customer reviews
+- **Profile & Verification** — Manage bio, skills, certifications, and ID verification status
+- **Support Center** — Create and track support tickets with category and booking reference
+
+### 🏪 Vendor Dashboard
+- **Store Management** — Store profile with logo, banner, description, and business details
+- **Product Management** — Add, edit, delete products with images, pricing, SKU, and inventory
+- **Order Management** — View and fulfill orders, update shipping status
+- **Offers & Discounts** — Create percentage discounts, coupon codes, Buy X Get Y promotions
+- **Inventory Tracking** — Stock levels, low-stock alerts, out-of-stock management
+- **Analytics** — Sales trends, revenue charts, order history, performance metrics
+- **Reviews** — Monitor and respond to product reviews
+- **Notifications** — Real-time alerts for orders, reviews, and system updates
+
+### 👑 Admin Dashboard
+- **System Overview** — Revenue, user counts, professionals, vendors, pending actions
+- **User Management** — View, search, and manage all platform users with role-based filtering
+- **Professional Management** — Review verification documents, approve/reject applications
+- **Vendor Management** — Review vendor applications, verify business details
+- **Product & Category Management** — Oversee the entire product catalog with category filters
+- **Orders & Bookings** — Monitor all transactions and service bookings
+- **Payments** — Revenue tracking, payouts, commission, refund management
+- **Reviews & Reports** — Moderate reviews, handle disputes, investigate complaints
+- **Verification Center** — Unified place to verify professionals, vendors, and documents
+- **Analytics** — User growth, revenue trends, popular products/services, top performers
+- **Support** — View and manage all customer support tickets and live chat sessions
+
+### 🔐 Authentication & Security
+- **JWT-based Authentication** — Secure login/register with Supabase Auth
+- **Role-Based Access Control** — Professionals, vendors, and admins see only their dashboard
+- **Row Level Security (RLS)** — Database-level isolation so users can only access their own data
+- **Service-Role Backend** — Admin operations use privileged client, bypassing RLS
+- **Rate Limiting** — API protection against abuse and brute force
+- **Password Reset** — Email-based forgot/reset password flow
+
+### 💬 Support System
+- **AI Chatbot** — Predefined answers for common questions (order tracking, refunds, bookings)
+- **Live Chat** — Direct connection to customer support with session management
+- **Admin Chat Dashboard** — View and respond to all support conversations
+- **FAQ System** — Searchable frequently asked questions
+- **Ticket Escalation** — Route complex issues to human support
+
+### 🎁 FixCoins Loyalty System
+- **Points for Actions** — Earn coins for completing jobs, getting 5-star ratings, milestones
+- **Professional Levels** — Bronze → Silver → Gold → Platinum tiers with increasing benefits
+- **Rewards Catalog** — Redeem for tool discounts, fuel rewards, mobile recharge, profile boost
+- **History & Tracking** — Full transaction log of points earned and redeemed
+
+---
 
 ## Architecture
 
 ```
-Frontend (React app in modern-frontend/)
-    │  fetch() → /api (proxied to http://localhost:5000)
-    ▼
-Backend (Express + Supabase in backend/)
-    │  supabase-js
-    ▼
-Supabase (Postgres + Auth + RLS)
+┌─────────────────────────────────────────────────────────────────┐
+│                         FRONTEND                                │
+│   React 18 · TypeScript · Vite · Tailwind CSS v4 · shadcn/ui  │
+│                                                                 │
+│   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────────┐  │
+│   │ Customer │ │Professional│ │  Vendor  │ │     Admin        │  │
+│   │ Pages    │ │Dashboard  │ │Dashboard │ │    Dashboard     │  │
+│   └────┬─────┘ └────┬──────┘ └────┬─────┘ └───────┬──────────┘  │
+│        │            │             │                │             │
+│        └────────────┴──────┬──────┴────────────────┘             │
+│                            │ fetch('/api/*')                     │
+│                            ▼                                     │
+│                   Vite Dev Proxy ──────► http://localhost:5000   │
+└─────────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         BACKEND                                 │
+│              Express 4 · Node.js 18+ · ESM                      │
+│                                                                 │
+│   ┌─────────┐  ┌────────────┐  ┌───────────┐  ┌──────────────┐ │
+│   │  Auth   │  │   Routes   │  │Controller │  │   Middleware  │ │
+│   │  (JWT)  │─▶│  (REST)    │─▶│ (Business)│─▶│(RLS, Verify) │ │
+│   └─────────┘  └────────────┘  └─────┬─────┘  └──────────────┘ │
+│                                       │                          │
+│                                       ▼                          │
+│                               ┌──────────────┐                   │
+│                               │   Supabase   │                   │
+│                               │   Client     │                   │
+│                               └──────┬───────┘                   │
+└──────────────────────────────────────┼───────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                        SUPABASE                                 │
+│     PostgreSQL · Auth · Row Level Security · Realtime           │
+│                                                                 │
+│   Tables: profiles, products, categories, services,             │
+│           professionals, vendors, orders, order_items,          │
+│           bookings, addresses, wallet, reviews,                 │
+│           support_tickets, offers, notifications                │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-- **Frontend (`modern-frontend/`)** — React + Vite + Tailwind v4. The one and
-  only site: home, search (products + services + professionals), product /
-  service / professional pages, cart, checkout, orders, bookings, booking form,
-  profile with saved addresses, and login/register. It has a dark-mode toggle,
-  Google-Maps location detection (optional key), a localStorage cart, and real
-  search backed by the API. The Vite dev server proxies `/api` to the backend.
-- **Backend:** Express server in `backend/` exposes `/api/*` routes. Public
-  endpoints (products, services, professionals) are read-only; user data
-  (profile, addresses, orders, bookings) is scoped to the signed-in user's JWT
-  and protected by Supabase Row Level Security.
+---
 
-## Running Locally
+## Tech Stack
 
-1. **Backend** (from `backend/`):
+### Frontend (`modern-frontend/`)
 
-   ```bash
-   cp .env.example .env   # fill in SUPABASE_URL / SUPABASE_ANON_KEY
-   npm install
-   npm run dev            # http://localhost:5000/api
-   ```
+| Category | Technology |
+|----------|-----------|
+| Framework | React 18.3 |
+| Language | TypeScript |
+| Build Tool | Vite 6.3 |
+| Styling | Tailwind CSS v4 + shadcn/ui components |
+| Routing | React Router v7 |
+| State | React Context (auth, cart, wishlist, theme) |
+| Forms | React Hook Form + Zod validation |
+| Charts | Recharts |
+| Icons | Lucide React |
+| Animation | Framer Motion (motion) |
+| UI Components | Radix UI primitives |
+| Toast | Sonner |
+| Date | date-fns |
 
-2. **Frontend** (from `modern-frontend/`):
+### Backend (`backend/`)
 
-   ```bash
-   npm install
-   npm run dev            # http://127.0.0.1:5173
-   ```
+| Category | Technology |
+|----------|-----------|
+| Runtime | Node.js 18+ |
+| Framework | Express 4 |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth (JWT) |
+| Validation | Zod |
+| Security | Helmet, CORS, Rate Limiting |
+| Email | Nodemailer |
+| Module System | ES Modules |
 
-   The Vite dev server proxies `/api` to `http://localhost:5000`, so no CORS
-   config is needed.
+### Infrastructure
 
-3. Browse the flows:
+| Category | Technology |
+|----------|-----------|
+| Frontend Deploy | Vercel |
+| Backend Deploy | Render |
+| Database/Auth | Supabase Cloud |
+| Containerization | Docker + Docker Compose |
 
-   - **Marketplace:** Home → Products → Product Details → Cart → Checkout →
-     Order Confirmation → Orders
-   - **Services:** Home → Services → Service Details → Professionals →
-     Professional Profile → Booking → My Bookings
-   - **Account:** Register → Login → Profile (saved addresses) → Orders →
-     Bookings
+---
 
-## Running with Docker (one stack)
+## Project Structure
 
-A `docker-compose.yml` at the repo root runs the whole stack:
+```
+FixKart/
+├── backend/
+│   ├── config/
+│   │   ├── env.js              # Environment loader + WebSocket polyfill
+│   │   ├── supabase.js         # Supabase client instances (anon + admin)
+│   │   ├── admin.js            # Service-role admin client
+│   │   └── admins.js           # Admin email allowlist
+│   ├── controllers/
+│   │   ├── auth.controller.js       # Register, login, password reset
+│   │   ├── admin.controller.js      # Admin dashboard, users, analytics
+│   │   ├── professional.controller.js  # Professional CRUD, bookings, earnings
+│   │   ├── vendors.controller.js    # Vendor products, orders, inventory
+│   │   ├── vendor-admin.controller.js  # Admin vendor management
+│   │   ├── products.controller.js   # Public product listing
+│   │   ├── services.controller.js   # Public service listing
+│   │   ├── bookings.controller.js   # Customer bookings
+│   │   ├── orders.controller.js     # Customer orders
+│   │   ├── reviews.controller.js    # Review CRUD
+│   │   ├── offers.controller.js     # Vendor offers/coupons
+│   │   ├── support.controller.js    # Chatbot + live chat
+│   │   ├── users.controller.js      # User profile
+│   │   ├── addresses.controller.js  # Saved addresses
+│   │   └── wallet.controller.js     # Wallet/balance
+│   ├── middleware/
+│   │   ├── auth.middleware.js        # JWT verification
+│   │   ├── role.middleware.js        # Role-based access (admin, professional, vendor)
+│   │   ├── rateLimit.middleware.js   # API rate limiting
+│   │   └── error.middleware.js       # Global error handler
+│   ├── routes/                      # Express route definitions
+│   ├── validators/                  # Zod request validation schemas
+│   ├── utils/
+│   │   ├── supabaseUser.js          # Per-user Supabase client (RLS-scoped)
+│   │   ├── email.js                 # Email sender
+│   │   ├── logger.js                # Structured logger
+│   │   ├── response.js              # Standardized API responses
+│   │   └── ids.js                   # ID generation
+│   ├── scripts/
+│   │   ├── seed.js                  # Full database seeder
+│   │   ├── seed.sql                 # SQL-based seed data
+│   │   └── migrations/              # Database migration SQL files
+│   ├── server.js                    # Express app entry point
+│   ├── Dockerfile
+│   └── package.json
+│
+├── modern-frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── App.tsx              # Root component, routing, layout
+│   │   │   ├── pages/               # All page components (30+ pages)
+│   │   │   │   ├── HomePage.tsx
+│   │   │   │   ├── ProductsPage.tsx
+│   │   │   │   ├── ServicesPage.tsx
+│   │   │   │   ├── ProfessionalsPage.tsx
+│   │   │   │   ├── ProductDetailPage.tsx
+│   │   │   │   ├── ServiceDetailPage.tsx
+│   │   │   │   ├── ProfessionalProfilePage.tsx
+│   │   │   │   ├── CartPage.tsx
+│   │   │   │   ├── CheckoutPage.tsx
+│   │   │   │   ├── OrdersPage.tsx
+│   │   │   │   ├── BookingsPage.tsx
+│   │   │   │   ├── ProfilePage.tsx
+│   │   │   │   ├── SettingsPage.tsx
+│   │   │   │   ├── WishlistPage.tsx
+│   │   │   │   ├── ProfessionalDashboardPage.tsx
+│   │   │   │   ├── VendorDashboardPage.tsx
+│   │   │   │   ├── AdminDashboardPage.tsx
+│   │   │   │   ├── AdminProfessionalsPage.tsx
+│   │   │   │   ├── AdminVendorsPage.tsx
+│   │   │   │   ├── CustomerSupportPage.tsx
+│   │   │   │   ├── PrivacyPolicyPage.tsx
+│   │   │   │   ├── TermsOfServicePage.tsx
+│   │   │   │   ├── CookiePolicyPage.tsx
+│   │   │   │   ├── AuthPages.tsx
+│   │   │   │   └── NotFoundPage.tsx
+│   │   │   ├── components/          # Reusable UI components
+│   │   │   │   ├── ChatBot.tsx
+│   │   │   │   ├── PageHeader.tsx
+│   │   │   │   ├── ProductCard.tsx
+│   │   │   │   ├── ReviewsSection.tsx
+│   │   │   │   ├── WishlistHeart.tsx
+│   │   │   │   └── ui/             # shadcn/ui components (40+)
+│   │   │   └── ...
+│   │   ├── lib/                     # Shared utilities
+│   │   │   ├── api.ts              # API client with auth headers
+│   │   │   ├── auth.tsx            # Auth context (login state, role detection)
+│   │   │   ├── cart.tsx            # Shopping cart context
+│   │   │   ├── wishlist.tsx        # Wishlist context
+│   │   │   ├── theme.tsx           # Dark/light mode toggle
+│   │   │   ├── format.ts           # Number/currency formatting
+│   │   │   ├── location.ts         # Geolocation utilities
+│   │   │   └── smoothScroll.tsx    # Smooth scroll behavior
+│   │   └── assets/                 # Images, SVGs
+│   ├── vite.config.ts              # Vite config with API proxy
+│   ├── index.html
+│   └── package.json
+│
+├── docker/
+│   ├── modern.Dockerfile           # Frontend nginx container
+│   └── .env.example                # Docker env template
+│
+├── docker-compose.yml              # Full stack orchestration
+├── vercel.json                     # Vercel deployment config
+└── README.md
+```
 
-| Service  | Image built from        | URL                          |
-| -------- | ----------------------- | ---------------------------- |
-| `backend`| `backend/Dockerfile`    | http://localhost:5000/api    |
-| `modern` | `docker/modern.Dockerfile`  | http://localhost:5173     |
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js** 18 or later
+- **npm** (or yarn/pnpm)
+- A **Supabase** project ([free tier works](https://supabase.com))
+
+### 1. Clone the Repository
 
 ```bash
-cp docker/.env.example .env   # fill in SUPABASE_URL / SUPABASE_ANON_KEY
-# or export SUPABASE_URL and SUPABASE_ANON_KEY in your shell
+git clone https://github.com/Navyas25/FixKart.git
+cd FixKart
+```
+
+### 2. Backend Setup
+
+```bash
+cd backend
+
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your Supabase credentials:
+#   SUPABASE_URL = your Supabase project URL
+#   SUPABASE_ANON_KEY = your anon/public key
+#   SUPABASE_SERVICE_ROLE_KEY = your service role key (server-side only)
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+# → http://localhost:5000/api
+```
+
+### 3. Frontend Setup
+
+Open a **second terminal**:
+
+```bash
+cd modern-frontend
+
+# Copy environment template
+cp .env.example .env
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+# → http://localhost:5173
+```
+
+> **Note:** The Vite dev server proxies `/api` requests to `http://localhost:5000`, so no CORS configuration is needed during development.
+
+### 4. Set Up the Database
+
+Follow the [Database Setup](#database-setup) section below to create tables and seed sample data.
+
+### 5. Open the App
+
+Visit **http://localhost:5173** and explore:
+
+| Flow | Path |
+|------|------|
+| Browse products | Home → Shop → Product Details → Cart → Checkout |
+| Book a service | Home → Services → Service Details → Professionals → Book |
+| Professional dashboard | Register as professional → Login → `/professional/dashboard` |
+| Vendor dashboard | Register as vendor → Login → `/vendor/dashboard` |
+| Admin dashboard | Login as admin → `/admin/dashboard` |
+
+---
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPABASE_URL` | ✅ | Supabase project URL (e.g., `https://xxx.supabase.co`) |
+| `SUPABASE_ANON_KEY` | ✅ | Supabase anonymous/public API key |
+| `SUPABASE_SERVICE_ROLE_KEY` | ⚠️ | Service role key (server-side only, bypasses RLS). Required for professional/vendor registration and admin operations |
+| `PORT` | ❌ | Server port (default: `5000`) |
+| `NODE_ENV` | ❌ | `development` or `production` |
+| `CLIENT_URL` | ❌ | Frontend origin for CORS (default: `http://127.0.0.1:5173`) |
+
+### Frontend (`modern-frontend/.env`)
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_GOOGLE_MAPS_API_KEY` | ❌ | Google Maps API key for Places autocomplete and reverse geocoding. Without it, location detection falls back to raw browser geolocation |
+| `VITE_API_BASE_URL` | ❌ | API base URL (default: `/api`, proxied by Vite to `localhost:5000`) |
+
+---
+
+## Database Setup
+
+### Create Tables
+
+FixKart requires the following Supabase tables. Run the migration scripts in order via the **Supabase SQL Editor**:
+
+```bash
+# In Supabase Dashboard → SQL Editor → New Query, run each file:
+
+# 1. Core tables (products, categories, services, professionals, etc.)
+# These are created automatically by Supabase or via seed data
+
+# 2. Professional verification fields
+backend/scripts/migrations/001_professional_verification.sql
+
+# 3. Engagement features (reviews, ratings)
+backend/scripts/migrations/002_engagement.sql
+
+# 4. Reviews system
+backend/scripts/migrations/003_reviews.sql
+
+# 5. Vendors table and policies
+backend/scripts/migrations/004_vendors.sql
+
+# 6. Any remaining missing tables
+backend/scripts/migrations/004_missing_tables.sql
+```
+
+### Key Tables
+
+| Table | Purpose |
+|-------|---------|
+| `profiles` | User profiles with role (customer/professional/vendor/admin) |
+| `products` | Hardware products with vendor ownership |
+| `categories` | Product categories (Tools, Plumbing, Electrical, etc.) |
+| `services` | Service listings (Plumbing, Electrical, etc.) |
+| `professionals` | Professional profiles, verification status, skills |
+| `vendors` | Vendor store profiles, business details, bank info |
+| `orders` | Product purchase orders |
+| `order_items` | Individual items within orders |
+| `bookings` | Service booking records |
+| `addresses` | Saved delivery/service addresses |
+| `reviews` | Product and professional reviews |
+| `offers` | Vendor-created discounts and coupons |
+| `wallet` | User wallet balance |
+| `support_tickets` | Customer support tickets |
+| `notifications` | User notifications |
+
+### Row Level Security (RLS)
+
+All user-facing tables have RLS enabled. Policies ensure:
+- Users can only read/write their own data
+- Public data (products, services, professionals) is readable by everyone
+- Admin operations use the service-role key (bypasses RLS)
+
+---
+
+## API Reference
+
+### Authentication
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/auth/register` | No | Register a new account |
+| `POST` | `/api/auth/login` | No | Login with email/password |
+| `GET` | `/api/auth/me` | Yes | Get current user profile |
+| `POST` | `/api/auth/forgot-password` | No | Request password reset email |
+| `POST` | `/api/auth/reset-password` | No | Reset password via token |
+| `POST` | `/api/auth/change-password` | Yes | Change password (logged in) |
+| `POST` | `/api/auth/logout` | No | Logout |
+
+### Products & Services (Public)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/products` | No | List products (supports `?featured=true&category=...`) |
+| `GET` | `/api/products/:id` | No | Get product details |
+| `GET` | `/api/services` | No | List all services |
+| `GET` | `/api/services/:id` | No | Get service details |
+| `GET` | `/api/categories` | No | List product categories |
+| `GET` | `/api/professionals` | No | List professionals (supports `?sort=rating`) |
+| `GET` | `/api/professionals/:id` | No | Get professional profile |
+
+### Customer
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET/PATCH` | `/api/users/profile` | Yes | View/update profile |
+| `GET/POST/PATCH/DELETE` | `/api/addresses` | Yes | Manage saved addresses |
+| `GET` | `/api/orders` | Yes | List my orders |
+| `POST` | `/api/orders` | Yes | Place an order |
+| `GET` | `/api/bookings` | Yes | List my bookings |
+| `POST` | `/api/bookings` | Yes | Create a booking |
+| `GET` | `/api/wallet` | Yes | View wallet balance |
+| `GET/POST/DELETE` | `/api/reviews` | Yes | Manage reviews |
+| `GET/POST` | `/api/support/*` | Yes | Chatbot + live support |
+
+### Professional Dashboard
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/professionals/me/dashboard` | Pro | Dashboard stats |
+| `GET/PATCH` | `/api/professionals/me` | Pro | View/update profile |
+| `GET` | `/api/professionals/me/bookings` | Pro | My bookings (supports `?status=...`) |
+| `PATCH` | `/api/professionals/me/bookings/:id/respond` | Pro | Accept/decline booking |
+| `PATCH` | `/api/professionals/me/bookings/:id/status` | Pro | Update booking status |
+| `GET` | `/api/professionals/me/services` | Pro | My services |
+| `PATCH` | `/api/professionals/me/services/:id` | Pro | Update service |
+| `GET` | `/api/professionals/me/earnings` | Pro | Earnings history |
+| `GET` | `/api/professionals/me/reviews` | Pro | My reviews |
+| `GET` | `/api/professionals/me/notifications` | Pro | Notifications |
+| `PATCH` | `/api/professionals/me/availability` | Pro | Toggle online/offline |
+| `POST` | `/api/professionals/document` | Pro | Upload verification doc |
+
+### Vendor Dashboard
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/vendors/me/dashboard` | Vendor | Dashboard stats |
+| `GET/POST/PATCH/DELETE` | `/api/vendors/me/products` | Vendor | Manage products |
+| `GET` | `/api/vendors/me/orders` | Vendor | My orders |
+| `PATCH` | `/api/vendors/me/orders/:id/status` | Vendor | Update order status |
+| `GET/POST/PATCH/DELETE` | `/api/offers` | Vendor | Manage offers/coupons |
+| `GET` | `/api/vendors/me/reviews` | Vendor | Product reviews |
+| `GET` | `/api/vendors/me/analytics` | Vendor | Sales analytics |
+| `GET/PATCH` | `/api/vendors/me/inventory` | Vendor | Inventory management |
+| `PATCH` | `/api/vendors/me/store` | Vendor | Update store profile |
+| `PATCH` | `/api/vendors/me/bank` | Vendor | Update bank details |
+
+### Admin
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/admin/dashboard` | Admin | System overview |
+| `GET` | `/api/admin/users` | Admin | All users |
+| `GET` | `/api/admin/orders` | Admin | All orders |
+| `GET` | `/api/admin/bookings` | Admin | All bookings |
+| `GET` | `/api/admin/analytics` | Admin | Platform analytics |
+| `GET` | `/api/admin/reviews` | Admin | All reviews |
+| `GET` | `/api/admin/support` | Admin | Support tickets |
+| `GET` | `/api/professionals/admin` | Admin | All professionals |
+| `PATCH` | `/api/professionals/:id/verify` | Admin | Verify/reject professional |
+| `GET` | `/api/vendors/admin` | Admin | All vendors |
+| `PATCH` | `/api/vendors/:id/verify` | Admin | Verify/reject vendor |
+
+---
+
+## Docker Setup
+
+Run the entire stack with Docker Compose:
+
+```bash
+# Set environment variables
+export SUPABASE_URL=https://your-project.supabase.co
+export SUPABASE_ANON_KEY=your-anon-key
+
+# Or copy the Docker env template
+cp docker/.env.example .env
+# Edit .env with your Supabase credentials
+
+# Build and start
 docker compose up --build
 ```
 
-- **`modern`** serves the compiled React app behind nginx and proxies `/api` to
-  the `backend` container, so no CORS setup is needed.
-- The backend healthcheck (`GET /api/health`) gates the frontend via
-  `depends_on: condition: service_healthy`.
-- Stop everything with `docker compose down`. `docker compose config` checks
-  the file without starting anything.
+| Service | Built From | URL |
+|---------|-----------|-----|
+| `backend` | `backend/Dockerfile` | http://localhost:5000/api |
+| `modern` | `docker/modern.Dockerfile` | http://localhost:5173 |
 
-## Seeding sample data
-
-The storefront lists read from Supabase, and RLS blocks the app's keys from
-writing, so the tables need seeding from a privileged context. Two equivalent
-options (both idempotent - safe to re-run):
-
-**Option A - Supabase SQL editor (no keys needed):** open your project's
-Dashboard → **SQL Editor**, paste the contents of `backend/scripts/seed.sql`,
-and run it. It seeds 8 categories, 14 products, 8 services. The professionals
-section only fills in profile details and professional rows for *existing*
-auth users (it matches them by email) — the accounts themselves must be
-created through the app, since inserting into `auth.users` directly is not
-version-proof. So, to also seed professionals:
-
-1. Register the six accounts against the running backend (or via your site's
-   sign-up form):
-
-   ```bash
-   for email in pro.plumber pro.electrician pro.carpenter pro.ac pro.painter pro.mechanic; do
-     curl -s -X POST http://localhost:5000/api/auth/register \
-       -H "Content-Type: application/json" \
-       -d "{\"name\":\"Seed Pro\",\"email\":\"$email@fixkart.dev\",\"password\":\"FixkartSeed123!\"}"
-   done
-   ```
-
-2. Run `backend/scripts/seed-professionals.sql` in the SQL editor to attach
-   avatars, phones, and the professional rows.
-
-> If an older seed left broken `pro.*@fixkart.dev` auth users behind (the
-> sign-up endpoint will fail with "Database error finding user"), run **PART 1**
-> of `backend/scripts/seed-professionals.sql` first to delete them, re-register,
-> then run **PART 2**.
-
-**Option B - seed script (service role key):** `npm run seed` in `backend/`
-creates everything including the professional accounts via the admin API, so
-no extra steps are needed.
+The frontend nginx container proxies `/api` to the backend, so everything works as one stack. The backend healthcheck (`GET /api/health`) gates the frontend startup.
 
 ```bash
-# backend/.env - Supabase dashboard -> Project Settings -> API
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-secret
+# Stop
+docker compose down
 
+# View logs
+docker compose logs -f backend
+```
+
+---
+
+## Deployment
+
+### Frontend (Vercel)
+
+The frontend deploys automatically to Vercel on push to `main`:
+
+1. Connect your GitHub repo to [Vercel](https://vercel.com)
+2. Vercel detects the `vercel.json` config and builds the React app
+3. Set environment variable `VITE_API_BASE_URL` to your deployed backend URL (e.g., `https://fixkart-api.onrender.com/api`)
+
+### Backend (Render)
+
+Deploy the backend to [Render](https://render.com):
+
+1. Create a new **Web Service** on Render
+2. Connect your GitHub repo
+3. Configure:
+   - **Root Directory:** `backend`
+   - **Runtime:** Node
+   - **Build Command:** `npm install`
+   - **Start Command:** `node server.js`
+4. Add environment variables:
+   - `SUPABASE_URL`
+   - `SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `PORT` = `10000`
+5. Deploy — you'll get a URL like `https://fixkart-api-xxxx.onrender.com`
+
+> **Important:** The backend includes a WebSocket polyfill in `config/env.js` to support Node.js 20 on Render. If upgrading to Node 22+, the polyfill is harmless and can be left in place.
+
+---
+
+## Seeding Sample Data
+
+### Option A: Supabase SQL Editor (Recommended)
+
+Open your Supabase Dashboard → **SQL Editor** and run:
+
+1. `backend/scripts/seed.sql` — Creates categories, products, and services
+2. `backend/scripts/seed-professionals.sql` — Creates professional accounts
+
+Then register customer/vendor accounts through the app.
+
+### Option B: Seed Script
+
+```bash
 cd backend
+# Ensure SUPABASE_SERVICE_ROLE_KEY is set in .env
 npm run seed
 ```
 
-After seeding, refresh the site. The seeded professional logins
-(`pro.plumber@fixkart.dev`, …) use password `FixkartSeed123!` for local/dev
-testing.
+This creates all sample data including professional accounts. The seeded logins use:
+- **Email:** `pro.plumber@fixkart.dev` (and similar for other professions)
+- **Password:** `FixkartSeed123!`
 
-## Google Maps location detection
+---
 
-The React app detects the user's location. With no API key it falls back to
-browser geolocation; with a key it gets Places autocomplete + reverse
-geocoding:
+## User Roles & Access
 
-- `VITE_GOOGLE_MAPS_API_KEY` in `modern-frontend/.env` (see
-  `modern-frontend/.env.example`)
+| Role | Login Path | Dashboard Path | Capabilities |
+|------|-----------|---------------|--------------|
+| Customer | `/login` | `/profile` | Browse, purchase, book services, review |
+| Professional | `/login` | `/professional/dashboard` | Accept jobs, manage bookings, earn FixCoins |
+| Vendor | `/login` | `/vendor/dashboard` | List products, manage orders, run offers |
+| Admin | `/login` | `/admin/dashboard` | Manage users, verify pros/vendors, analytics |
 
-Enable the **Places API** and **Geocoding API** on the Google Cloud key, then
-restart the React dev server.
+**Admin account:** `admin@fixkart.dev` / `Admin@12345`
 
-## Database
+Role-based routing automatically redirects users to their dashboard on login. Professionals, vendors, and admins see their dedicated dashboard — not the full storefront.
 
-Tables live in Supabase: `products`, `categories`, `services`, `professionals`,
-`orders`, `order_items`, `bookings`, `addresses`, `profiles`. Seed them from the
-Supabase dashboard (anonymous writes are blocked by RLS by design). The list
-pages show an empty state until rows exist — products/services/professionals
-must be seeded before orders and bookings can be created, since the backend
-validates ids and pricing server-side.
+---
+
+## Design System
+
+### Colors
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| Dark Navy | `#0F172A` | Backgrounds, primary text, buttons |
+| Amber | `#F59E0B` | Accent, highlights, CTAs, FixCoins |
+| Blue | `#2563EB` | Secondary actions, links |
+| Slate | `#64748B` | Secondary text, placeholders |
+| Green | `#10B981` | Success states, online status |
+| Red | `#DC2626` | Errors, badges, alerts |
+
+### Component Library
+
+Built with **shadcn/ui** (40+ components) on top of Radix UI primitives. All components support dark mode via Tailwind's `dark:` variant.
+
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Make your changes
+4. Run the build: `cd modern-frontend && npx vite build`
+5. Commit: `git commit -m "feat: add my feature"`
+6. Push: `git push origin feature/my-feature`
+7. Open a Pull Request
+
+### Code Style
+
+- **TypeScript** for all new frontend code
+- **ES Modules** (`import`/`export`) for backend
+- **Zod** schemas for all API request validation
+- **Tailwind CSS** for styling (no CSS modules)
+- **Functional components** with hooks only (no class components)
+
+---
+
+## License
+
+This project is proprietary software. All rights reserved.
+
+---
+
+<div align="center">
+
+**Built with ❤️ for FixKart**
+
+Fixed fast, every time, everywhere.
+
+</div>
