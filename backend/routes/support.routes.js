@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import {
   chatbotMessage,
-  createTicket,
-  getMyTickets,
-  getAllTickets,
-  updateTicket,
+  createChatSession,
+  sendChatMessage,
+  getChatMessages,
+  getAllChatSessions,
+  updateChatSession,
   getSupportStats,
   getFAQ,
 } from '../controllers/support.controller.js';
@@ -17,13 +18,14 @@ const router = Router();
 router.post('/chatbot', chatbotMessage);
 router.get('/faq', getFAQ);
 
-// --- Authenticated user ---
-router.post('/tickets', requireAuth, createTicket);
-router.get('/tickets', requireAuth, getMyTickets);
+// --- Live Chat (anyone can start, messages are public within session) ---
+router.post('/chat/session', createChatSession);
+router.post('/chat/message', sendChatMessage);
+router.get('/chat/:session_id/messages', getChatMessages);
 
-// --- Admin / Support agent ---
-router.get('/admin/tickets', requireAuth, requireAdmin, getAllTickets);
-router.patch('/admin/tickets/:id', requireAuth, requireAdmin, updateTicket);
+// --- Admin ---
+router.get('/admin/sessions', requireAuth, requireAdmin, getAllChatSessions);
+router.patch('/admin/sessions/:id', requireAuth, requireAdmin, updateChatSession);
 router.get('/admin/stats', requireAuth, requireAdmin, getSupportStats);
 
 export default router;

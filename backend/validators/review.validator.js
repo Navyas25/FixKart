@@ -14,7 +14,7 @@ export const validate = (schema) => (req, res, next) => {
 };
 
 export const reviewSchema = z.object({
-  item_type: z.enum(['product', 'service'], 'item_type must be "product" or "service"'),
+  item_type: z.enum(['product', 'service', 'professional'], 'item_type must be "product", "service", or "professional"'),
   item_id: z.string().uuid('Invalid item id'),
   rating: z.number().int().min(1, 'Rating must be between 1 and 5').max(5, 'Rating must be between 1 and 5'),
   comment: z.string().trim().max(1000, 'Comment must be under 1000 characters').optional(),

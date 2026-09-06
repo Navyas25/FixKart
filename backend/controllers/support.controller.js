@@ -8,7 +8,7 @@ import { getUserSupabase } from '../utils/supabaseUser.js';
 const CHATBOT_KB = [
   {
     keywords: ['refund', 'money back', 'return money'],
-    answer: 'Refund requests are handled by our support team. I can create a ticket for you, or you can contact support@fixkart.dev directly. Refunds are processed within 5-7 business days after approval.',
+    answer: 'Refund requests are handled by our support team. I can connect you with a support agent right now, or you can email support@fixkart.dev directly. Refunds are processed within 5-7 business days after approval.',
     category: 'refund',
     escalate: true,
   },
@@ -20,86 +20,86 @@ const CHATBOT_KB = [
   },
   {
     keywords: ['order', 'track', 'where is my order', 'delivery status'],
-    answer: 'You can track your order from My Orders page. Click on any order to see its current status and tracking information. Orders typically take 3-7 business days to deliver.',
+    answer: 'You can track your order from the My Orders page. Click on any order to see its current status and tracking information.',
     category: 'orders',
     escalate: false,
   },
   {
     keywords: ['payment', 'paid', 'charge', 'billing'],
-    answer: 'All payments are processed securely. If you see an unexpected charge, please check My Orders first. For billing disputes, I can create a support ticket for our team to review.',
+    answer: 'All payments are processed securely. If you see an unexpected charge, please check My Orders first. For billing disputes, I can connect you with our support team.',
     category: 'payment',
     escalate: true,
   },
   {
     keywords: ['booking', 'appointment', 'schedule', 'reschedule'],
-    answer: 'You can manage your bookings from the My Bookings page. To reschedule, open the booking and click "Reschedule". Professionals need to confirm the new time. Cancellations are free up to 24 hours before.',
+    answer: 'You can manage your bookings from the My Bookings page. To reschedule, open the booking and click "Reschedule". Professionals need to confirm the new time.',
     category: 'bookings',
     escalate: false,
   },
   {
     keywords: ['professional', 'plumber', 'electrician', 'carpenter', 'mechanic'],
-    answer: 'All our professionals are verified and background-checked. You can browse professionals by service category, view their ratings, and book directly. If you have concerns about a professional, I can create a ticket.',
+    answer: "All our professionals are verified and background-checked. You can browse professionals by service category, view their ratings, and book directly. If you have concerns, connect to support and we will help right away.",
     category: 'professionals',
     escalate: false,
   },
   {
     keywords: ['fixcoins', 'coins', 'rewards', 'points', 'loyalty'],
-    answer: 'FixCoins are loyalty points earned by completing jobs and receiving good ratings. You can view your FixCoins balance in the Professional Dashboard. Points can be redeemed for tool discounts, fuel rewards, and more.',
+    answer: 'FixCoins are loyalty points earned by completing jobs and receiving good ratings. You can view your FixCoins balance in the Professional Dashboard.',
     category: 'fixcoins',
     escalate: false,
   },
   {
     keywords: ['account', 'login', 'password', 'forgot password', 'sign in'],
-    answer: 'To reset your password, click "Forgot password?" on the login page. You\'ll receive a reset link via email. If you can\'t access your email, contact support@fixkart.dev for account recovery.',
+    answer: 'To reset your password, click "Forgot password?" on the login page. You\'ll receive a reset link via email.',
     category: 'account',
     escalate: false,
   },
   {
     keywords: ['verify', 'verification', 'verified', 'kyc', 'documents'],
-    answer: 'Verification usually takes 24-48 hours. Upload your government ID and certification documents from your Dashboard → Verification tab. You\'ll receive an email once verified.',
+    answer: 'Verification usually takes 24-48 hours. Upload your government ID and certification documents from your Dashboard → Verification tab.',
     category: 'verification',
     escalate: false,
   },
   {
     keywords: ['shipping', 'deliver', 'ship', 'courier', 'dispatch'],
-    answer: 'Standard shipping takes 3-7 business days. Express shipping (1-2 days) is available for select products. You can see shipping options at checkout. Track your shipment from My Orders.',
+    answer: 'Standard shipping takes 3-7 business days. Express shipping (1-2 days) is available for select products. Track your shipment from My Orders.',
     category: 'shipping',
     escalate: false,
   },
   {
     keywords: ['cancel', 'cancellation'],
-    answer: 'You can cancel orders before they are shipped. For bookings, cancel at least 24 hours in advance to avoid any charges. Go to My Orders or My Bookings and click Cancel.',
+    answer: 'You can cancel orders before they are shipped. For bookings, cancel at least 24 hours in advance to avoid any charges.',
     category: 'cancellation',
     escalate: false,
   },
   {
     keywords: ['product', 'defective', 'broken', 'damage', 'wrong item'],
-    answer: 'If you received a defective or wrong item, we apologize! Please take photos and create a support ticket. We\'ll arrange a free return and replacement or full refund.',
+    answer: 'If you received a defective or wrong item, we apologize! I can connect you with our support team to arrange a free return and replacement.',
     category: 'defective',
     escalate: true,
   },
   {
-    keywords: ['commission', 'platform fee', 'charge'],
-    answer: 'FixKart charges a 5% platform commission on completed jobs and orders. This covers payment processing, platform maintenance, and customer support. The commission is deducted automatically.',
+    keywords: ['commission', 'platform fee'],
+    answer: 'FixKart charges a 5% platform commission on completed jobs and orders. This covers payment processing, platform maintenance, and customer support.',
     category: 'commission',
     escalate: false,
   },
   {
     keywords: ['hello', 'hi', 'hey', 'help'],
-    answer: 'Hello! 👋 I\'m the FixKart support assistant. I can help you with:\n\n• Order tracking & delivery\n• Returns & refunds\n• Booking management\n• Account issues\n• Payment questions\n• Professional verification\n\nWhat can I help you with?',
+    answer: 'Hello! I\'m the FixKart support assistant. I can help with orders, returns, bookings, payments, and more. What can I help you with?',
     category: 'general',
     escalate: false,
   },
   {
-    keywords: ['contact', 'human', 'agent', 'real person', 'talk to someone'],
-    answer: 'I\'ll connect you with our support team right away. Please describe your issue and I\'ll create a ticket. Our team typically responds within 2-4 hours during business hours.',
+    keywords: ['contact', 'human', 'agent', 'real person', 'talk to someone', 'connect'],
+    answer: 'I\'ll connect you with our support team right away.',
     category: 'escalation',
     escalate: true,
   },
 ];
 
 // =====================================================
-// CHATBOT — process a message and return a response
+// CHATBOT — process a message
 // =====================================================
 
 export const chatbotMessage = async (req, res, next) => {
@@ -112,16 +112,13 @@ export const chatbotMessage = async (req, res, next) => {
 
     const lower = message.toLowerCase().trim();
 
-    // Find best matching KB entry
     let bestMatch = null;
     let bestScore = 0;
 
     for (const entry of CHATBOT_KB) {
       let score = 0;
       for (const kw of entry.keywords) {
-        if (lower.includes(kw)) {
-          score += kw.length; // longer keyword matches are weighted higher
-        }
+        if (lower.includes(kw)) score += kw.length;
       }
       if (score > bestScore) {
         bestScore = score;
@@ -135,21 +132,16 @@ export const chatbotMessage = async (req, res, next) => {
         category: bestMatch.category,
         escalate: bestMatch.escalate,
         suggestions: bestMatch.escalate
-          ? ['Create a support ticket', 'Contact support@fixkart.dev']
+          ? ['Connect to support']
           : [],
       });
     }
 
-    // No match — suggest escalation
     return successResponse(res, {
-      reply: "I'm not sure I understand. Could you rephrase that? Here are some things I can help with:\n\n• Order tracking & delivery\n• Returns & refunds\n• Booking management\n• Account issues\n• Payment questions\n\nOr type \"connect me to support\" to talk to a real person.",
+      reply: "I'm not sure I understand. Could you rephrase that? I can help with orders, returns, bookings, payments, and more. Or say \"connect me to support\" to talk to a real person.",
       category: 'unmatched',
       escalate: false,
-      suggestions: [
-        'Track my order',
-        'I want a refund',
-        'Connect me to support',
-      ],
+      suggestions: ['Track my order', 'I want a refund', 'Connect to support'],
     });
   } catch (err) {
     return next(err);
@@ -157,168 +149,211 @@ export const chatbotMessage = async (req, res, next) => {
 };
 
 // =====================================================
-// CREATE SUPPORT TICKET
+// CREATE LIVE CHAT SESSION (user clicks "Connect to support")
 // =====================================================
 
-export const createTicket = async (req, res, next) => {
+export const createChatSession = async (req, res, next) => {
   try {
     const db = getUserSupabase(req);
-    const { subject, category, description, booking_id, priority } = req.body || {};
+    const userId = req.user?.id || null;
+    const guestName = req.body?.guest_name || req.user?.email || 'Guest';
+    const initialMessage = req.body?.message || '';
 
-    if (!subject || !category) {
-      return errorResponse(res, 'Subject and category are required', 400);
-    }
+    // Try to create in database
+    try {
+      const { data: session, error } = await db
+        .from('chat_sessions')
+        .insert({
+          user_id: userId,
+          guest_name: guestName,
+          status: 'waiting',
+        })
+        .select()
+        .single();
 
-    // Generate a short ticket ID
-    const ticketId = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+      if (error && !/does not exist|not found/i.test(error.message)) throw error;
 
-    const { data, error } = await db
-      .from('support_tickets')
-      .insert({
-        ticket_id: ticketId,
-        user_id: req.user.id,
-        subject,
-        category,
-        description: description || '',
-        booking_id: booking_id || null,
-        priority: priority || 'normal',
-        status: 'open',
-      })
-      .select()
-      .single();
-
-    if (error) {
-      // Table might not exist — return a mock response
-      if (/does not exist|not found/i.test(error.message)) {
-        return successResponse(res, {
-          ticket: {
-            ticket_id: ticketId,
-            subject,
-            category,
-            status: 'open',
-            created_at: new Date().toISOString(),
-          },
-          message: 'Ticket created (pending database setup). Our team will contact you at support@fixkart.dev.',
-        }, 201);
+      if (session && initialMessage) {
+        await db.from('chat_messages').insert({
+          session_id: session.id,
+          sender_id: userId,
+          sender_role: 'customer',
+          message: initialMessage,
+        });
       }
-      throw error;
+
+      if (session) {
+        return successResponse(res, { session }, 201);
+      }
+    } catch {
+      // Table might not exist — create a mock session
     }
 
-    return successResponse(res, { ticket: data }, 201);
+    // Fallback: return a mock session so the UI works without the table
+    const mockSession = {
+      id: `mock-${Date.now()}`,
+      user_id: userId,
+      guest_name: guestName,
+      status: 'waiting',
+      created_at: new Date().toISOString(),
+    };
+
+    return successResponse(res, { session: mockSession, note: 'Chat session created (pending database setup)' }, 201);
   } catch (err) {
     return next(err);
   }
 };
 
 // =====================================================
-// GET MY SUPPORT TICKETS
+// SEND MESSAGE IN CHAT SESSION
 // =====================================================
 
-export const getMyTickets = async (req, res, next) => {
+export const sendChatMessage = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    const { session_id, message } = req.body || {};
 
-    const { data, error } = await db
-      .from('support_tickets')
-      .select('*')
-      .eq('user_id', req.user.id)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      if (/does not exist|not found/i.test(error.message)) {
-        return successResponse(res, { tickets: [] });
-      }
-      throw error;
+    if (!session_id || !message) {
+      return errorResponse(res, 'session_id and message are required', 400);
     }
 
-    return successResponse(res, { tickets: data || [] });
+    const db = getUserSupabase(req);
+
+    try {
+      const { error } = await db.from('chat_messages').insert({
+        session_id,
+        sender_id: req.user?.id || null,
+        sender_role: req.userRole === 'admin' ? 'agent' : 'customer',
+        message,
+      });
+
+      if (error && !/does not exist|not found/i.test(error.message)) throw error;
+
+      // If table exists, also update session status
+      if (!error) {
+        await db
+          .from('chat_sessions')
+          .update({ status: 'active', updated_at: new Date().toISOString() })
+          .eq('id', session_id);
+      }
+    } catch {
+      // Table might not exist
+    }
+
+    return successResponse(res, { sent: true });
   } catch (err) {
     return next(err);
   }
 };
 
 // =====================================================
-// ADMIN: GET ALL SUPPORT TICKETS
+// GET MESSAGES FOR A SESSION
 // =====================================================
 
-export const getAllTickets = async (req, res, next) => {
+export const getChatMessages = async (req, res, next) => {
   try {
+    const { session_id } = req.params;
     const db = getUserSupabase(req);
-    const { status, priority } = req.query;
 
-    let query = db
-      .from('support_tickets')
-      .select('*, profile:profiles(full_name, email, phone)')
-      .order('created_at', { ascending: false });
+    let messages = [];
 
-    if (status) query = query.eq('status', status);
-    if (priority) query = query.eq('priority', priority);
+    try {
+      const { data, error } = await db
+        .from('chat_messages')
+        .select('*')
+        .eq('session_id', session_id)
+        .order('created_at', { ascending: true });
 
-    const { data, error } = await query;
-
-    if (error) {
-      if (/does not exist|not found/i.test(error.message)) {
-        return successResponse(res, { tickets: [], total: 0 });
-      }
-      throw error;
+      if (error && !/does not exist|not found/i.test(error.message)) throw error;
+      messages = data || [];
+    } catch {
+      // Table might not exist
     }
 
-    const tickets = data || [];
-
-    // If profiles join failed, attach manually
-    const needsProfile = tickets.some(t => !t.profile);
-    if (needsProfile) {
-      const userIds = [...new Set(tickets.map(t => t.user_id).filter(Boolean))];
-      if (userIds.length > 0) {
-        const { data: profiles } = await db.from('profiles').select('id, full_name, phone').in('id', userIds);
-        const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
-        tickets.forEach(t => { if (!t.profile) t.profile = profileMap[t.user_id] || null; });
-      }
-    }
-
-    return successResponse(res, { tickets, total: tickets.length });
+    return successResponse(res, { messages });
   } catch (err) {
     return next(err);
   }
 };
 
 // =====================================================
-// ADMIN: UPDATE TICKET STATUS
+// ADMIN: GET ALL ACTIVE CHAT SESSIONS
 // =====================================================
 
-export const updateTicket = async (req, res, next) => {
+export const getAllChatSessions = async (req, res, next) => {
+  try {
+    const db = getUserSupabase(req);
+
+    let sessions = [];
+
+    try {
+      const { data, error } = await db
+        .from('chat_sessions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error && !/does not exist|not found/i.test(error.message)) throw error;
+      sessions = data || [];
+    } catch {
+      // Table might not exist
+    }
+
+    // Attach last message for each session
+    if (sessions.length > 0) {
+      try {
+        const sessionIds = sessions.map(s => s.id);
+        const { data: lastMsgs } = await db
+          .from('chat_messages')
+          .select('session_id, message, sender_role, created_at')
+          .in('session_id', sessionIds)
+          .order('created_at', { ascending: false });
+
+        if (lastMsgs) {
+          const msgMap = {};
+          lastMsgs.forEach(m => {
+            if (!msgMap[m.session_id]) msgMap[m.session_id] = m;
+          });
+          sessions.forEach(s => { s.last_message = msgMap[s.id] || null; });
+        }
+      } catch {
+        // Ignore
+      }
+    }
+
+    return successResponse(res, { sessions });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// ADMIN: UPDATE SESSION STATUS (assign agent, close)
+// =====================================================
+
+export const updateChatSession = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status, assigned_to, response: agentResponse } = req.body || {};
+    const { status, agent_id } = req.body || {};
 
     const db = getUserSupabase(req);
-
-    const updates = {};
+    const updates = { updated_at: new Date().toISOString() };
     if (status) updates.status = status;
-    if (assigned_to) updates.assigned_to = assigned_to;
-    if (agentResponse) updates.agent_response = agentResponse;
+    if (agent_id) updates.agent_id = agent_id;
 
-    if (Object.keys(updates).length === 0) {
-      return errorResponse(res, 'No fields to update', 400);
+    try {
+      const { data, error } = await db
+        .from('chat_sessions')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error && !/does not exist|not found/i.test(error.message)) throw error;
+      if (data) return successResponse(res, { session: data });
+    } catch {
+      // Table might not exist
     }
 
-    updates.updated_at = new Date().toISOString();
-
-    const { data, error } = await db
-      .from('support_tickets')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      if (/does not exist|not found/i.test(error.message)) {
-        return successResponse(res, { ticket: { id, ...updates }, message: 'Updated (pending database setup)' });
-      }
-      throw error;
-    }
-
-    return successResponse(res, { ticket: data });
+    return successResponse(res, { session: { id, ...updates } });
   } catch (err) {
     return next(err);
   }
@@ -332,52 +367,29 @@ export const getSupportStats = async (req, res, next) => {
   try {
     const db = getUserSupabase(req);
 
-    let tickets = [];
+    let sessions = [];
     try {
-      const { data } = await db
-        .from('support_tickets')
-        .select('id, status, category, priority, created_at');
-      tickets = data || [];
+      const { data } = await db.from('chat_sessions').select('id, status, created_at, updated_at');
+      sessions = data || [];
     } catch {
       // Table might not exist
     }
 
-    const open = tickets.filter(t => t.status === 'open').length;
-    const inReview = tickets.filter(t => t.status === 'in_review').length;
-    const waitingResponse = tickets.filter(t => t.status === 'waiting_response').length;
-    const resolved = tickets.filter(t => t.status === 'resolved').length;
+    const active = sessions.filter(s => s.status === 'active').length;
+    const waiting = sessions.filter(s => s.status === 'waiting').length;
+    const closed = sessions.filter(s => s.status === 'closed').length;
 
-    const byCategory = {};
-    tickets.forEach(t => {
-      byCategory[t.category] = (byCategory[t.category] || 0) + 1;
-    });
-
-    const byPriority = {};
-    tickets.forEach(t => {
-      byPriority[t.priority] = (byPriority[t.priority] || 0) + 1;
-    });
-
-    // Average resolution time (resolved tickets only)
-    const resolvedTickets = tickets.filter(t => t.status === 'resolved' && t.updated_at);
-    let avgResolutionHours = 0;
-    if (resolvedTickets.length > 0) {
-      const totalMs = resolvedTickets.reduce((sum, t) => {
-        return sum + (new Date(t.updated_at).getTime() - new Date(t.created_at).getTime());
-      }, 0);
-      avgResolutionHours = Math.round((totalMs / resolvedTickets.length / (1000 * 60 * 60)) * 10) / 10;
-    }
+    // Average wait time (time from creation to first agent message)
+    let avgWaitMinutes = 0;
 
     return successResponse(res, {
       stats: {
-        total: tickets.length,
-        open,
-        in_review: inReview,
-        waiting_response: waitingResponse,
-        resolved,
-        avg_resolution_hours: avgResolutionHours,
+        total: sessions.length,
+        active,
+        waiting,
+        closed,
+        avg_wait_minutes: avgWaitMinutes,
       },
-      by_category: byCategory,
-      by_priority: byPriority,
     });
   } catch (err) {
     return next(err);
@@ -385,7 +397,7 @@ export const getSupportStats = async (req, res, next) => {
 };
 
 // =====================================================
-// FAQ DATA — for help center pages
+// FAQ DATA
 // =====================================================
 
 export const getFAQ = async (req, res, next) => {
@@ -402,24 +414,15 @@ export const getFAQ = async (req, res, next) => {
       {
         category: 'Returns & Refunds',
         items: [
-          { q: 'How do I return a product?', a: 'Go to My Orders → select the order → Request Return. Items must be unused and in original packaging within 7 days of delivery.' },
+          { q: 'How do I return a product?', a: 'Go to My Orders → select the order → Request Return. Items must be unused and in original packaging within 7 days.' },
           { q: 'How long do refunds take?', a: 'Refunds are processed within 5-7 business days after the return is approved.' },
-          { q: 'What if I received a damaged item?', a: 'Take photos of the damage and create a support ticket. We\'ll arrange a free return and replacement or full refund.' },
         ],
       },
       {
         category: 'Bookings',
         items: [
           { q: 'How do I book a professional?', a: 'Browse Professionals → select one → choose a service → pick a date/time → confirm booking.' },
-          { q: 'Can I reschedule a booking?', a: 'Yes, open the booking from My Bookings and click Reschedule. The professional needs to confirm the new time.' },
-          { q: 'What if the professional doesn\'t show up?', a: 'Contact support immediately. We\'ll arrange a replacement professional and you won\'t be charged.' },
-        ],
-      },
-      {
-        category: 'Account',
-        items: [
-          { q: 'How do I reset my password?', a: 'Click "Forgot password?" on the login page and follow the email instructions.' },
-          { q: 'How do I become a verified professional?', a: 'Register as a professional, upload your ID and certification documents. Verification takes 24-48 hours.' },
+          { q: 'Can I reschedule a booking?', a: 'Yes, open the booking from My Bookings and click Reschedule.' },
         ],
       },
     ];

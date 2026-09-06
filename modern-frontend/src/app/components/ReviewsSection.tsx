@@ -43,7 +43,7 @@ function Stars({ rating, interactive, onChange }: {
 }
 
 export function ReviewsSection({ itemType, itemId }: {
-  itemType: "product" | "service";
+  itemType: "product" | "service" | "professional";
   itemId: string;
 }) {
   const { isLoggedIn, user } = useAuth();
@@ -171,7 +171,7 @@ export function ReviewsSection({ itemType, itemId }: {
       ) : (
         <div className="bg-white dark:bg-[#111827] rounded-2xl p-5 border border-gray-100 dark:border-white/10 mb-8 text-center">
           <p className="text-sm text-[#64748B] dark:text-slate-400 mb-3">
-            Sign in to rate and review this {itemType === "product" ? "product" : "service"}.
+            Sign in to rate and review this {itemType === "professional" ? "professional" : itemType === "product" ? "product" : "service"}.
           </p>
           <Link
             to={`/login?next=${encodeURIComponent(window.location.pathname)}`}

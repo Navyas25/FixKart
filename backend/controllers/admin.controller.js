@@ -11,43 +11,50 @@ export const getAdminDashboard = async (req, res, next) => {
   try {
     const db = getUserSupabase(req);
 
-    // Parallel queries for dashboard stats
-    const [
-      usersResult,
-      professionalsResult,
-      vendorsResult,
-      productsResult,
-      ordersResult,
-      bookingsResult,
-    ] = await Promise.allSettled([
-      db.from('profiles').select('id', { count: 'exact', head: true }),
-      db.from('professionals').select('id, verification_status, rating'),
-      db.from('vendors').select('id, verification_status, total_sales'),
-      db.from('products').select('id, status, stock'),
-      db.from('orders').select('id, status, total_amount, created_at'),
-      db.from('bookings').select('id, status, scheduled_at, created_at'),
+    // Parallel queries for dashboard stats — each falls back if columns/tables are missing
+    async function safeQuery(table, columns, fallbackColumns) {
+      try {
+        const { data, error } = await db.from(table).select(columns);
+        if (error) {
+          if (/column .* does not exist|not found|does not exist/i.test(error.message)) {
+            const fb = await db.from(table).select(fallbackColumns || 'id');
+            return fb.data || [];
+          }
+          throw error;
+        }
+        return data || [];
+      } catch {
+        return [];
+      }
+    }
+
+    const [usersCount, professionals, vendors, products, orders, bookings] = await Promise.all([
+      (async () => {
+        try {
+          const { count } = await db.from('profiles').select('id', { count: 'exact', head: true });
+          return count || 0;
+        } catch { return 0; }
+      })(),
+      safeQuery('professionals', 'id, verification_status, rating', 'id, rating'),
+      safeQuery('vendors', 'id, verification_status, total_sales', 'id'),
+      safeQuery('products', 'id, status, stock', 'id'),
+      safeQuery('orders', 'id, status, total_amount, created_at', 'id, status, created_at'),
+      safeQuery('bookings', 'id, status, scheduled_at, created_at', 'id, status, created_at'),
     ]);
 
-    const totalUsers = usersResult.status === 'fulfilled' ? (usersResult.value.count || 0) : 0;
-
-    const professionals = professionalsResult.status === 'fulfilled' ? (professionalsResult.value.data || []) : [];
+    const totalUsers = usersCount;
     const totalProfessionals = professionals.length;
     const pendingProfessionals = professionals.filter(p => p.verification_status === 'pending').length;
 
-    const vendors = vendorsResult.status === 'fulfilled' ? (vendorsResult.value.data || []) : [];
     const totalVendors = vendors.length;
     const pendingVendors = vendors.filter(v => v.verification_status === 'pending').length;
 
-    const products = productsResult.status === 'fulfilled' ? (productsResult.value.data || []) : [];
     const totalProducts = products.length;
-
-    const orders = ordersResult.status === 'fulfilled' ? (ordersResult.value.data || []) : [];
     const totalOrders = orders.length;
     const totalRevenue = orders
       .filter(o => ['delivered', 'completed'].includes(o.status))
       .reduce((sum, o) => sum + (o.total_amount || 0), 0);
 
-    const bookings = bookingsResult.status === 'fulfilled' ? (bookingsResult.value.data || []) : [];
     const totalBookings = bookings.length;
 
     // Pending actions

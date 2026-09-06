@@ -24,8 +24,8 @@ export const getReviews = async (req, res, next) => {
   try {
     const { type, item_id } = req.query;
 
-    if (!['product', 'service'].includes(type)) {
-      return errorResponse(res, 'type must be "product" or "service"', 400);
+    if (!['product', 'service', 'professional'].includes(type)) {
+      return errorResponse(res, 'type must be "product", "service", or "professional"', 400);
     }
     if (!item_id) {
       return errorResponse(res, 'item_id is required', 400);
@@ -74,7 +74,7 @@ export const createReview = async (req, res, next) => {
     const db = getUserSupabase(req);
 
     // Verify the item actually exists before attaching a review to it.
-    const table = item_type === 'product' ? 'products' : 'services';
+    const table = item_type === 'professional' ? 'professionals' : (item_type === 'product' ? 'products' : 'services');
     const { data: item } = await supabase
       .from(table)
       .select('id')
@@ -101,6 +101,23 @@ export const createReview = async (req, res, next) => {
       .single();
 
     if (error) throw error;
+
+    // If reviewing a professional, update their average rating
+    if (item_type === 'professional') {
+      try {
+        const { data: allReviews } = await supabase
+          .from('reviews')
+          .select('rating')
+          .eq('item_type', 'professional')
+          .eq('item_id', item_id);
+        if (allReviews && allReviews.length > 0) {
+          const avg = Math.round((allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length) * 10) / 10;
+          await supabase.from('professionals').update({ rating: avg }).eq('id', item_id);
+        }
+      } catch {
+        // Ignore rating update errors
+      }
+    }
 
     return successResponse(res, { review: data }, 201);
   } catch (err) {

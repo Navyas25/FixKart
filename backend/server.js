@@ -23,6 +23,7 @@ import usersRoutes from "./routes/users.routes.js";
 import addressesRoutes from "./routes/addresses.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import supportRoutes from "./routes/support.routes.js";
+import offersRoutes from "./routes/offers.routes.js";
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/addresses", addressesRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/support", supportRoutes);
+app.use("/api/offers", offersRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

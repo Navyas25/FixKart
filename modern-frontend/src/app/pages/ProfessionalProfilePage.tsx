@@ -4,6 +4,7 @@ import { Star, MapPin, CheckCircle, Calendar, ArrowRight, Award, Briefcase } fro
 import { apiGet } from "../../lib/api";
 import { PLACEHOLDER_IMG } from "../../lib/format";
 import { PageHeader } from "../components/PageHeader";
+import { ReviewsSection } from "../components/ReviewsSection";
 
 interface ProDetail {
   id: string;
@@ -147,6 +148,13 @@ export default function ProfessionalProfilePage() {
               ))}
             </div>
           </div>
+
+          {/* Reviews */}
+          {id && (
+            <div className="mt-8">
+              <ReviewsSection itemType="professional" itemId={id} />
+            </div>
+          )}
 
           <div className="text-center mt-10">
             <Link to="/professionals" className="text-sm font-bold text-[#2563EB] hover:text-blue-600 transition-colors">

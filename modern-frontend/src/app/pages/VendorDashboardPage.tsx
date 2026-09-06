@@ -58,26 +58,26 @@ type Tab =
   | "account";
 
 const STATUS_BADGE: Record<string, string> = {
-  confirmed: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400",
-  packed: "bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400",
-  shipped: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
-  delivered: "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400",
-  cancelled: "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400",
-  pending: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
+  confirmed: "bg-blue-100 text-blue-700 dark:bg-blue-500[0.15] dark:text-blue-400",
+  packed: "bg-purple-100 text-purple-700 dark:bg-purple-500[0.15] dark:text-purple-400",
+  shipped: "bg-amber-100 text-amber-700 dark:bg-amber-500[0.15] dark:text-amber-400",
+  delivered: "bg-green-100 text-green-700 dark:bg-green-500[0.15] dark:text-green-400",
+  cancelled: "bg-red-100 text-red-700 dark:bg-red-500[0.15] dark:text-red-400",
+  pending: "bg-amber-100 text-amber-700 dark:bg-amber-500[0.15] dark:text-amber-400",
 };
 
 const PRODUCT_STATUS: Record<string, string> = {
-  active: "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400",
-  draft: "bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-slate-400",
-  out_of_stock: "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400",
-  deleted: "bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-slate-400",
+  active: "bg-green-100 text-green-700 dark:bg-green-500[0.15] dark:text-green-400",
+  draft: "bg-gray-100 text-gray-600 dark:bg-white[0.1] dark:text-slate-400",
+  out_of_stock: "bg-red-100 text-red-700 dark:bg-red-500[0.15] dark:text-red-400",
+  deleted: "bg-gray-100 text-gray-600 dark:bg-white[0.1] dark:text-slate-400",
 };
 
 const inputClass =
-  "w-full bg-white dark:bg-[#111827] border border-gray-200 dark:border-white/15 text-[#0F172A] dark:text-white text-sm font-medium px-4 py-3 rounded-xl outline-none focus:border-[#2563EB] transition-colors placeholder-gray-400";
+  "w-full bg-white dark:bg-[#111827] border border-gray-200 dark:border-white[0.15] text-[#0F172A] dark:text-white text-sm font-medium px-4 py-3 rounded-xl outline-none focus:border-[#2563EB] transition-colors placeholder-gray-400";
 
 const CARD =
-  "bg-white dark:bg-[#111827] rounded-2xl p-5 border border-gray-100 dark:border-white/10 shadow-sm";
+  "bg-white dark:bg-[#111827] rounded-2xl p-5 border border-gray-100 dark:border-white[0.1] shadow-sm";
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
 /*  MAIN DASHBOARD COMPONENT                                                 */
@@ -127,7 +127,7 @@ export default function VendorDashboardPage() {
           subtitle="Sign in to manage your shop."
         />
         <section className="py-16 bg-[#F8FAFC] dark:bg-[#0B1220] min-h-[50vh]">
-          <div className="max-w-md mx-auto px-4 text-center bg-white dark:bg-[#111827] rounded-3xl border border-gray-100 dark:border-white/10 py-12">
+          <div className="max-w-md mx-auto px-4 text-center bg-white dark:bg-[#111827] rounded-3xl border border-gray-100 dark:border-white[0.1] py-12">
             <Store className="w-10 h-10 text-[#2563EB] mx-auto mb-3" />
             <p className="text-[#64748B] dark:text-slate-400 mb-6">
               Sign in to your vendor account to manage your store, products, and
@@ -172,8 +172,8 @@ export default function VendorDashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[240px_1fr] gap-8">
           {/* Sidebar */}
           <aside className="lg:sticky lg:top-24 h-fit">
-            <div className="bg-white dark:bg-[#111827] rounded-2xl border border-gray-100 dark:border-white/10 p-4 shadow-sm">
-              <div className="flex items-center gap-2.5 px-2 pb-4 border-b border-gray-100 dark:border-white/10 mb-3">
+            <div className="bg-white dark:bg-[#111827] rounded-2xl border border-gray-100 dark:border-white[0.1] p-4 shadow-sm">
+              <div className="flex items-center gap-2.5 px-2 pb-4 border-b border-gray-100 dark:border-white[0.1] mb-3">
                 <div className="w-9 h-9 bg-[#2563EB] rounded-xl flex items-center justify-center">
                   <Store className="w-5 h-5 text-white" strokeWidth={2.5} />
                 </div>
@@ -194,7 +194,7 @@ export default function VendorDashboardPage() {
                     className={`w-full flex items-center gap-2.5 text-sm font-bold px-3 py-2.5 rounded-xl transition-colors ${
                       tab === item.key
                         ? "bg-[#2563EB] text-white"
-                        : "text-[#64748B] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-[#0F172A] dark:hover:text-white"
+                        : "text-[#64748B] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white[0.1] hover:text-[#0F172A] dark:hover:text-white"
                     }`}
                   >
                     {item.icon}
@@ -202,7 +202,7 @@ export default function VendorDashboardPage() {
                   </button>
                 ))}
               </nav>
-              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/10">
+              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white[0.1]">
                 {confirmLogout ? (
                   <div className="space-y-1.5">
                     <button
@@ -213,7 +213,7 @@ export default function VendorDashboardPage() {
                     </button>
                     <button
                       onClick={() => setConfirmLogout(false)}
-                      className="w-full text-xs font-bold text-[#64748B] dark:text-slate-400 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10"
+                      className="w-full text-xs font-bold text-[#64748B] dark:text-slate-400 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white[0.1]"
                     >
                       Cancel
                     </button>
@@ -221,7 +221,7 @@ export default function VendorDashboardPage() {
                 ) : (
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2.5 text-sm font-bold text-red-500 px-3 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                    className="w-full flex items-center gap-2.5 text-sm font-bold text-red-500 px-3 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-500[0.1] transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
                     Log out
@@ -234,13 +234,13 @@ export default function VendorDashboardPage() {
           {/* Main content */}
           <div>
             {error && (
-              <div className="mb-5 text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 rounded-xl px-4 py-3 flex items-center gap-2">
+              <div className="mb-5 text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500[0.1] rounded-xl px-4 py-3 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 {error}
               </div>
             )}
             {saveMsg && (
-              <div className="mb-5 text-sm font-semibold text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-500/10 rounded-xl px-4 py-3 flex items-center gap-2">
+              <div className="mb-5 text-sm font-semibold text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-500[0.1] rounded-xl px-4 py-3 flex items-center gap-2">
                 <Check className="w-4 h-4 flex-shrink-0" />
                 {saveMsg}
               </div>
@@ -354,7 +354,7 @@ function DashboardTab({ setError, setSaveMsg }: { setError: (s: string) => void;
     <div className="space-y-6">
       {/* Verification Banner */}
       {vendor.verification_status === "pending" && (
-        <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-5">
+        <div className="bg-amber-50 dark:bg-amber-500[0.1] border border-amber-200 dark:border-amber-500[0.2] rounded-2xl p-5">
           <div className="flex items-center gap-3">
             <Clock className="w-6 h-6 text-amber-600 flex-shrink-0" />
             <div>
@@ -368,7 +368,7 @@ function DashboardTab({ setError, setSaveMsg }: { setError: (s: string) => void;
       )}
 
       {vendor.verification_status === "rejected" && (
-        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-2xl p-5">
+        <div className="bg-red-50 dark:bg-red-500[0.1] border border-red-200 dark:border-red-500[0.2] rounded-2xl p-5">
           <div className="flex items-center gap-3">
             <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
             <div>
@@ -385,13 +385,13 @@ function DashboardTab({ setError, setSaveMsg }: { setError: (s: string) => void;
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Today's Sales"
-          value={`₹${stats.today_sales ?? 0}`}
+          value={`Rs. ${stats.today_sales ?? 0}`}
           icon={<IndianRupee className="w-4 h-4" style={{ color: "#16A34A" }} />}
           color="#16A34A"
         />
         <StatCard
           label="Total Revenue"
-          value={`₹${stats.total_revenue ?? 0}`}
+          value={`Rs. ${stats.total_revenue ?? 0}`}
           icon={<TrendingUp className="w-4 h-4" style={{ color: "#2563EB" }} />}
           color="#2563EB"
           subtitle={`${stats.total_orders ?? 0} orders`}
@@ -478,7 +478,7 @@ function DashboardTab({ setError, setSaveMsg }: { setError: (s: string) => void;
                       {order.item_count ?? "–"}
                     </td>
                     <td className="py-3 pr-4 font-bold text-[#0F172A] dark:text-white">
-                      ₹{order.vendor_total ?? 0}
+                      Rs. {order.vendor_total ?? 0}
                     </td>
                     <td className="py-3 text-[#64748B] dark:text-slate-400">
                       {new Date(order.created_at).toLocaleDateString()}
@@ -498,17 +498,17 @@ function DashboardTab({ setError, setSaveMsg }: { setError: (s: string) => void;
           <div className="space-y-2">
             {data.low_stock_products.map((p: any) => (
               <div key={p.id} className="flex items-center gap-3 py-2">
-                <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-white[0.1] flex items-center justify-center flex-shrink-0">
                   <Package className="w-4 h-4 text-[#64748B] dark:text-slate-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-[#0F172A] dark:text-white truncate">{p.name}</p>
-                  <p className="text-xs text-[#64748B] dark:text-slate-400">₹{p.price}</p>
+                  <p className="text-xs text-[#64748B] dark:text-slate-400">Rs. {p.price}</p>
                 </div>
                 <span className={`text-xs font-extrabold px-2.5 py-1 rounded-full ${
                   p.stock === 0
-                    ? "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400"
-                    : "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
+                    ? "bg-red-100 text-red-700 dark:bg-red-500[0.15] dark:text-red-400"
+                    : "bg-amber-100 text-amber-700 dark:bg-amber-500[0.15] dark:text-amber-400"
                 }`}>
                   {p.stock === 0 ? "Out of stock" : `${p.stock} left`}
                 </span>
@@ -654,11 +654,11 @@ function ProductsTab({ setError, setSaveMsg }: { setError: (s: string) => void; 
             </div>
             <div className="grid sm:grid-cols-4 gap-4">
               <div>
-                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Price (₹) *</label>
+                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Price (Rs. ) *</label>
                 <input type="number" step="0.01" min="0" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className={inputClass} required placeholder="0.00" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Discount Price (₹)</label>
+                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Discount Price (Rs. )</label>
                 <input type="number" step="0.01" min="0" value={form.discount_price} onChange={(e) => setForm({ ...form, discount_price: e.target.value })} className={inputClass} placeholder="Optional" />
               </div>
               <div>
@@ -688,7 +688,7 @@ function ProductsTab({ setError, setSaveMsg }: { setError: (s: string) => void; 
                 {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 {editingProduct ? "Update Product" : "Create Product"}
               </button>
-              <button type="button" onClick={resetForm} className="text-xs font-bold text-[#64748B] dark:text-slate-400 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
+              <button type="button" onClick={resetForm} className="text-xs font-bold text-[#64748B] dark:text-slate-400 px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white[0.1] transition-colors">
                 Cancel
               </button>
             </div>
@@ -702,7 +702,7 @@ function ProductsTab({ setError, setSaveMsg }: { setError: (s: string) => void; 
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B] dark:text-slate-400" />
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products..." className={`${inputClass} pl-10`} />
         </div>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-white/15 text-sm font-bold px-4 py-3 rounded-xl outline-none text-[#0F172A] dark:text-white">
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-white[0.15] text-sm font-bold px-4 py-3 rounded-xl outline-none text-[#0F172A] dark:text-white">
           <option value="">All Status</option>
           <option value="active">Active</option>
           <option value="draft">Draft</option>
@@ -730,7 +730,7 @@ function ProductsTab({ setError, setSaveMsg }: { setError: (s: string) => void; 
           {products.map((p) => (
             <div key={p.id} className={CARD}>
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gray-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <div className="w-14 h-14 rounded-xl bg-gray-100 dark:bg-white[0.1] flex items-center justify-center flex-shrink-0 overflow-hidden">
                   {p.image_url ? (
                     <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
                   ) : (
@@ -744,7 +744,7 @@ function ProductsTab({ setError, setSaveMsg }: { setError: (s: string) => void; 
                       {p.status?.replace("_", " ")}
                     </span>
                     {p.featured && (
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#F59E0B]/15 text-[#D97706]">Featured</span>
+                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#F59E0B][0.15] text-[#D97706]">Featured</span>
                     )}
                   </div>
                   <p className="text-xs text-[#64748B] dark:text-slate-400">
@@ -755,18 +755,18 @@ function ProductsTab({ setError, setSaveMsg }: { setError: (s: string) => void; 
                 <div className="text-right flex-shrink-0">
                   {p.discount_price ? (
                     <div>
-                      <p className="text-sm font-extrabold text-[#16A34A]">₹{p.discount_price}</p>
-                      <p className="text-xs text-[#64748B] line-through">₹{p.price}</p>
+                      <p className="text-sm font-extrabold text-[#16A34A]">Rs. {p.discount_price}</p>
+                      <p className="text-xs text-[#64748B] line-through">Rs. {p.price}</p>
                     </div>
                   ) : (
-                    <p className="text-sm font-extrabold text-[#0F172A] dark:text-white">₹{p.price}</p>
+                    <p className="text-sm font-extrabold text-[#0F172A] dark:text-white">Rs. {p.price}</p>
                   )}
                 </div>
                 <div className="flex gap-1.5 flex-shrink-0">
-                  <button onClick={() => openEdit(p)} className="p-2 text-[#64748B] dark:text-slate-400 hover:text-[#2563EB] hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-xl transition-colors">
+                  <button onClick={() => openEdit(p)} className="p-2 text-[#64748B] dark:text-slate-400 hover:text-[#2563EB] hover:bg-blue-50 dark:hover:bg-blue-500[0.1] rounded-xl transition-colors">
                     <Edit3 className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(p.id)} className="p-2 text-[#64748B] dark:text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors">
+                  <button onClick={() => handleDelete(p.id)} className="p-2 text-[#64748B] dark:text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500[0.1] rounded-xl transition-colors">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -835,7 +835,7 @@ function OrdersTab({ setError }: { setError: (s: string) => void }) {
             className={`px-3 py-1.5 rounded-xl text-xs font-extrabold capitalize transition-colors ${
               statusFilter === s
                 ? "bg-[#0F172A] dark:bg-white text-white dark:text-[#0F172A]"
-                : "bg-white dark:bg-[#111827] text-[#64748B] dark:text-slate-400 border border-gray-100 dark:border-white/10"
+                : "bg-white dark:bg-[#111827] text-[#64748B] dark:text-slate-400 border border-gray-100 dark:border-white[0.1]"
             }`}
           >
             {s || "All"}
@@ -880,7 +880,7 @@ function OrdersTab({ setError }: { setError: (s: string) => void }) {
                   {/* Vendor items in this order */}
                   {order.vendor_items?.map((item: any, idx: number) => (
                     <p key={idx} className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
-                      {item.product?.name || "Product"} × {item.quantity} — ₹{item.unit_price * item.quantity}
+                      {item.product?.name || "Product"} × {item.quantity} — Rs. {item.unit_price * item.quantity}
                     </p>
                   ))}
                   <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
@@ -890,7 +890,7 @@ function OrdersTab({ setError }: { setError: (s: string) => void }) {
 
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <div className="text-right">
-                    <p className="text-sm font-extrabold text-[#16A34A]">₹{order.vendor_total ?? 0}</p>
+                    <p className="text-sm font-extrabold text-[#16A34A]">Rs. {order.vendor_total ?? 0}</p>
                   </div>
                   {NEXT_STATUS[order.status] && (
                     <button
@@ -910,7 +910,7 @@ function OrdersTab({ setError }: { setError: (s: string) => void }) {
                     <button
                       onClick={() => updateStatus(order.id, "cancelled")}
                       disabled={updating === order.id}
-                      className="flex items-center gap-1.5 border border-red-200 dark:border-red-500/30 text-red-500 text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                      className="flex items-center gap-1.5 border border-red-200 dark:border-red-500[0.3] text-red-500 text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-500[0.1] transition-colors"
                     >
                       <X className="w-3.5 h-3.5" /> Cancel
                     </button>
@@ -965,7 +965,7 @@ function AnalyticsTab({ setError }: { setError: (s: string) => void }) {
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           label="Total Revenue"
-          value={`₹${summary.total_revenue ?? 0}`}
+          value={`Rs. ${summary.total_revenue ?? 0}`}
           icon={<TrendingUp className="w-4 h-4" style={{ color: "#16A34A" }} />}
           color="#16A34A"
         />
@@ -977,7 +977,7 @@ function AnalyticsTab({ setError }: { setError: (s: string) => void }) {
         />
         <StatCard
           label="Avg Order Value"
-          value={`₹${summary.avg_order_value ?? 0}`}
+          value={`Rs. ${summary.avg_order_value ?? 0}`}
           icon={<IndianRupee className="w-4 h-4" style={{ color: "#7C3AED" }} />}
           color="#7C3AED"
         />
@@ -997,7 +997,7 @@ function AnalyticsTab({ setError }: { setError: (s: string) => void }) {
                 <div
                   className="w-full bg-[#2563EB] rounded-t-md hover:bg-blue-400 transition-colors min-h-[2px]"
                   style={{ height: `${(d.revenue / maxRevenue) * 120}px` }}
-                  title={`${d.date}: ₹${Math.round(d.revenue)}`}
+                  title={`${d.date}: Rs. ${Math.round(d.revenue)}`}
                 />
                 {i % 5 === 0 && (
                   <span className="text-[8px] text-[#64748B] dark:text-slate-400">
@@ -1034,7 +1034,7 @@ function AnalyticsTab({ setError }: { setError: (s: string) => void }) {
                     <td className="py-3 pr-4 font-bold text-[#64748B] dark:text-slate-400">{i + 1}</td>
                     <td className="py-3 pr-4 font-bold text-[#0F172A] dark:text-white">{p.name}</td>
                     <td className="py-3 pr-4 text-[#64748B] dark:text-slate-400">{p.quantity}</td>
-                    <td className="py-3 font-bold text-[#16A34A]">₹{p.revenue}</td>
+                    <td className="py-3 font-bold text-[#16A34A]">Rs. {p.revenue}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1088,7 +1088,7 @@ function PaymentsTab({ setError }: { setError: (s: string) => void }) {
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           label="Total Earnings"
-          value={`₹${stats.total_revenue ?? 0}`}
+          value={`Rs. ${stats.total_revenue ?? 0}`}
           icon={<DollarSign className="w-4 h-4" style={{ color: "#16A34A" }} />}
           color="#16A34A"
           subtitle="After platform commission"
@@ -1101,7 +1101,7 @@ function PaymentsTab({ setError }: { setError: (s: string) => void }) {
         />
         <StatCard
           label="Net Earnings"
-          value={`₹${Math.round((stats.total_revenue ?? 0) * 0.95)}`}
+          value={`Rs. ${Math.round((stats.total_revenue ?? 0) * 0.95)}`}
           icon={<IndianRupee className="w-4 h-4" style={{ color: "#2563EB" }} />}
           color="#2563EB"
           subtitle="Estimated after 5% commission"
@@ -1141,7 +1141,7 @@ function PaymentsTab({ setError }: { setError: (s: string) => void }) {
         <SectionHeader title="Payout Schedule" />
         <div className="space-y-3">
           <div className="flex items-center gap-3 py-2">
-            <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-500/15 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-500[0.15] flex items-center justify-center">
               <Check className="w-4 h-4 text-green-600" />
             </div>
             <div>
@@ -1150,7 +1150,7 @@ function PaymentsTab({ setError }: { setError: (s: string) => void }) {
             </div>
           </div>
           <div className="flex items-center gap-3 py-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/15 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500[0.15] flex items-center justify-center">
               <IndianRupee className="w-4 h-4 text-blue-600" />
             </div>
             <div>
@@ -1194,7 +1194,7 @@ function ShippingTab({ setError }: { setError: (s: string) => void }) {
                 <p className="text-xs text-[#64748B] dark:text-slate-400">5-7 business days</p>
               </div>
             </div>
-            <span className="text-xs font-bold text-[#16A34A]">Free / ₹49</span>
+            <span className="text-xs font-bold text-[#16A34A]">Free / Rs. 49</span>
           </div>
           <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-white/5">
             <div className="flex items-center gap-3">
@@ -1204,7 +1204,7 @@ function ShippingTab({ setError }: { setError: (s: string) => void }) {
                 <p className="text-xs text-[#64748B] dark:text-slate-400">2-3 business days</p>
               </div>
             </div>
-            <span className="text-xs font-bold text-[#0F172A] dark:text-white">₹99</span>
+            <span className="text-xs font-bold text-[#0F172A] dark:text-white">Rs. 99</span>
           </div>
         </div>
       </div>
@@ -1225,7 +1225,7 @@ function ShippingTab({ setError }: { setError: (s: string) => void }) {
                 <div>
                   <p className="text-sm font-bold text-[#0F172A] dark:text-white">Order #{order.id?.slice(0, 8)}</p>
                   <p className="text-xs text-[#64748B] dark:text-slate-400">
-                    {order.vendor_items?.length || 0} items · ₹{order.vendor_total ?? 0}
+                    {order.vendor_items?.length || 0} items · Rs. {order.vendor_total ?? 0}
                   </p>
                 </div>
                 <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${STATUS_BADGE[order.status]}`}>
@@ -1350,14 +1350,14 @@ function InventoryTab({ setError }: { setError: (s: string) => void }) {
                         <button
                           onClick={() => updateStock(p.id, Math.max(0, p.stock - 1))}
                           disabled={updating === p.id}
-                          className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-[#64748B] hover:bg-gray-200 dark:hover:bg-white/20 transition-colors"
+                          className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-white[0.1] flex items-center justify-center text-[#64748B] hover:bg-gray-200 dark:hover:bg-white[0.2] transition-colors"
                         >
                           −
                         </button>
                         <button
                           onClick={() => updateStock(p.id, p.stock + 1)}
                           disabled={updating === p.id}
-                          className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-[#64748B] hover:bg-gray-200 dark:hover:bg-white/20 transition-colors"
+                          className="w-7 h-7 rounded-lg bg-gray-100 dark:bg-white[0.1] flex items-center justify-center text-[#64748B] hover:bg-gray-200 dark:hover:bg-white[0.2] transition-colors"
                         >
                           +
                         </button>
@@ -1367,7 +1367,7 @@ function InventoryTab({ setError }: { setError: (s: string) => void }) {
                             if (val !== null) updateStock(p.id, parseInt(val, 10) || 0);
                           }}
                           disabled={updating === p.id}
-                          className="w-7 h-7 rounded-lg bg-[#2563EB]/10 flex items-center justify-center text-[#2563EB] hover:bg-[#2563EB]/20 transition-colors"
+                          className="w-7 h-7 rounded-lg bg-[#2563EB][0.1] flex items-center justify-center text-[#2563EB] hover:bg-[#2563EB][0.2] transition-colors"
                         >
                           <Edit3 className="w-3 h-3" />
                         </button>
@@ -1376,8 +1376,8 @@ function InventoryTab({ setError }: { setError: (s: string) => void }) {
                     <td className="py-3">
                       <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
                         p.stock === 0
-                          ? "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400"
-                          : "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
+                          ? "bg-red-100 text-red-700 dark:bg-red-500[0.15] dark:text-red-400"
+                          : "bg-amber-100 text-amber-700 dark:bg-amber-500[0.15] dark:text-amber-400"
                       }`}>
                         {p.stock === 0 ? "Out of Stock" : "Low Stock"}
                       </span>
@@ -1416,9 +1416,9 @@ function InventoryTab({ setError }: { setError: (s: string) => void }) {
                     <td className="py-2.5 pr-4 font-bold text-[#0F172A] dark:text-white">{p.stock}</td>
                     <td className="py-2.5">
                       <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
-                        p.stock === 0 ? "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400"
-                        : p.stock <= 5 ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
-                        : "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400"
+                        p.stock === 0 ? "bg-red-100 text-red-700 dark:bg-red-500[0.15] dark:text-red-400"
+                        : p.stock <= 5 ? "bg-amber-100 text-amber-700 dark:bg-amber-500[0.15] dark:text-amber-400"
+                        : "bg-green-100 text-green-700 dark:bg-green-500[0.15] dark:text-green-400"
                       }`}>
                         {p.stock === 0 ? "Out" : p.stock <= 5 ? "Low" : "In Stock"}
                       </span>
@@ -1494,7 +1494,7 @@ function ReviewsTab({ setError }: { setError: (s: string) => void }) {
           {reviews.map((review: any) => (
             <div key={review.id} className={CARD}>
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#F59E0B]/15 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[#F59E0B][0.15] flex items-center justify-center flex-shrink-0">
                   <span className="text-sm font-extrabold text-[#D97706]">
                     {review.profile?.full_name?.slice(0, 1) || "?"}
                   </span>
@@ -1536,29 +1536,215 @@ function ReviewsTab({ setError }: { setError: (s: string) => void }) {
 /* ═══════════════════════════════════════════════════════════════════════════ */
 
 function OffersTab({ setError, setSaveMsg }: { setError: (s: string) => void; setSaveMsg: (s: string) => void }) {
+  const [offers, setOffers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+  const [form, setForm] = useState({
+    code: "", title: "", description: "", type: "percentage",
+    discount_value: "", min_order: "", max_uses: "",
+    start_date: "", end_date: "",
+  });
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const data = await apiGet<{ offers: any[] }>("/offers");
+      setOffers(data.offers || []);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const startCreate = () => {
+    setEditing(null);
+    setForm({ code: "", title: "", description: "", type: "percentage", discount_value: "", min_order: "", max_uses: "", start_date: "", end_date: "" });
+    setShowForm(true);
+  };
+
+  const startEdit = (offer: any) => {
+    setEditing(offer);
+    setForm({
+      code: offer.code || "", title: offer.title || "", description: offer.description || "",
+      type: offer.type || "percentage", discount_value: String(offer.discount_value || ""),
+      min_order: String(offer.min_order || ""), max_uses: String(offer.max_uses || ""),
+      start_date: offer.start_date ? offer.start_date.split("T")[0] : "",
+      end_date: offer.end_date ? offer.end_date.split("T")[0] : "",
+    });
+    setShowForm(true);
+  };
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editing) {
+        await apiPatch(`/offers/${editing.id}`, {
+          title: form.title, description: form.description, discount_value: parseFloat(form.discount_value) || 0,
+          min_order: parseFloat(form.min_order) || 0, max_uses: form.max_uses ? parseInt(form.max_uses) : null,
+          end_date: form.end_date || null,
+        });
+        setSaveMsg("Offer updated.");
+      } else {
+        await apiPost("/offers", {
+          code: form.code, title: form.title, description: form.description, type: form.type,
+          discount_value: parseFloat(form.discount_value) || 0, min_order: parseFloat(form.min_order) || 0,
+          max_uses: form.max_uses ? parseInt(form.max_uses) : null,
+          start_date: form.start_date || undefined, end_date: form.end_date || undefined,
+        });
+        setSaveMsg("Offer created.");
+      }
+      setShowForm(false);
+      await load();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const toggleActive = async (offer: any) => {
+    try {
+      await apiPatch(`/offers/${offer.id}`, { is_active: !offer.is_active });
+      await load();
+    } catch (err: any) { setError(err.message); }
+  };
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete this offer?")) return;
+    try {
+      await apiDelete(`/offers/${id}`);
+      await load();
+    } catch (err: any) { setError(err.message); }
+  };
+
+  const TYPE_LABELS: Record<string, { label: string; color: string }> = {
+    percentage: { label: "% Off", color: "bg-blue-100 text-blue-700 dark:bg-blue-500[0.15] dark:text-blue-400" },
+    fixed: { label: "Flat Rs.  Off", color: "bg-green-100 text-green-700 dark:bg-green-500[0.15] dark:text-green-400" },
+    bogo: { label: "Buy 1 Get 1", color: "bg-purple-100 text-purple-700 dark:bg-purple-500[0.15] dark:text-purple-400" },
+    seasonal: { label: "Seasonal", color: "bg-amber-100 text-amber-700 dark:bg-amber-500[0.15] dark:text-amber-400" },
+  };
+
   return (
     <div className="space-y-6">
-      <SectionHeader title="Offers & Discounts" subtitle="Create and manage promotions" />
+      <SectionHeader title="Offers & Discounts" subtitle="Create and manage promotions" action={
+        <button onClick={startCreate} className="flex items-center gap-2 bg-[#2563EB] text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-colors">
+          <Tags className="w-3.5 h-3.5" /> Create Offer
+        </button>
+      } />
 
-      <div className={CARD}>
-        <div className="text-center py-12">
-          <Tags className="w-12 h-12 text-[#F59E0B] mx-auto mb-4" />
-          <h3 className="text-lg font-extrabold text-[#0F172A] dark:text-white mb-2">
-            Coupons & Offers Coming Soon
-          </h3>
-          <p className="text-sm text-[#64748B] dark:text-slate-400 max-w-md mx-auto mb-6">
-            Create product discounts, coupon codes, bulk discounts, seasonal offers, 
-            and Buy X Get Y promotions. This feature is under development.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {["Product Discounts", "Coupon Codes", "Bulk Discounts", "Seasonal Offers", "Buy X Get Y"].map((f) => (
-              <span key={f} className="text-xs font-bold text-[#64748B] dark:text-slate-400 bg-gray-100 dark:bg-white/10 px-3 py-1.5 rounded-full">
-                {f}
-              </span>
-            ))}
+      {loading ? (
+        <div className="space-y-3">{[1, 2, 3].map(i => <div key={i} className="h-24 bg-white dark:bg-[#111827] rounded-2xl animate-pulse" />)}</div>
+      ) : offers.length === 0 ? (
+        <div className={CARD + " py-16 text-center"}>
+          <Tags className="w-10 h-10 text-[#64748B] dark:text-slate-400 mx-auto mb-3" />
+          <p className="font-extrabold text-[#0F172A] dark:text-white">No offers yet</p>
+          <p className="text-sm text-[#64748B] dark:text-slate-400 mt-1">Create your first coupon or discount to boost sales.</p>
+          <button onClick={startCreate} className="mt-4 bg-[#2563EB] text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-colors">Create Offer</button>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {offers.map(offer => {
+            const typeInfo = TYPE_LABELS[offer.type] || TYPE_LABELS.percentage;
+            const isExpired = offer.end_date && new Date(offer.end_date) < new Date();
+            return (
+              <div key={offer.id} className={CARD + " hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                      <p className="text-sm font-extrabold text-[#0F172A] dark:text-white">{offer.title}</p>
+                      <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${typeInfo.color}`}>{typeInfo.label}</span>
+                      <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${offer.is_active ? "bg-green-100 text-green-700 dark:bg-green-500[0.15] dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-white[0.1] dark:text-slate-400"}`}>{offer.is_active ? "Active" : "Paused"}</span>
+                      {isExpired && <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-500[0.15] dark:text-red-400">Expired</span>}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-[#64748B] dark:text-slate-400">
+                      <span className="font-bold">Code: <span className="text-[#2563EB] dark:text-blue-400">{offer.code}</span></span>
+                      <span>{offer.type === "percentage" ? offer.discount_value + "% off" : offer.type === "fixed" ? "Rs. " + offer.discount_value + " off" : offer.type === "bogo" ? "Buy " + (offer.buy_quantity || 1) + " Get " + (offer.get_quantity || 1) : "Seasonal: " + offer.discount_value + "% off"}</span>
+                      {offer.min_order > 0 && <span>Min Rs. {offer.min_order}</span>}
+                      {offer.max_uses && <span>Max {offer.max_uses} uses ({offer.uses_count || 0} used)</span>}
+                      {offer.end_date && <span>Expires {new Date(offer.end_date).toLocaleDateString()}</span>}
+                    </div>
+                    {offer.description && <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">{offer.description}</p>}
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button onClick={() => toggleActive(offer)} className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${offer.is_active ? "text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500[0.1]" : "text-green-600 hover:bg-green-50 dark:hover:bg-green-500[0.1]"}`}>
+                      {offer.is_active ? "Pause" : "Activate"}
+                    </button>
+                    <button onClick={() => startEdit(offer)} className="text-xs font-bold text-[#2563EB] hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-500[0.1] transition-colors">Edit</button>
+                    <button onClick={() => remove(offer.id)} className="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-500[0.1] transition-colors">Delete</button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Create/Edit Form Modal */}
+      {showForm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
+          <div className="bg-white dark:bg-[#111827] rounded-3xl max-w-lg w-full p-6 max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-extrabold text-[#0F172A] dark:text-white">{editing ? "Edit Offer" : "Create Offer"}</h3>
+              <button onClick={() => setShowForm(false)} className="text-[#64748B] hover:text-[#0F172A]"><X className="w-5 h-5" /></button>
+            </div>
+            <form onSubmit={save} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Coupon Code</label>
+                <input type="text" value={form.code} onChange={e => setForm({...form, code: e.target.value})} placeholder="e.g. SUMMER20" className={inputClass} required disabled={!!editing} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Title</label>
+                <input type="text" value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="e.g. Summer Sale" className={inputClass} required />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Description</label>
+                <input type="text" value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Optional description" className={inputClass} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Type</label>
+                <select value={form.type} onChange={e => setForm({...form, type: e.target.value})} className={inputClass} disabled={!!editing}>
+                  <option value="percentage">Percentage Discount</option>
+                  <option value="fixed">Flat Amount Discount</option>
+                  <option value="bogo">Buy X Get Y</option>
+                  <option value="seasonal">Seasonal Offer</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                    {form.type === "percentage" ? "% Discount" : form.type === "fixed" ? "Rs.  Discount" : "Discount Value"}
+                  </label>
+                  <input type="number" step="0.01" min="0" value={form.discount_value} onChange={e => setForm({...form, discount_value: e.target.value})} className={inputClass} required />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Min Order (Rs. )</label>
+                  <input type="number" min="0" value={form.min_order} onChange={e => setForm({...form, min_order: e.target.value})} className={inputClass} placeholder="0" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">Max Uses</label>
+                  <input type="number" min="1" value={form.max_uses} onChange={e => setForm({...form, max_uses: e.target.value})} className={inputClass} placeholder="Unlimited" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#64748B] dark:text-slate-400 mb-1.5 uppercase tracking-wide">End Date</label>
+                  <input type="date" value={form.end_date} onChange={e => setForm({...form, end_date: e.target.value})} className={inputClass} />
+                </div>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button type="submit" className="flex-1 bg-[#2563EB] text-white font-bold text-sm py-3 rounded-xl hover:bg-blue-600 transition-colors">
+                  {editing ? "Update Offer" : "Create Offer"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)} className="px-6 text-sm font-bold text-[#64748B] dark:text-slate-400 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-white[0.1] transition-colors">
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -1814,10 +2000,10 @@ function AccountTab({ setError, setSaveMsg }: { setError: (s: string) => void; s
   }
 
   const VERIFICATION_META: Record<string, { label: string; badge: string; color: string }> = {
-    pending: { label: "Pending Verification", badge: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400", color: "#D97706" },
-    verified: { label: "Verified Vendor", badge: "bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400", color: "#16A34A" },
-    rejected: { label: "Application Rejected", badge: "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400", color: "#EF4444" },
-    suspended: { label: "Account Suspended", badge: "bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-slate-400", color: "#64748B" },
+    pending: { label: "Pending Verification", badge: "bg-amber-100 text-amber-700 dark:bg-amber-500[0.15] dark:text-amber-400", color: "#D97706" },
+    verified: { label: "Verified Vendor", badge: "bg-green-100 text-green-700 dark:bg-green-500[0.15] dark:text-green-400", color: "#16A34A" },
+    rejected: { label: "Application Rejected", badge: "bg-red-100 text-red-700 dark:bg-red-500[0.15] dark:text-red-400", color: "#EF4444" },
+    suspended: { label: "Account Suspended", badge: "bg-gray-100 text-gray-600 dark:bg-white[0.1] dark:text-slate-400", color: "#64748B" },
   };
 
   const vMeta = VERIFICATION_META[vendor?.verification_status] || VERIFICATION_META.pending;

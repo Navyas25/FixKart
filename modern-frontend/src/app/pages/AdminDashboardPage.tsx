@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import {
   LayoutDashboard,
@@ -37,8 +37,10 @@ import {
   RefreshCw,
   Download,
   Mail,
+  Headphones,
+  Inbox,
 } from "lucide-react";
-import { apiGet, apiPatch } from "../../lib/api";
+import { apiGet, apiPatch, apiPost } from "../../lib/api";
 import { useAuth } from "../../lib/auth";
 import { PageHeader } from "../components/PageHeader";
 
@@ -206,7 +208,6 @@ export default function AdminDashboardPage() {
     { key: "payments", label: "Payments", icon: <DollarSign className="w-4 h-4" /> },
     { key: "reviews", label: "Reviews", icon: <Star className="w-4 h-4" /> },
     { key: "analytics", label: "Analytics", icon: <BarChart3 className="w-4 h-4" /> },
-    { key: "support", label: "Support", icon: <HelpCircle className="w-4 h-4" /> },
     { key: "notifications", label: "Notifications", icon: <Bell className="w-4 h-4" /> },
     { key: "settings", label: "Settings", icon: <Settings className="w-4 h-4" /> },
   ];
@@ -1330,36 +1331,173 @@ function AnalyticsTab({ setError }: { setError: (s: string) => void }) {
 /* ═══════════════════════════════════════════════════════════════════════════ */
 
 function SupportTab() {
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [chatInput, setChatInput] = useState("");
+  const [sending, setSending] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    apiGet<{ sessions: any[] }>("/support/admin/sessions")
+      .then((data) => setSessions(data.sessions || []))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Load messages when session selected
+  useEffect(() => {
+    if (!selectedSession?.id || selectedSession.id.startsWith("mock-")) return;
+    const load = async () => {
+      try {
+        const data = await apiGet<{ messages: any[] }>(`/support/chat/${selectedSession.id}/messages`);
+        setChatMessages(data.messages || []);
+      } catch { /* ignore */ }
+    };
+    load();
+    const interval = setInterval(load, 3000);
+    return () => clearInterval(interval);
+  }, [selectedSession?.id]);
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [chatMessages]);
+
+  const updateSession = async (id: string, status: string) => {
+    try {
+      await apiPatch(`/support/admin/sessions/${id}`, { status });
+      setSessions(prev => prev.map(s => s.id === id ? { ...s, status } : s));
+      if (selectedSession?.id === id) setSelectedSession({ ...selectedSession, status });
+    } catch (err: any) { setError(err.message); }
+  };
+
+  const sendMessage = async () => {
+    if (!chatInput.trim() || !selectedSession) return;
+    setSending(true);
+    try {
+      await apiPost("/support/chat/message", { session_id: selectedSession.id, message: chatInput.trim() });
+      setChatInput("");
+      const data = await apiGet<{ messages: any[] }>(`/support/chat/${selectedSession.id}/messages`);
+      setChatMessages(data.messages || []);
+    } catch (err: any) { setError(err.message); }
+    finally { setSending(false); }
+  };
+
+  const waiting = sessions.filter(s => s.status === "waiting");
+  const active = sessions.filter(s => s.status === "active");
+  const closed = sessions.filter(s => s.status === "closed");
+
   return (
     <div className="space-y-6">
-      <SectionHeader title="Support" subtitle="Handle customer and vendor issues" />
+      <SectionHeader title="Support" subtitle="Live customer chat sessions" action={
+        <a href="/admin/support" className="text-xs font-bold text-[#2563EB] hover:text-blue-600 flex items-center gap-1">
+          <Headphones className="w-3.5 h-3.5" /> Open Full Dashboard
+        </a>
+      } />
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {[
-          { icon: <MessageSquare className="w-5 h-5 text-[#2563EB]" />, title: "Customer Tickets", desc: "Customer complaints and issues", count: "—" },
-          { icon: <Store className="w-5 h-5 text-[#7C3AED]" />, title: "Vendor Issues", desc: "Vendor support requests", count: "—" },
-          { icon: <Wrench className="w-5 h-5 text-[#F59E0B]" />, title: "Professional Issues", desc: "Professional support requests", count: "—" },
-          { icon: <DollarSign className="w-5 h-5 text-[#16A34A]" />, title: "Payment Disputes", desc: "Payment and refund issues", count: "—" },
-          { icon: <RefreshCw className="w-5 h-5 text-[#06B6D4]" />, title: "Refund Requests", desc: "Pending refund processing", count: "—" },
-          { icon: <AlertCircle className="w-5 h-5 text-[#EF4444]" />, title: "Complaints", desc: "General complaints", count: "—" },
-        ].map((item, i) => (
-          <div key={i} className={CARD + " cursor-pointer hover:shadow-md transition-shadow"}>
-            <div className="flex items-center gap-3 mb-2">
-              {item.icon}
-              <p className="text-sm font-bold text-[#0F172A] dark:text-white">{item.title}</p>
-            </div>
-            <p className="text-xs text-[#64748B] dark:text-slate-400">{item.desc}</p>
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className={CARD + " flex items-center gap-3"}>
+          <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center"><Clock className="w-4 h-4 text-amber-500" /></div>
+          <div>
+            <p className="text-xl font-extrabold text-[#0F172A] dark:text-white">{waiting.length}</p>
+            <p className="text-[10px] font-bold text-[#64748B] dark:text-slate-400 uppercase">Waiting</p>
           </div>
-        ))}
+        </div>
+        <div className={CARD + " flex items-center gap-3"}>
+          <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-500/15 flex items-center justify-center"><MessageSquare className="w-4 h-4 text-green-500" /></div>
+          <div>
+            <p className="text-xl font-extrabold text-[#0F172A] dark:text-white">{active.length}</p>
+            <p className="text-[10px] font-bold text-[#64748B] dark:text-slate-400 uppercase">Active</p>
+          </div>
+        </div>
+        <div className={CARD + " flex items-center gap-3"}>
+          <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center"><CheckCircle2 className="w-4 h-4 text-gray-400" /></div>
+          <div>
+            <p className="text-xl font-extrabold text-[#0F172A] dark:text-white">{closed.length}</p>
+            <p className="text-[10px] font-bold text-[#64748B] dark:text-slate-400 uppercase">Closed</p>
+          </div>
+        </div>
       </div>
 
-      <div className={CARD + " py-16 text-center"}>
-        <HelpCircle className="w-10 h-10 text-[#64748B] dark:text-slate-400 mx-auto mb-3" />
-        <p className="font-extrabold text-[#0F172A] dark:text-white">Support Center</p>
-        <p className="text-sm text-[#64748B] dark:text-slate-400 mt-1">Ticket management coming soon. Currently handled via email.</p>
-        <a href="mailto:support@fixkart.dev" className="inline-flex items-center gap-2 text-sm font-bold text-[#2563EB] hover:text-blue-600 mt-4">
-          <Mail className="w-4 h-4" /> support@fixkart.dev
-        </a>
+      {error && <p className="text-xs text-red-500">{error}</p>}
+
+      {/* Session list + chat */}
+      <div className="grid lg:grid-cols-[300px_1fr] gap-4">
+        <div className="space-y-2 max-h-[400px] overflow-y-auto">
+          {loading ? (
+            [1,2,3].map(i => <div key={i} className="h-16 bg-white dark:bg-[#111827] rounded-xl animate-pulse" />)
+          ) : sessions.length === 0 ? (
+            <div className={CARD + " py-10 text-center"}>
+              <Inbox className="w-8 h-8 text-[#64748B] dark:text-slate-400 mx-auto mb-2" />
+              <p className="text-sm font-bold text-[#64748B] dark:text-slate-400">No sessions yet</p>
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">Customers will appear when they chat</p>
+            </div>
+          ) : (
+            [...waiting, ...active, ...closed].map((s) => (
+              <button key={s.id} onClick={() => setSelectedSession(s)} className={`w-full text-left p-3 rounded-xl border transition-all ${
+                selectedSession?.id === s.id ? "border-[#2563EB] bg-blue-50 dark:bg-blue-500/10" : "border-gray-100 dark:border-white/10 bg-white dark:bg-[#111827] hover:shadow-sm"
+              } ${s.status === "waiting" ? "border-l-4 border-l-amber-400" : ""}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${s.status === "waiting" ? "bg-amber-500 animate-pulse" : s.status === "active" ? "bg-green-500" : "bg-gray-300"}`} />
+                    <span className="text-sm font-bold text-[#0F172A] dark:text-white">{s.guest_name || "Customer"}</span>
+                  </div>
+                  {s.status === "waiting" && (
+                    <button onClick={(e) => { e.stopPropagation(); updateSession(s.id, "active"); }} className="bg-[#16A34A] text-white text-[10px] font-bold px-2.5 py-1 rounded-lg hover:bg-green-600">Accept</button>
+                  )}
+                </div>
+                {s.last_message && <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1 truncate">{s.last_message.message}</p>}
+                <p className="text-[10px] text-gray-400 dark:text-slate-600 mt-0.5">{new Date(s.created_at).toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>
+              </button>
+            ))
+          )}
+        </div>
+
+        {/* Chat panel */}
+        <div className={CARD + " flex flex-col"} style={{ minHeight: 360 }}>
+          {selectedSession ? (
+            <>
+              <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-white/10">
+                <div>
+                  <p className="text-sm font-extrabold text-[#0F172A] dark:text-white">{selectedSession.guest_name || "Customer"}</p>
+                  <p className="text-[10px] font-bold text-[#64748B] dark:text-slate-400">{selectedSession.status}</p>
+                </div>
+                <div className="flex gap-2">
+                  {selectedSession.status === "waiting" && <button onClick={() => updateSession(selectedSession.id, "active")} className="bg-[#16A34A] text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-600">Accept</button>}
+                  {selectedSession.status !== "closed" && <button onClick={() => updateSession(selectedSession.id, "closed")} className="text-xs font-bold text-gray-400 hover:text-gray-600">Close</button>}
+                </div>
+              </div>
+              <div ref={scrollRef} className="flex-1 overflow-y-auto py-3 space-y-2" style={{ minHeight: 200 }}>
+                {chatMessages.length === 0 ? (
+                  <p className="text-xs text-gray-400 text-center py-8">No messages yet</p>
+                ) : chatMessages.map((m, i) => (
+                  <div key={i} className={`flex ${m.sender_role === "agent" ? "justify-end" : "justify-start"}`}>
+                    <div className={`max-w-[80%] px-3 py-2 rounded-xl text-sm ${
+                      m.sender_role === "agent" ? "bg-[#2563EB] text-white rounded-br-md" : "bg-gray-100 dark:bg-white/5 text-[#0F172A] dark:text-white rounded-bl-md"
+                    }`}>{m.message}</div>
+                  </div>
+                ))}
+              </div>
+              {selectedSession.status !== "closed" && (
+                <div className="border-t border-gray-100 dark:border-white/10 pt-2 flex gap-2">
+                  <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessage()} placeholder="Reply..." className="flex-1 text-sm bg-gray-100 dark:bg-white/5 rounded-lg px-3 py-2 outline-none text-[#0F172A] dark:text-white" disabled={sending} />
+                  <button onClick={sendMessage} disabled={!chatInput.trim() || sending} className="bg-[#2563EB] text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-blue-600 disabled:opacity-40">Send</button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <Headphones className="w-8 h-8 text-[#64748B] dark:text-slate-400 mx-auto mb-2" />
+                <p className="text-sm font-bold text-[#64748B] dark:text-slate-400">Select a session to chat</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

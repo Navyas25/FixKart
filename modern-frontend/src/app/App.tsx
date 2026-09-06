@@ -111,21 +111,32 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-9 h-9 bg-[#F59E0B] rounded-xl flex items-center justify-center shadow-md shadow-amber-500/30">
-              <Wrench className="w-5 h-5 text-[#0F172A]" strokeWidth={2.5} />
+          {isAdmin ? (
+            <div className="flex items-center gap-2.5 flex-shrink-0">
+              <div className="w-9 h-9 bg-[#F59E0B] rounded-xl flex items-center justify-center shadow-md shadow-amber-500/30">
+                <Wrench className="w-5 h-5 text-[#0F172A]" strokeWidth={2.5} />
+              </div>
+              <span className="text-white font-extrabold text-xl tracking-tight">
+                Fix<span className="text-[#F59E0B]">Kart</span>
+              </span>
             </div>
-            <span className="text-white font-extrabold text-xl tracking-tight">
-              Fix<span className="text-[#F59E0B]">Kart</span>
-            </span>
-          </Link>
+          ) : (
+            <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+              <div className="w-9 h-9 bg-[#F59E0B] rounded-xl flex items-center justify-center shadow-md shadow-amber-500/30">
+                <Wrench className="w-5 h-5 text-[#0F172A]" strokeWidth={2.5} />
+              </div>
+              <span className="text-white font-extrabold text-xl tracking-tight">
+                Fix<span className="text-[#F59E0B]">Kart</span>
+              </span>
+            </Link>
+          )}
 
           {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-6 xl:gap-7">
             {isAdmin ? (
               <>
                 {navLink("/admin/dashboard", "Dashboard")}
-                {navLink("/support", "Support")}
+                {navLink("/admin/support", "Support")}
               </>
             ) : (
               <>
@@ -165,13 +176,15 @@ function Navbar() {
             >
               {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <Link
-              to={isAdmin ? "/admin/dashboard" : isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login"}
-              className="p-2 text-white/60 hover:text-white transition-colors"
-              aria-label="My account"
-            >
-              <User className="w-5 h-5" />
-            </Link>
+            {!isAdmin && (
+              <Link
+                to={isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login"}
+                className="p-2 text-white/60 hover:text-white transition-colors"
+                aria-label="My account"
+              >
+                <User className="w-5 h-5" />
+              </Link>
+            )}
             {isLoggedIn && !isAdmin && (
               <Link
                 to="/settings"
@@ -412,24 +425,30 @@ function ScrollToTop() {
 }
 
 function Layout() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isVendor, user } = useAuth();
+  const isProfessional = user?.user_metadata?.role === "professional";
+  const isDashboard = isAdmin || isProfessional || isVendor;
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
     if (isAdmin && !pathname.startsWith("/admin")) {
       navigate("/admin/dashboard", { replace: true });
+    } else if (isProfessional && !pathname.startsWith("/professional")) {
+      navigate("/professional/dashboard", { replace: true });
+    } else if (isVendor && !pathname.startsWith("/vendor")) {
+      navigate("/vendor/dashboard", { replace: true });
     }
-  }, [isAdmin, pathname, navigate]);
+  }, [isAdmin, isProfessional, isVendor, pathname, navigate]);
 
   return (
     <div className="min-h-screen overflow-x-clip bg-[#F8FAFC]">
-      <Navbar />
+      {!isDashboard && <Navbar />}
       <main>
         <Outlet />
       </main>
-      {!isAdmin && <Footer />}
-      {!isAdmin && <ChatBot />}
+      {!isDashboard && <Footer />}
+      {!isDashboard && <ChatBot />}
     </div>
   );
 }
@@ -480,7 +499,7 @@ export default function App() {
                 <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                 <Route path="/admin/professionals" element={<AdminProfessionalsPage />} />
                 <Route path="/admin/vendors" element={<AdminVendorsPage />} />
-                <Route path="/support" element={<CustomerSupportPage />} />
+                <Route path="/admin/support" element={<CustomerSupportPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
