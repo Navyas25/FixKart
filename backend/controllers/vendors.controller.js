@@ -3,6 +3,24 @@ import { successResponse, errorResponse } from '../utils/response.js';
 import { getUserSupabase } from '../utils/supabaseUser.js';
 import { isUuid } from '../utils/ids.js';
 
+// Safe vendor table check - returns null if table doesn't exists
+async function getVendorForUser(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('vendors')
+      .select('id')
+      .eq('user_id', userId)
+      .maybeSingle();
+    if (error) {
+      if (/does not exist|not found|schema cache/i.test(error.message)) return null;
+      throw error;
+    }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 const VENDOR_SELECT = `
   id, user_id, shop_name, shop_description, shop_location,
   logo_url, banner_url, rating, total_sales, total_orders,
@@ -133,13 +151,42 @@ export const getVendorById = async (req, res, next) => {
 
 export const getVendorDashboard = async (req, res, next) => {
   try {
-    const { data: vendor, error: vendorError } = await supabase
-      .from('vendors')
-      .select(VENDOR_SELECT)
-      .eq('user_id', req.user.id)
-      .maybeSingle();
+    let vendor;
+    try {
+      const { data, error: vendorError } = await supabase
+        .from('vendors')
+        .select(VENDOR_SELECT)
+        .eq('user_id', req.user.id)
+        .maybeSingle();
 
-    if (vendorError) throw vendorError;
+      if (vendorError) {
+        // vendors table may not exist yet
+        if (/does not exist|not found|schema cache/i.test(vendorError.message)) {
+          return successResponse(res, {
+            vendor: null,
+            stats: { today_sales: 0, total_revenue: 0, total_orders: 0, pending_orders: 0, product_count: 0, active_products: 0, out_of_stock: 0, low_stock: 0, review_count: 0, rating: 0, total_sales: 0 },
+            recent_orders: [],
+            low_stock_products: [],
+            recent_products: [],
+            message: 'Vendors table not found. Please run the database migration.',
+          });
+        }
+        throw vendorError;
+      }
+      vendor = data;
+    } catch (err) {
+      if (/does not exist|not found|schema cache/i.test(err.message)) {
+        return successResponse(res, {
+          vendor: null,
+          stats: { today_sales: 0, total_revenue: 0, total_orders: 0, pending_orders: 0, product_count: 0, active_products: 0, out_of_stock: 0, low_stock: 0, review_count: 0, rating: 0, total_sales: 0 },
+          recent_orders: [],
+          low_stock_products: [],
+          recent_products: [],
+          message: 'Vendors table not found. Please run the database migration.',
+        });
+      }
+      throw err;
+    }
 
     if (!vendor) {
       return errorResponse(res, 'Vendor profile not found', 404);
@@ -311,15 +358,9 @@ export const getVendorDashboard = async (req, res, next) => {
 // =====================================================
 
 export const getMyProducts = async (req, res, next) => {
-  try {
-    const { data: vendor } = await supabase
-      .from('vendors')
-      .select('id')
-      .eq('user_id', req.user.id)
-      .maybeSingle();
-
+  try {      const vendor = await getVendorForUser(req.user.id);
     if (!vendor) {
-      return errorResponse(res, 'Vendor profile not found', 404);
+      return errorResponse(res, 'Vendor profile not found. Vendors table may not exist yet.', 404);
     }
 
     const { page = 1, limit = 20, status, q } = req.query;
@@ -364,18 +405,18 @@ export const getMyProducts = async (req, res, next) => {
 // =====================================================
 
 export const createProduct = async (req, res, next) => {
-  try {
-    const { data: vendor } = await supabase
+  try {      const vendor = await getVendorForUser(req.user.id);
+    if (!vendor) {
+      return errorResponse(res, 'Vendor profile not found. Vendors table may not exist yet.', 404);
+    }
+
+    // For create product, we also need verification status
+    const { data: vendorFull } = await supabase
       .from('vendors')
       .select('id, verification_status')
       .eq('user_id', req.user.id)
       .maybeSingle();
-
-    if (!vendor) {
-      return errorResponse(res, 'Vendor profile not found', 404);
-    }
-
-    if (vendor.verification_status !== 'verified') {
+    if (vendorFull && vendorFull.verification_status !== 'verified') {
       return errorResponse(res, 'Your vendor account must be verified to add products', 403);
     }
 
@@ -427,15 +468,9 @@ export const createProduct = async (req, res, next) => {
 
 export const updateProduct = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { data: vendor } = await supabase
-      .from('vendors')
-      .select('id')
-      .eq('user_id', req.user.id)
-      .maybeSingle();
-
+    const { id } = req.params;      const vendor = await getVendorForUser(req.user.id);
     if (!vendor) {
-      return errorResponse(res, 'Vendor profile not found', 404);
+      return errorResponse(res, 'Vendor profile not found. Vendors table may not exist yet.', 404);
     }
 
     // Verify the product belongs to this vendor
@@ -934,15 +969,9 @@ export const updateStock = async (req, res, next) => {
 // =====================================================
 
 export const updateStoreProfile = async (req, res, next) => {
-  try {
-    const { data: vendor } = await supabase
-      .from('vendors')
-      .select('id')
-      .eq('user_id', req.user.id)
-      .maybeSingle();
-
+  try {      const vendor = await getVendorForUser(req.user.id);
     if (!vendor) {
-      return errorResponse(res, 'Vendor profile not found', 404);
+      return errorResponse(res, 'Vendor profile not found. Vendors table may not exist yet.', 404);
     }
 
     const allowed = [

@@ -1648,35 +1648,86 @@ function OffersTab({ setError, setSaveMsg }: { setError: (s: string) => void; se
           {offers.map(offer => {
             const typeInfo = TYPE_LABELS[offer.type] || TYPE_LABELS.percentage;
             const isExpired = offer.end_date && new Date(offer.end_date) < new Date();
-            return (
-              <div key={offer.id} className={CARD + " hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                      <p className="text-sm font-extrabold text-[#0F172A] dark:text-white">{offer.title}</p>
-                      <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${typeInfo.color}`}>{typeInfo.label}</span>
-                      <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${offer.is_active ? "bg-green-100 text-green-700 dark:bg-green-500[0.15] dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-white[0.1] dark:text-slate-400"}`}>{offer.is_active ? "Active" : "Paused"}</span>
-                      {isExpired && <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-500[0.15] dark:text-red-400">Expired</span>}
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-[#64748B] dark:text-slate-400">
-                      <span className="font-bold">Code: <span className="text-[#2563EB] dark:text-blue-400">{offer.code}</span></span>
-                      <span>{offer.type === "percentage" ? offer.discount_value + "% off" : offer.type === "fixed" ? "Rs. " + offer.discount_value + " off" : offer.type === "bogo" ? "Buy " + (offer.buy_quantity || 1) + " Get " + (offer.get_quantity || 1) : "Seasonal: " + offer.discount_value + "% off"}</span>
-                      {offer.min_order > 0 && <span>Min Rs. {offer.min_order}</span>}
-                      {offer.max_uses && <span>Max {offer.max_uses} uses ({offer.uses_count || 0} used)</span>}
-                      {offer.end_date && <span>Expires {new Date(offer.end_date).toLocaleDateString()}</span>}
-                    </div>
-                    {offer.description && <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">{offer.description}</p>}
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <button onClick={() => toggleActive(offer)} className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${offer.is_active ? "text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500[0.1]" : "text-green-600 hover:bg-green-50 dark:hover:bg-green-500[0.1]"}`}>
-                      {offer.is_active ? "Pause" : "Activate"}
-                    </button>
-                    <button onClick={() => startEdit(offer)} className="text-xs font-bold text-[#2563EB] hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-500[0.1] transition-colors">Edit</button>
-                    <button onClick={() => remove(offer.id)} className="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-500[0.1] transition-colors">Delete</button>
-                  </div>
+        return (
+          <div key={offer.id} className={CARD + " hover:shadow-md transition-shadow"}>
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                  <p className="text-sm font-extrabold text-[#0F172A] dark:text-white">
+                    {offer.title}
+                  </p>
+                  <span
+                    className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${typeInfo.color}`}
+                  >
+                    {typeInfo.label}
+                  </span>
+                  <span
+                    className={offer.is_active ? "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400" : "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-slate-400"}
+                  >
+                    {offer.is_active ? "Active" : "Paused"}
+                  </span>
+                  {isExpired && (
+                    <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400">
+                      Expired
+                    </span>
+                  )}
                 </div>
+
+                <div className="flex flex-wrap items-center gap-3 text-xs text-[#64748B] dark:text-slate-400">
+                  <span className="font-bold">
+                    Code:{" "}
+                    <span className="text-[#2563EB] dark:text-blue-400">{offer.code}</span>
+                  </span>
+                  <span>
+                    {offer.type === "percentage"
+                      ? `${offer.discount_value}% off`
+                      : offer.type === "fixed"
+                      ? `Rs. ${offer.discount_value} off`
+                      : offer.type === "bogo"
+                      ? `Buy ${offer.buy_quantity || 1} Get ${offer.get_quantity || 1}`
+                      : `Seasonal: ${offer.discount_value}% off`}
+                  </span>
+                  {offer.min_order > 0 && <span>Min Rs. {offer.min_order}</span>}
+                  {offer.max_uses && (
+                    <span>
+                      Max {offer.max_uses} uses ({offer.uses_count || 0} used)
+                    </span>
+                  )}
+                  {offer.end_date && (
+                    <span>Expires {new Date(offer.end_date).toLocaleDateString()}</span>
+                  )}
+                </div>
+
+                {offer.description && (
+                  <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
+                    {offer.description}
+                  </p>
+                )}
               </div>
-            );
+
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <button
+                  onClick={() => toggleActive(offer)}
+                  className={offer.is_active ? "text-xs font-bold px-3 py-1.5 rounded-lg transition-colors text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500/10" : "text-xs font-bold px-3 py-1.5 rounded-lg transition-colors text-green-600 hover:bg-green-50 dark:hover:bg-green-500/10"}
+                >
+                  {offer.is_active ? "Pause" : "Activate"}
+                </button>
+                <button
+                  onClick={() => startEdit(offer)}
+                  className="text-xs font-bold text-[#2563EB] hover:text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => remove(offer.id)}
+                  className="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        );
           })}
         </div>
       )}

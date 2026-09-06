@@ -831,6 +831,9 @@ function ProductsTab({ setError }: { setError: (s: string) => void }) {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [catFilter, setCatFilter] = useState("");
+
+  const categories = ["Plumbing", "Electrical", "Hardware", "Tools", "Paint", "Automotive", "Safety Equipment"];
 
   useEffect(() => {
     apiGet("/products?limit=100")
@@ -839,9 +842,11 @@ function ProductsTab({ setError }: { setError: (s: string) => void }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = search
-    ? products.filter(p => p.name?.toLowerCase().includes(search.toLowerCase()) || p.brand?.toLowerCase().includes(search.toLowerCase()))
-    : products;
+  const filtered = products.filter(p => {
+    const matchesSearch = !search || p.name?.toLowerCase().includes(search.toLowerCase()) || p.brand?.toLowerCase().includes(search.toLowerCase());
+    const matchesCat = !catFilter || p.category?.name?.toLowerCase() === catFilter.toLowerCase() || p.category_id === catFilter;
+    return matchesSearch && matchesCat;
+  });
 
   return (
     <div className="space-y-6">
@@ -858,8 +863,20 @@ function ProductsTab({ setError }: { setError: (s: string) => void }) {
       <div className={CARD}>
         <h3 className="text-sm font-extrabold text-[#0F172A] dark:text-white mb-3">Categories</h3>
         <div className="flex flex-wrap gap-2">
-          {["Plumbing", "Electrical", "Hardware", "Tools", "Paint", "Automotive", "Safety Equipment"].map(cat => (
-            <span key={cat} className="text-xs font-bold text-[#2563EB] bg-[#2563EB]/10 px-3 py-1.5 rounded-full">{cat}</span>
+          <button
+            onClick={() => setCatFilter(catFilter ? "" : "")}
+            className={`text-xs font-bold px-3 py-1.5 rounded-full transition-colors ${!catFilter ? 'bg-[#0F172A] text-white' : 'text-[#64748B] bg-gray-100 dark:bg-white/10 dark:text-slate-400 hover:bg-gray-200'}`}
+          >
+            All
+          </button>
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setCatFilter(catFilter === cat ? '' : cat)}
+              className={`text-xs font-bold px-3 py-1.5 rounded-full transition-colors ${catFilter === cat ? 'bg-[#2563EB] text-white' : 'text-[#2563EB] bg-[#2563EB]/10 hover:bg-[#2563EB]/20'}`}
+            >
+              {cat}
+            </button>
           ))}
         </div>
       </div>

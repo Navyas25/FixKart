@@ -1,16 +1,15 @@
-import { supabase } from '../config/supabase.js';
+import { supabase, supabaseAdmin } from '../config/supabase.js';
 import { successResponse, errorResponse } from '../utils/response.js';
 import { getUserSupabase } from '../utils/supabaseUser.js';
 import { sendEmail, vendorApprovedEmail, vendorRejectedEmail } from '../utils/email.js';
 
-const VENDOR_SELECT_ADMIN = `
-  id, user_id, shop_name, shop_description, shop_location,
-  logo_url, banner_url, rating, total_sales,
-  verification_status, created_at, updated_at,
-  category, gst_number, business_address, business_phone,
-  bank_account_number, bank_ifsc, bank_name, upi_id,
-  profile:profiles(full_name, phone, avatar_url)
-`;
+const VENDOR_SELECT_ADMIN = [
+  'id', 'user_id', 'shop_name', 'shop_description', 'shop_location',
+  'logo_url', 'banner_url', 'rating', 'total_sales',
+  'verification_status', 'created_at', 'updated_at',
+  'category', 'gst_number', 'business_address', 'business_phone',
+  'bank_account_number', 'bank_ifsc', 'bank_name', 'upi_id'
+].join(', ');
 
 const VERIFICATION_STATUSES = ['pending', 'verified', 'rejected', 'suspended'];
 
@@ -21,7 +20,8 @@ const VERIFICATION_STATUSES = ['pending', 'verified', 'rejected', 'suspended'];
 
 export const getAllVendorsAdmin = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    // Use service-role client to bypass RLS for admin queries
+    const db = supabaseAdmin;
 
     const { data, error } = await db
       .from('vendors')
@@ -36,7 +36,16 @@ export const getAllVendorsAdmin = async (req, res, next) => {
       throw error;
     }
 
-    return successResponse(res, { vendors: data || [] });
+    // Attach profiles separately (no FK relationship between vendors and profiles)
+    const vendors = data || [];
+    const userIds = [...new Set(vendors.map(v => v.user_id).filter(Boolean))];
+    if (userIds.length > 0) {
+      const { data: profiles } = await db.from('profiles').select('id, full_name, phone, avatar_url, email').in('id', userIds);
+      const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+      vendors.forEach(v => { v.profile = profileMap[v.user_id] || null; });
+    }
+
+    return successResponse(res, { vendors });
   } catch (err) {
     return next(err);
   }
@@ -61,7 +70,7 @@ export const verifyVendor = async (req, res, next) => {
       );
     }
 
-    const db = getUserSupabase(req);
+    const db = supabaseAdmin;
 
     // First, get the current vendor data
     const { data: currentVendor, error: fetchError } = await db

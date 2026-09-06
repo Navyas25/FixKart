@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabase.js';
+import { supabase, supabaseAdmin } from '../config/supabase.js';
 import { successResponse, errorResponse } from '../utils/response.js';
 import { getUserSupabase } from '../utils/supabaseUser.js';
 
@@ -9,7 +9,8 @@ import { getUserSupabase } from '../utils/supabaseUser.js';
 
 export const getAdminDashboard = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    // Use service-role client to bypass RLS for admin queries
+    const db = supabaseAdmin;
 
     // Parallel queries for dashboard stats — each falls back if columns/tables are missing
     async function safeQuery(table, columns, fallbackColumns) {
@@ -130,7 +131,7 @@ export const getAdminDashboard = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    const db = supabaseAdmin;
     const { page = 1, limit = 50, q, role } = req.query;
 
     const pageNum = Math.max(parseInt(page, 10) || 1, 1);
@@ -140,7 +141,7 @@ export const getAllUsers = async (req, res, next) => {
 
     let query = db
       .from('profiles')
-      .select('id, full_name, phone, role, avatar_url, created_at, updated_at', { count: 'exact' });
+      .select('id, full_name, email, phone, role, avatar_url, created_at, updated_at', { count: 'exact' });
 
     if (q) {
       query = query.or(`full_name.ilike.%${q}%,phone.ilike.%${q}%`);
@@ -173,7 +174,7 @@ export const getAllUsers = async (req, res, next) => {
 
 export const getAllOrders = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    const db = supabaseAdmin;
     const { page = 1, limit = 50, status, q } = req.query;
 
     const pageNum = Math.max(parseInt(page, 10) || 1, 1);
@@ -229,7 +230,7 @@ export const getAllOrders = async (req, res, next) => {
 
 export const getAllBookings = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    const db = supabaseAdmin;
     const { page = 1, limit = 50, status } = req.query;
 
     const pageNum = Math.max(parseInt(page, 10) || 1, 1);
@@ -299,7 +300,7 @@ export const getAllBookings = async (req, res, next) => {
 
 export const getAdminAnalytics = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    const db = supabaseAdmin;
 
     const [ordersResult, bookingsResult, productsResult, usersResult] = await Promise.allSettled([
       db.from('orders').select('id, status, total_amount, created_at'),
@@ -423,7 +424,7 @@ export const getAdminAnalytics = async (req, res, next) => {
 
 export const getAllReviews = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    const db = supabaseAdmin;
 
     let reviews = [];
     try {

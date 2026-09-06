@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabase.js';
+import { supabase, supabaseAdmin } from '../config/supabase.js';
 import { successResponse, errorResponse } from '../utils/response.js';
 import { getUserSupabase } from '../utils/supabaseUser.js';
 import { isUuid } from '../utils/ids.js';
@@ -752,25 +752,34 @@ export const uploadDocument = async (req, res, next) => {
 
 export const getAllProfessionalsAdmin = async (req, res, next) => {
   try {
-    const db = getUserSupabase(req);
+    // Use service-role client to bypass RLS for admin queries
+    const db = supabaseAdmin;
 
-    // Try full query first (needs verification columns)
+    // Query all professionals with all available columns
     let { data, error } = await db
       .from('professionals')
       .select(`
         id, user_id, experience_years, rating, bio, created_at,
         verification_status, service_categories, service_locations,
-        availability, id_document_url, is_online
+        availability, id_document_url
       `)
       .order('created_at', { ascending: false });
 
-    // If columns are missing, fall back to basic columns
+    // If columns are missing, progressively fall back
     if (error && /column .* does not exist/i.test(error.message)) {
       const fallback = await db
         .from('professionals')
-        .select('id, user_id, experience_years, rating, bio, created_at')
+        .select('id, user_id, experience_years, rating, bio, created_at, verification_status, service_categories, service_locations, availability')
         .order('created_at', { ascending: false });
       data = fallback.data || [];
+      error = null;
+    }
+    if (error && /column .* does not exist/i.test(error.message)) {
+      const fallback2 = await db
+        .from('professionals')
+        .select('id, user_id, experience_years, rating, bio, created_at, verification_status')
+        .order('created_at', { ascending: false });
+      data = fallback2.data || [];
       error = null;
     }
 
@@ -810,7 +819,7 @@ export const verifyProfessional = async (req, res, next) => {
       return errorResponse(res, `verification_status must be one of: ${VERIFICATION_STATUSES.join(', ')}`, 400);
     }
 
-    const db = getUserSupabase(req);
+    const db = supabaseAdmin;
 
     const { data, error } = await db
       .from('professionals')
