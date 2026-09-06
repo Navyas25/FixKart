@@ -10,15 +10,11 @@ import { isUuid } from '../utils/ids.js';
 const VERIFICATION_STATUSES = ['pending', 'verified', 'rejected', 'suspended'];
 
 const PROFESSIONAL_EDITABLE = [
-  'bio',
-  'experience_years',
-  'service_categories',
-  'service_locations',
-  'availability',
+  'bio', 'experience_years', 'service_categories', 'service_locations',
+  'availability', 'service_radius_km', 'max_jobs_per_day', 'hourly_rate',
+  'bank_account_number', 'bank_ifsc', 'bank_name', 'upi_id',
 ];
 
-// Fetch the caller's own professional row (by user_id). Returns null if the
-// user has no professional row.
 const getOwnProfessional = async (req) => {
   const db = getUserSupabase(req);
   const { data, error } = await db
@@ -26,7 +22,6 @@ const getOwnProfessional = async (req) => {
     .select('*')
     .eq('user_id', req.user.id)
     .maybeSingle();
-
   if (error) throw error;
   return data || null;
 };
@@ -39,15 +34,10 @@ const getOwnProfessional = async (req) => {
 export const getMyProfessionalProfile = async (req, res, next) => {
   try {
     const db = getUserSupabase(req);
-
     const professional = await getOwnProfessional(req);
 
     if (!professional) {
-      return errorResponse(
-        res,
-        'No professional profile found. Register as a professional to get started.',
-        403
-      );
+      return errorResponse(res, 'No professional profile found.', 403);
     }
 
     const { data: profile } = await db
@@ -67,23 +57,152 @@ export const getMyProfessionalProfile = async (req, res, next) => {
 };
 
 // =====================================================
+// GET COMPREHENSIVE DASHBOARD
+// GET /api/professionals/me/dashboard
+// =====================================================
+
+export const getProfessionalDashboard = async (req, res, next) => {
+  try {
+    const professional = await getOwnProfessional(req);
+    if (!professional) {
+      return errorResponse(res, 'No professional profile found.', 403);
+    }
+
+    const db = getUserSupabase(req);
+
+    // Get profile info
+    const { data: profile } = await db
+      .from('profiles')
+      .select('full_name, phone, avatar_url, email')
+      .eq('id', req.user.id)
+      .maybeSingle();
+
+    // Get all bookings
+    const { data: bookings } = await db
+      .from('bookings')
+      .select(`
+        id, status, scheduled_at, created_at, notes, customer_notes,
+        address, service_id, professional_id, customer_id,
+        service:services(id, name, base_price, description, estimated_duration),
+        customer:profiles!bookings_customer_id_fkey(full_name, phone, avatar_url)
+      `)
+      .eq('professional_id', professional.id)
+      .order('created_at', { ascending: false });
+
+    const allBookings = bookings || [];
+
+    // Calculate stats
+    const pending = allBookings.filter(b => b.status === 'pending');
+    const confirmed = allBookings.filter(b => b.status === 'confirmed');
+    const inProgress = allBookings.filter(b => b.status === 'in_progress');
+    const completed = allBookings.filter(b => b.status === 'completed');
+    const cancelled = allBookings.filter(b => b.status === 'cancelled');
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayBookings = allBookings.filter(b => {
+      if (!b.scheduled_at) return false;
+      const d = new Date(b.scheduled_at);
+      d.setHours(0, 0, 0, 0);
+      return d.getTime() === today.getTime();
+    });
+
+    const thisMonth = new Date();
+    thisMonth.setDate(1);
+    thisMonth.setHours(0, 0, 0, 0);
+    const monthBookings = completed.filter(b => new Date(b.created_at) >= thisMonth);
+
+    const totalEarnings = completed.reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
+    const monthEarnings = monthBookings.reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
+
+    // Pending payments (completed but not yet paid out)
+    const pendingPayments = completed
+      .filter(b => !b.paid_out)
+      .reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
+
+    // Reviews
+    let reviewCount = 0;
+    let avgRating = professional.rating || 0;
+    let reviews = [];
+    try {
+      const { data: reviewData } = await db
+        .from('reviews')
+        .select(`
+          id, rating, comment, created_at,
+          profile:profiles(full_name, avatar_url)
+        `)
+        .eq('item_type', 'service')
+        .eq('item_id', professional.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      reviews = reviewData || [];
+      reviewCount = reviews.length;
+      if (reviewCount > 0) {
+        const allReviews = await db
+          .from('reviews')
+          .select('rating')
+          .eq('item_type', 'service')
+          .eq('item_id', professional.id);
+        if (allReviews.data && allReviews.data.length > 0) {
+          avgRating = Math.round((allReviews.data.reduce((s, r) => s + r.rating, 0) / allReviews.data.length) * 10) / 10;
+        }
+      }
+    } catch {
+      // reviews table might not exist
+    }
+
+    // Services offered
+    let services = [];
+    try {
+      const { data: svcData } = await db
+        .from('services')
+        .select('id, name, base_price, description, estimated_duration, category')
+        .eq('professional_id', professional.id);
+      services = svcData || [];
+    } catch {
+      // services table might not exist
+    }
+
+    return successResponse(res, {
+      professional,
+      profile: profile || null,
+      email: req.user.email,
+      stats: {
+        today_bookings: todayBookings.length,
+        pending_requests: pending.length,
+        upcoming_jobs: confirmed.length + inProgress.length,
+        completed_jobs: completed.length,
+        cancelled_jobs: cancelled.length,
+        total_jobs: allBookings.length,
+        total_earnings: totalEarnings,
+        this_month_earnings: monthEarnings,
+        pending_payments: pendingPayments,
+        available_balance: totalEarnings * 0.95, // After 5% commission
+        rating: avgRating,
+        review_count: reviewCount,
+        is_online: professional.is_online ?? true,
+      },
+      bookings: allBookings.slice(0, 20),
+      reviews,
+      services,
+      recent_bookings: allBookings.slice(0, 5),
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
 // UPDATE MY PROFESSIONAL PROFILE
 // PATCH /api/professionals/me
 // =====================================================
-//
-// Whitelist-only: verification_status, rating, user_id and id can never be
-// changed through this endpoint - they are set by the server/admin.
 
 export const updateMyProfessionalProfile = async (req, res, next) => {
   try {
     const existing = await getOwnProfessional(req);
-
     if (!existing) {
-      return errorResponse(
-        res,
-        'No professional profile found. Register as a professional to get started.',
-        403
-      );
+      return errorResponse(res, 'No professional profile found.', 403);
     }
 
     const updates = {};
@@ -104,16 +223,43 @@ export const updateMyProfessionalProfile = async (req, res, next) => {
       .maybeSingle();
 
     if (error) throw error;
-
     if (!data) {
-      return errorResponse(
-        res,
-        'Could not update profile. If this just registered, run the RLS migration (backend/scripts/migrations) first.',
-        403
-      );
+      return errorResponse(res, 'Could not update profile.', 403);
     }
 
     return successResponse(res, { professional: data });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// TOGGLE ONLINE/OFFLINE AVAILABILITY
+// PATCH /api/professionals/me/availability
+// =====================================================
+
+export const toggleAvailability = async (req, res, next) => {
+  try {
+    const { is_online } = req.body;
+    if (typeof is_online !== 'boolean') {
+      return errorResponse(res, 'is_online must be a boolean', 400);
+    }
+
+    const db = getUserSupabase(req);
+    const { data, error } = await db
+      .from('professionals')
+      .update({ is_online })
+      .eq('user_id', req.user.id)
+      .select('id, is_online')
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return errorResponse(res, 'Professional not found', 404);
+
+    return successResponse(res, {
+      is_online: data.is_online,
+      message: is_online ? 'You are now online' : 'You are now offline',
+    });
   } catch (err) {
     return next(err);
   }
@@ -127,45 +273,347 @@ export const updateMyProfessionalProfile = async (req, res, next) => {
 export const getMyEarnings = async (req, res, next) => {
   try {
     const professional = await getOwnProfessional(req);
-
     if (!professional) {
-      return errorResponse(
-        res,
-        'No professional profile found. Register as a professional to get started.',
-        403
-      );
+      return errorResponse(res, 'No professional profile found.', 403);
     }
 
     const db = getUserSupabase(req);
 
-    // All bookings for this professional with the service price attached.
     const { data: bookings, error } = await db
       .from('bookings')
-      .select('id, status, scheduled_at, created_at, service:services(id, base_price, name)')
+      .select('id, status, scheduled_at, created_at, paid_out, service:services(id, base_price, name)')
       .eq('professional_id', professional.id);
 
     if (error) throw error;
 
-    const completed = (bookings || []).filter((b) => b.status === 'completed');
-    const upcoming = (bookings || []).filter((b) =>
+    const completed = (bookings || []).filter(b => b.status === 'completed');
+    const upcoming = (bookings || []).filter(b =>
       ['pending', 'confirmed', 'in_progress'].includes(b.status)
     );
+    const cancelled = (bookings || []).filter(b => b.status === 'cancelled');
 
     const totalEarnings = completed.reduce(
-      (sum, b) => sum + (b.service?.base_price || 0),
-      0
+      (sum, b) => sum + (b.service?.base_price || 0), 0
     );
+
+    const paidOut = completed
+      .filter(b => b.paid_out)
+      .reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
+
+    const pendingPayment = totalEarnings - paidOut;
+
+    // This month
+    const thisMonth = new Date();
+    thisMonth.setDate(1);
+    thisMonth.setHours(0, 0, 0, 0);
+    const monthEarnings = completed
+      .filter(b => new Date(b.created_at) >= thisMonth)
+      .reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
+
+    // Earnings history (last 30 days grouped by day)
+    const dailyEarnings = {};
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    for (const b of completed) {
+      const d = new Date(b.created_at);
+      if (d < thirtyDaysAgo) continue;
+      const key = d.toISOString().split('T')[0];
+      if (!dailyEarnings[key]) dailyEarnings[key] = { date: key, revenue: 0, jobs: 0 };
+      dailyEarnings[key].revenue += b.service?.base_price || 0;
+      dailyEarnings[key].jobs += 1;
+    }
 
     return successResponse(res, {
       earnings: {
         total: totalEarnings,
+        paid_out: paidOut,
+        pending_payment: pendingPayment,
+        this_month: monthEarnings,
+        commission: Math.round(totalEarnings * 0.05),
+        net_earnings: Math.round(totalEarnings * 0.95),
         completedJobs: completed.length,
         upcomingJobs: upcoming.length,
+        cancelledJobs: cancelled.length,
         totalJobs: (bookings || []).length,
         avgRating: professional.rating,
         verificationStatus: professional.verification_status,
       },
+      daily_earnings: Object.values(dailyEarnings).sort((a, b) => a.date.localeCompare(b.date)),
+      bank_details: {
+        bank_account_number: professional.bank_account_number || null,
+        bank_ifsc: professional.bank_ifsc || null,
+        bank_name: professional.bank_name || null,
+        upi_id: professional.upi_id || null,
+      },
     });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// GET BOOKINGS WITH FILTERS
+// GET /api/professionals/me/bookings
+// =====================================================
+
+export const getMyBookings = async (req, res, next) => {
+  try {
+    const professional = await getOwnProfessional(req);
+    if (!professional) return errorResponse(res, 'No professional profile found.', 403);
+
+    const db = getUserSupabase(req);
+    const { status } = req.query;
+
+    let query = db
+      .from('bookings')
+      .select(`
+        id, status, scheduled_at, created_at, notes, customer_notes, address,
+        service:services(id, name, base_price, description, estimated_duration, category),
+        customer:profiles!bookings_customer_id_fkey(full_name, phone, avatar_url)
+      `)
+      .eq('professional_id', professional.id)
+      .order('created_at', { ascending: false });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+
+    return successResponse(res, { bookings: data || [] });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// GET NOTIFICATIONS
+// GET /api/professionals/me/notifications
+// =====================================================
+
+export const getMyNotifications = async (req, res, next) => {
+  try {
+    const professional = await getOwnProfessional(req);
+    if (!professional) return errorResponse(res, 'No professional profile found.', 403);
+
+    const db = getUserSupabase(req);
+    const notifications = [];
+
+    // Pending booking requests
+    const { data: pendingBookings } = await db
+      .from('bookings')
+      .select('id, created_at, service:services(name), customer:profiles!bookings_customer_id_fkey(full_name)')
+      .eq('professional_id', professional.id)
+      .eq('status', 'pending');
+
+    (pendingBookings || []).forEach(b => {
+      notifications.push({
+        type: 'new_request',
+        title: 'New Job Request',
+        message: `${b.customer?.full_name || 'Customer'} requested ${b.service?.name || 'a service'}`,
+        severity: 'info',
+        created_at: b.created_at,
+      });
+    });
+
+    // Completed bookings awaiting review
+    const { data: completedRecent } = await db
+      .from('bookings')
+      .select('id, created_at, service:services(name)')
+      .eq('professional_id', professional.id)
+      .eq('status', 'completed')
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    (completedRecent || []).forEach(b => {
+      notifications.push({
+        type: 'job_completed',
+        title: 'Job Completed',
+        message: `${b.service?.name || 'Service'} marked as completed`,
+        severity: 'success',
+        created_at: b.created_at,
+      });
+    });
+
+    // Payments
+    const { data: paidBookings } = await db
+      .from('bookings')
+      .select('id, created_at, service:services(base_price)')
+      .eq('professional_id', professional.id)
+      .eq('status', 'completed')
+      .eq('paid_out', true)
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    (paidBookings || []).forEach(b => {
+      notifications.push({
+        type: 'payment',
+        title: 'Payment Received',
+        message: `₹${b.service?.base_price || 0} deposited to your account`,
+        severity: 'success',
+        created_at: b.created_at,
+      });
+    });
+
+    // New reviews
+    try {
+      const { data: newReviews } = await db
+        .from('reviews')
+        .select('id, rating, created_at, profile:profiles(full_name)')
+        .eq('item_type', 'service')
+        .eq('item_id', professional.id)
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      (newReviews || []).forEach(r => {
+        notifications.push({
+          type: 'new_review',
+          title: 'New Review',
+          message: `${r.profile?.full_name || 'Customer'} left a ${r.rating}-star review`,
+          severity: 'info',
+          created_at: r.created_at,
+        });
+      });
+    } catch {
+      // reviews table might not exist
+    }
+
+    notifications.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    return successResponse(res, { notifications, unread_count: notifications.length });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// GET REVIEWS
+// GET /api/professionals/me/reviews
+// =====================================================
+
+export const getMyReviews = async (req, res, next) => {
+  try {
+    const professional = await getOwnProfessional(req);
+    if (!professional) return errorResponse(res, 'No professional profile found.', 403);
+
+    let reviews = [];
+    let count = 0;
+    let average = professional.rating || 0;
+
+    try {
+      const db = getUserSupabase(req);
+      const { data } = await db
+        .from('reviews')
+        .select(`
+          id, rating, comment, created_at,
+          profile:profiles(full_name, avatar_url)
+        `)
+        .eq('item_type', 'service')
+        .eq('item_id', professional.id)
+        .order('created_at', { ascending: false });
+
+      reviews = data || [];
+      count = reviews.length;
+
+      if (count > 0) {
+        const allReviews = await db
+          .from('reviews')
+          .select('rating')
+          .eq('item_type', 'service')
+          .eq('item_id', professional.id);
+        if (allReviews.data && allReviews.data.length > 0) {
+          average = Math.round(
+            (allReviews.data.reduce((s, r) => s + r.rating, 0) / allReviews.data.length) * 10
+          ) / 10;
+        }
+      }
+    } catch {
+      // reviews table might not exist
+    }
+
+    // Rating breakdown
+    const breakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    reviews.forEach(r => {
+      const stars = Math.round(r.rating);
+      if (breakdown[stars] !== undefined) breakdown[stars]++;
+    });
+
+    return successResponse(res, { reviews, count, average, breakdown });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// GET SERVICES
+// GET /api/professionals/me/services
+// =====================================================
+
+export const getMyServices = async (req, res, next) => {
+  try {
+    const professional = await getOwnProfessional(req);
+    if (!professional) return errorResponse(res, 'No professional profile found.', 403);
+
+    const db = getUserSupabase(req);
+    const { data, error } = await db
+      .from('services')
+      .select('id, name, base_price, description, estimated_duration, category, is_active')
+      .eq('professional_id', professional.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return successResponse(res, { services: data || [] });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// UPDATE SERVICE
+// PATCH /api/professionals/me/services/:id
+// =====================================================
+
+export const updateService = async (req, res, next) => {
+  try {
+    const professional = await getOwnProfessional(req);
+    if (!professional) return errorResponse(res, 'No professional profile found.', 403);
+
+    const { id } = req.params;
+    const { name, base_price, description, estimated_duration, is_active } = req.body;
+
+    const db = getUserSupabase(req);
+
+    // Verify service belongs to this professional
+    const { data: existing } = await db
+      .from('services')
+      .select('id, professional_id')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (!existing || existing.professional_id !== professional.id) {
+      return errorResponse(res, 'Service not found', 404);
+    }
+
+    const updates = {};
+    if (name !== undefined) updates.name = name;
+    if (base_price !== undefined) updates.base_price = parseFloat(base_price);
+    if (description !== undefined) updates.description = description;
+    if (estimated_duration !== undefined) updates.estimated_duration = estimated_duration;
+    if (is_active !== undefined) updates.is_active = is_active;
+
+    const { data, error } = await db
+      .from('services')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .maybeSingle();
+
+    if (error) throw error;
+
+    return successResponse(res, { service: data });
   } catch (err) {
     return next(err);
   }
@@ -175,29 +623,19 @@ export const getMyEarnings = async (req, res, next) => {
 // UPLOAD VERIFICATION DOCUMENT
 // POST /api/professionals/document
 // =====================================================
-//
-// Accepts a base64 document (PDF/JPEG/PNG), validates type + size, uploads it
-// to the Supabase Storage bucket "professional-docs" under the user's own
-// folder, and records the URL on the professional row. Requires the storage
-// bucket + policy from backend/scripts/migrations.
 
 const ALLOWED_DOC_TYPES = {
   'application/pdf': 'pdf',
   'image/jpeg': 'jpg',
   'image/png': 'png',
 };
-const MAX_DOC_BYTES = 2 * 1024 * 1024; // 2 MB
+const MAX_DOC_BYTES = 2 * 1024 * 1024;
 
 export const uploadDocument = async (req, res, next) => {
   try {
     const professional = await getOwnProfessional(req);
-
     if (!professional) {
-      return errorResponse(
-        res,
-        'No professional profile found. Register as a professional to get started.',
-        403
-      );
+      return errorResponse(res, 'No professional profile found.', 403);
     }
 
     const { document_b64, filename, mime } = req.body || {};
@@ -208,11 +646,7 @@ export const uploadDocument = async (req, res, next) => {
 
     const ext = (filename || '').split('.').pop()?.toLowerCase() || '';
     if (!['pdf', 'jpg', 'jpeg', 'png'].includes(ext)) {
-      return errorResponse(
-        res,
-        'Only PDF, JPG, JPEG or PNG documents are allowed',
-        400
-      );
+      return errorResponse(res, 'Only PDF, JPG, JPEG or PNG documents are allowed', 400);
     }
 
     if (!mime || !ALLOWED_DOC_TYPES[mime]) {
@@ -226,16 +660,8 @@ export const uploadDocument = async (req, res, next) => {
       return errorResponse(res, 'Invalid document data', 400);
     }
 
-    if (buffer.length === 0) {
-      return errorResponse(res, 'Document is empty', 400);
-    }
-    if (buffer.length > MAX_DOC_BYTES) {
-      return errorResponse(
-        res,
-        'Document must be 2 MB or smaller',
-        400
-      );
-    }
+    if (buffer.length === 0) return errorResponse(res, 'Document is empty', 400);
+    if (buffer.length > MAX_DOC_BYTES) return errorResponse(res, 'Document must be 2 MB or smaller', 400);
 
     const db = getUserSupabase(req);
     const storagePath = `${req.user.id}/${Date.now()}-${filename.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
@@ -249,19 +675,13 @@ export const uploadDocument = async (req, res, next) => {
       });
 
     if (uploadError) {
-      return errorResponse(
-        res,
-        `Document upload failed (${uploadError.message}). Make sure the "professional-docs" bucket exists - run backend/scripts/migrations/001_professional_verification.sql.`,
-        400
-      );
+      return errorResponse(res, `Document upload failed (${uploadError.message}).`, 400);
     }
 
     const { data: publicUrl } = db.storage
       .from('professional-docs')
       .getPublicUrl(storagePath);
 
-    // Record the document URL. `verification_status` is deliberately left as
-    // pending until an admin reviews and verifies the professional.
     const { data: updated, error: updateError } = await db
       .from('professionals')
       .update({ id_document_url: publicUrl?.publicUrl || storagePath })
@@ -284,10 +704,6 @@ export const uploadDocument = async (req, res, next) => {
 // LIST ALL PROFESSIONALS (ADMIN ONLY)
 // GET /api/professionals/admin
 // =====================================================
-//
-// Full rows including verification status and document URL so the admin UI
-// can review and act. The public catalog endpoint deliberately excludes
-// verification_status / id_document_url.
 
 export const getAllProfessionalsAdmin = async (req, res, next) => {
   try {
@@ -295,23 +711,17 @@ export const getAllProfessionalsAdmin = async (req, res, next) => {
 
     const { data, error } = await db
       .from('professionals')
-      .select(
-        `
+      .select(`
         id, user_id, experience_years, rating, bio, created_at,
         verification_status, service_categories, service_locations,
-        availability, id_document_url,
+        availability, id_document_url, is_online,
         profile:profiles(full_name, phone, avatar_url)
-      `
-      )
+      `)
       .order('created_at', { ascending: false });
 
     if (error) {
       if (/column .* does not exist/i.test(error.message)) {
-        return errorResponse(
-          res,
-          'Professional verification columns are missing. Run backend/scripts/migrations/001_professional_verification.sql in the Supabase SQL editor first.',
-          503
-        );
+        return errorResponse(res, 'Professional verification columns are missing.', 503);
       }
       throw error;
     }
@@ -338,16 +748,9 @@ export const verifyProfessional = async (req, res, next) => {
     const { verification_status } = req.body || {};
 
     if (!VERIFICATION_STATUSES.includes(verification_status)) {
-      return errorResponse(
-        res,
-        `verification_status must be one of: ${VERIFICATION_STATUSES.join(', ')}`,
-        400
-      );
+      return errorResponse(res, `verification_status must be one of: ${VERIFICATION_STATUSES.join(', ')}`, 400);
     }
 
-    // Run as the authenticated admin (their JWT), so RLS sees auth.uid() and
-    // the admin-update policy applies. The shared anon client would be
-    // filtered out by RLS and silently update zero rows.
     const db = getUserSupabase(req);
 
     const { data, error } = await db
@@ -358,10 +761,7 @@ export const verifyProfessional = async (req, res, next) => {
       .maybeSingle();
 
     if (error) throw error;
-
-    if (!data) {
-      return errorResponse(res, 'Professional not found', 404);
-    }
+    if (!data) return errorResponse(res, 'Professional not found', 404);
 
     return successResponse(res, {
       message: `Professional verification status set to "${verification_status}"`,

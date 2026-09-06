@@ -7,6 +7,13 @@ import {
   getMyProfessionalProfile,
   updateMyProfessionalProfile,
   getMyEarnings,
+  getProfessionalDashboard,
+  getMyBookings,
+  toggleAvailability,
+  getMyNotifications,
+  getMyReviews,
+  getMyServices,
+  updateService,
   uploadDocument,
   getAllProfessionalsAdmin,
   verifyProfessional,
@@ -17,10 +24,16 @@ import { requireProfessional, requireAdmin } from '../middleware/role.middleware
 const router = Router();
 
 // --- Professional portal (own data only) ------------------------
-// Registered BEFORE the public /:id route so "me" is never captured as an id.
+router.get('/me/dashboard', requireAuth, requireProfessional, getProfessionalDashboard);
 router.get('/me', requireAuth, requireProfessional, getMyProfessionalProfile);
 router.patch('/me', requireAuth, requireProfessional, updateMyProfessionalProfile);
 router.get('/me/earnings', requireAuth, requireProfessional, getMyEarnings);
+router.get('/me/bookings', requireAuth, requireProfessional, getMyBookings);
+router.patch('/me/availability', requireAuth, requireProfessional, toggleAvailability);
+router.get('/me/notifications', requireAuth, requireProfessional, getMyNotifications);
+router.get('/me/reviews', requireAuth, requireProfessional, getMyReviews);
+router.get('/me/services', requireAuth, requireProfessional, getMyServices);
+router.patch('/me/services/:id', requireAuth, requireProfessional, updateService);
 router.post('/document', requireAuth, requireProfessional, uploadDocument);
 
 // --- Admin --------------------------------------------------------

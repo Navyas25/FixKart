@@ -52,6 +52,8 @@ import ProfessionalDashboardPage from "./pages/ProfessionalDashboardPage";
 import VendorRegisterPage from "./pages/VendorRegisterPage";
 import VendorDashboardPage from "./pages/VendorDashboardPage";
 import AdminProfessionalsPage from "./pages/AdminProfessionalsPage";
+import AdminVendorsPage from "./pages/AdminVendorsPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 import {
   LoginPage,
   RegisterPage,
@@ -71,7 +73,7 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const { count } = useCart();
   const { count: wishlistCount } = useWishlist();
-  const { isLoggedIn, user, isAdmin } = useAuth();
+  const { isLoggedIn, user, isAdmin, isVendor } = useAuth();
   const isProfessional = user?.user_metadata?.role === "professional";
 
   useEffect(() => {
@@ -122,7 +124,8 @@ function Navbar() {
             {navLink("/services", "Services")}
             {navLink("/professionals", "Professionals")}
             {navLink("/bookings", "My Bookings")}
-            {isAdmin && navLink("/admin/professionals", "Admin")}
+            {isAdmin && navLink("/admin/dashboard", "Admin")}
+            {isVendor && navLink("/vendor/dashboard", "Vendor")}
           </div>
 
           {/* Desktop search */}
@@ -241,8 +244,8 @@ function Navbar() {
             { to: "/bookings", label: "My Bookings" },
             { to: isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login", label: isLoggedIn ? "My Account" : "Sign In" },
             ...(isLoggedIn ? [{ to: "/settings", label: "Settings" }] : []),
-            { to: "/wishlist", label: `Wishlist${wishlistCount ? ` (${wishlistCount})` : ""}` },
-            ...(isAdmin ? [{ to: "/admin/professionals", label: "Admin" }] : []),
+            { to: "/wishlist", label: `Wishlist${wishlistCount ? ` (${wishlistCount})` : ""}` },              ...(isAdmin ? [{ to: "/admin/dashboard", label: "Admin" }] : []),
+            ...(isVendor ? [{ to: "/vendor/dashboard", label: "Vendor Dashboard" }] : []),
             { to: "/professional", label: "Become a Pro" },
             { to: "/cart", label: `Cart${count ? ` (${count})` : ""}` },
           ].map((item) => (
@@ -436,7 +439,9 @@ export default function App() {
                 <Route path="/register/professional" element={<ProfessionalRegisterPage />} />
                 <Route path="/register/vendor" element={<VendorRegisterPage />} />
                 <Route path="/vendor/dashboard" element={<VendorDashboardPage />} />
+                <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                 <Route path="/admin/professionals" element={<AdminProfessionalsPage />} />
+                <Route path="/admin/vendors" element={<AdminVendorsPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
