@@ -63,6 +63,9 @@ import {
   ResetPasswordPage,
 } from "./pages/AuthPages";
 import NotFoundPage from "./pages/NotFoundPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
+import CookiePolicyPage from "./pages/CookiePolicyPage";
 
 /* ─── Navbar ───────────────────────────────────────────────────────────────── */
 
@@ -399,13 +402,18 @@ function Footer() {
             © 2026 FixKart Technologies Pvt. Ltd. All rights reserved.
           </p>
           <div className="flex gap-5">
-            {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((label) => (
-              <span
-                key={label}
-                className="text-white/25 text-xs font-medium cursor-default"
+            {[
+                { label: "Privacy Policy", to: "/privacy-policy" },
+                { label: "Terms of Service", to: "/terms-of-service" },
+                { label: "Cookie Policy", to: "/cookie-policy" },
+              ].map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                className="text-white/25 text-xs font-medium hover:text-white/50 transition-colors"
               >
-                {label}
-              </span>
+                {item.label}
+              </Link>
             ))}
           </div>
         </div>
@@ -504,6 +512,9 @@ export default function App() {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                <Route path="/cookie-policy" element={<CookiePolicyPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>
