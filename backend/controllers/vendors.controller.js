@@ -9,7 +9,7 @@ const VENDOR_SELECT = `
   verification_status, created_at, updated_at,
   category, gst_number, business_address, business_phone,
   business_hours, bank_account_number, bank_ifsc, bank_name, upi_id,
-  profile:profiles(full_name, phone, avatar_url, email)
+  profile:profiles(full_name, phone, avatar_url)
 `;
 
 const PRODUCT_SELECT = `
@@ -583,7 +583,7 @@ export const getMyOrders = async (req, res, next) => {
     // Get full order details
     let ordersQuery = supabase
       .from('orders')
-      .select('*, address:addresses(*), profile:profiles(full_name, phone, email)')
+      .select('*, address:addresses(*), profile:profiles(full_name, phone)')
       .in('id', orderIds)
       .order('created_at', { ascending: false });
 

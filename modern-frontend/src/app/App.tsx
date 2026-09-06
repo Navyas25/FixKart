@@ -54,6 +54,8 @@ import VendorDashboardPage from "./pages/VendorDashboardPage";
 import AdminProfessionalsPage from "./pages/AdminProfessionalsPage";
 import AdminVendorsPage from "./pages/AdminVendorsPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import CustomerSupportPage from "./pages/CustomerSupportPage";
+import ChatBot from "./components/ChatBot";
 import {
   LoginPage,
   RegisterPage,
@@ -120,28 +122,38 @@ function Navbar() {
 
           {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-6 xl:gap-7">
-            {navLink("/products", "Shop")}
-            {navLink("/services", "Services")}
-            {navLink("/professionals", "Professionals")}
-            {navLink("/bookings", "My Bookings")}
-            {isAdmin && navLink("/admin/dashboard", "Admin")}
-            {isVendor && navLink("/vendor/dashboard", "Vendor")}
+            {isAdmin ? (
+              <>
+                {navLink("/admin/dashboard", "Dashboard")}
+                {navLink("/support", "Support")}
+              </>
+            ) : (
+              <>
+                {navLink("/products", "Shop")}
+                {navLink("/services", "Services")}
+                {navLink("/professionals", "Professionals")}
+                {navLink("/bookings", "My Bookings")}
+                {isVendor && navLink("/vendor/dashboard", "Vendor")}
+              </>
+            )}
           </div>
 
           {/* Desktop search */}
-          <form
-            onSubmit={submitSearch}
-            className="hidden lg:flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3.5 py-2 w-56 xl:w-64 focus-within:border-[#F59E0B]/60 transition-colors"
-          >
-            <Search className="w-4 h-4 text-white/40 flex-shrink-0" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products & services…"
-              className="bg-transparent outline-none text-sm text-white w-full placeholder-white/35"
-            />
-          </form>
+          {!isAdmin && (
+            <form
+              onSubmit={submitSearch}
+              className="hidden lg:flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3.5 py-2 w-56 xl:w-64 focus-within:border-[#F59E0B]/60 transition-colors"
+            >
+              <Search className="w-4 h-4 text-white/40 flex-shrink-0" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search products & services…"
+                className="bg-transparent outline-none text-sm text-white w-full placeholder-white/35"
+              />
+            </form>
+          )}
 
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-1.5">
@@ -154,13 +166,13 @@ function Navbar() {
               {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             <Link
-              to={isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login"}
+              to={isAdmin ? "/admin/dashboard" : isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login"}
               className="p-2 text-white/60 hover:text-white transition-colors"
               aria-label="My account"
             >
               <User className="w-5 h-5" />
             </Link>
-            {isLoggedIn && (
+            {isLoggedIn && !isAdmin && (
               <Link
                 to="/settings"
                 className="p-2 text-white/60 hover:text-white transition-colors"
@@ -170,43 +182,51 @@ function Navbar() {
                 <Settings className="w-5 h-5" />
               </Link>
             )}
-            <Link
-              to="/wishlist"
-              className="relative p-2 text-white/60 hover:text-white transition-colors"
-              aria-label="Wishlist"
-              title="Wishlist"
-            >
-              <Heart className="w-5 h-5" />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-[#DC2626] text-white rounded-full text-[10px] font-extrabold flex items-center justify-center ring-2 ring-[#0F172A]">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
-            <Link
-              to="/cart"
-              className="relative p-2 text-white/60 hover:text-white transition-colors"
-              aria-label="Shopping cart"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {count > 0 && (
+            {!isAdmin && (
+              <>
+                <Link
+                  to="/wishlist"
+                  className="relative p-2 text-white/60 hover:text-white transition-colors"
+                  aria-label="Wishlist"
+                  title="Wishlist"
+                >
+                  <Heart className="w-5 h-5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-[#DC2626] text-white rounded-full text-[10px] font-extrabold flex items-center justify-center ring-2 ring-[#0F172A]">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  to="/cart"
+                  className="relative p-2 text-white/60 hover:text-white transition-colors"
+                  aria-label="Shopping cart"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {count > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-[#F59E0B] text-[#0F172A] rounded-full text-[10px] font-extrabold flex items-center justify-center ring-2 ring-[#0F172A]">
                   {count}
                 </span>
               )}
             </Link>
-            <Link
-              to="/professional"
-              className="ml-1 bg-[#F59E0B] text-[#0F172A] text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-amber-400 transition-colors shadow-md shadow-amber-500/30"
-            >
-              Become a Pro
-            </Link>
-            <Link
-              to="/services"
-              className="ml-1 bg-[#2563EB] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-500 transition-colors shadow-md shadow-blue-600/30"
-            >
-              Book Now
-            </Link>
+              </>
+            )}
+            {!isAdmin && (
+              <>
+                <Link
+                  to="/professional"
+                  className="ml-1 bg-[#F59E0B] text-[#0F172A] text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-amber-400 transition-colors shadow-md shadow-amber-500/30"
+                >
+                  Become a Pro
+                </Link>
+                <Link
+                  to="/services"
+                  className="ml-1 bg-[#2563EB] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-500 transition-colors shadow-md shadow-blue-600/30"
+                >
+                  Book Now
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile toggle */}
@@ -227,37 +247,44 @@ function Navbar() {
         }`}
       >
         <div className="px-4 py-4 space-y-1">
-          <form onSubmit={submitSearch} className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 mb-2">
-            <Search className="w-4 h-4 text-white/40" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products & services…"
-              className="bg-transparent outline-none text-sm text-white w-full placeholder-white/35"
-            />
-          </form>
-          {[
-            { to: "/products", label: "Shop" },
-            { to: "/services", label: "Services" },
-            { to: "/professionals", label: "Professionals" },
-            { to: "/bookings", label: "My Bookings" },
-            { to: isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login", label: isLoggedIn ? "My Account" : "Sign In" },
-            ...(isLoggedIn ? [{ to: "/settings", label: "Settings" }] : []),
-            { to: "/wishlist", label: `Wishlist${wishlistCount ? ` (${wishlistCount})` : ""}` },              ...(isAdmin ? [{ to: "/admin/dashboard", label: "Admin" }] : []),
-            ...(isVendor ? [{ to: "/vendor/dashboard", label: "Vendor Dashboard" }] : []),
-            { to: "/professional", label: "Become a Pro" },
-            { to: "/cart", label: `Cart${count ? ` (${count})` : ""}` },
-          ].map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              onClick={() => setOpen(false)}
-              className="block py-3 text-white/70 text-sm font-semibold border-b border-white/5"
-            >
-              {item.label}
+          {!isAdmin && (
+            <form onSubmit={submitSearch} className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 mb-2">
+              <Search className="w-4 h-4 text-white/40" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search products & services…"
+                className="bg-transparent outline-none text-sm text-white w-full placeholder-white/35"
+              />
+            </form>
+          )}
+          {isAdmin ? (
+            <Link to="/admin/dashboard" onClick={() => setOpen(false)} className="block py-3 text-white/70 text-sm font-semibold border-b border-white/5">
+              Admin Dashboard
             </Link>
-          ))}
+          ) : (
+            [
+              { to: "/products", label: "Shop" },
+              { to: "/services", label: "Services" },
+              { to: "/professionals", label: "Professionals" },
+              { to: "/bookings", label: "My Bookings" },
+              { to: isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login", label: isLoggedIn ? "My Account" : "Sign In" },
+              ...(isLoggedIn ? [{ to: "/settings", label: "Settings" }] : []),
+              ...(isVendor ? [{ to: "/vendor/dashboard", label: "Vendor Dashboard" }] : []),
+              { to: "/professional", label: "Become a Pro" },
+              { to: "/cart", label: `Cart${count ? ` (${count})` : ""}` },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className="block py-3 text-white/70 text-sm font-semibold border-b border-white/5"
+              >
+                {item.label}
+              </Link>
+            ))
+          )}
           <div className="flex gap-3 pt-3">
             <button
               onClick={() => {
@@ -385,13 +412,24 @@ function ScrollToTop() {
 }
 
 function Layout() {
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (isAdmin && !pathname.startsWith("/admin")) {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [isAdmin, pathname, navigate]);
+
   return (
     <div className="min-h-screen overflow-x-clip bg-[#F8FAFC]">
       <Navbar />
       <main>
         <Outlet />
       </main>
-      <Footer />
+      {!isAdmin && <Footer />}
+      {!isAdmin && <ChatBot />}
     </div>
   );
 }
@@ -442,6 +480,7 @@ export default function App() {
                 <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                 <Route path="/admin/professionals" element={<AdminProfessionalsPage />} />
                 <Route path="/admin/vendors" element={<AdminVendorsPage />} />
+                <Route path="/support" element={<CustomerSupportPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />

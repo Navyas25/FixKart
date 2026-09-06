@@ -133,10 +133,10 @@ export const getAllUsers = async (req, res, next) => {
 
     let query = db
       .from('profiles')
-      .select('id, full_name, email, phone, role, avatar_url, created_at, updated_at', { count: 'exact' });
+      .select('id, full_name, phone, role, avatar_url, created_at, updated_at', { count: 'exact' });
 
     if (q) {
-      query = query.or(`full_name.ilike.%${q}%,email.ilike.%${q}%,phone.ilike.%${q}%`);
+      query = query.or(`full_name.ilike.%${q}%,phone.ilike.%${q}%`);
     }
 
     if (role) {
@@ -179,9 +179,7 @@ export const getAllOrders = async (req, res, next) => {
       .select(`
         id, status, total_amount, created_at, updated_at,
         user_id,
-        items:order_items(id, quantity, unit_price, product:products(id, name, image_url)),
-        profile:profiles(full_name, email, phone),
-        address:addresses(*)
+        items:order_items(id, quantity, unit_price, product:products(id, name, image_url))
       `, { count: 'exact' });
 
     if (status) {
@@ -197,8 +195,17 @@ export const getAllOrders = async (req, res, next) => {
     const { data, error, count } = await query;
     if (error) throw error;
 
+    // Attach customer profiles
+    const orders = data || [];
+    const userIds = [...new Set(orders.map(o => o.user_id).filter(Boolean))];
+    if (userIds.length > 0) {
+      const { data: customers } = await db.from('profiles').select('id, full_name, phone').in('id', userIds);
+      const customerMap = Object.fromEntries((customers || []).map(c => [c.id, c]));
+      orders.forEach(o => { o.profile = customerMap[o.user_id] || null; });
+    }
+
     return successResponse(res, {
-      orders: data || [],
+      orders,
       total: count ?? 0,
       page: pageNum,
       limit: limitNum,
@@ -226,12 +233,8 @@ export const getAllBookings = async (req, res, next) => {
     let query = db
       .from('bookings')
       .select(`
-        id, status, scheduled_at, created_at, notes, address,
-        service:services(id, name, base_price, category),
-        professional:professionals(id, rating, user_id,
-          profile:profiles(full_name, phone)
-        ),
-        customer:profiles!bookings_customer_id_fkey(full_name, email, phone)
+        id, status, scheduled_at, created_at, notes, user_id, professional_id,
+        service:services(id, name, base_price, category)
       `, { count: 'exact' });
 
     if (status) {
@@ -243,8 +246,36 @@ export const getAllBookings = async (req, res, next) => {
     const { data, error, count } = await query;
     if (error) throw error;
 
+    // Attach customer and professional profiles separately
+    const bookings = data || [];
+    const userIds = [...new Set(bookings.map(b => b.user_id).filter(Boolean))];
+    const proIds = [...new Set(bookings.map(b => b.professional_id).filter(Boolean))];
+
+    let customerMap = {};
+    let proMap = {};
+    if (userIds.length > 0) {
+      const { data: customers } = await db.from('profiles').select('id, full_name, phone').in('id', userIds);
+      customerMap = Object.fromEntries((customers || []).map(c => [c.id, c]));
+    }
+    if (proIds.length > 0) {
+      const { data: pros } = await db.from('professionals').select('id, rating, user_id').in('id', proIds);
+      const proUserIds = [...new Set((pros || []).map(p => p.user_id).filter(Boolean))];
+      let proProfileMap = {};
+      if (proUserIds.length > 0) {
+        const { data: proProfiles } = await db.from('profiles').select('id, full_name, phone').in('id', proUserIds);
+        proProfileMap = Object.fromEntries((proProfiles || []).map(p => [p.id, p]));
+      }
+      proMap = Object.fromEntries((pros || []).map(p => [
+        p.id, { ...p, profile: proProfileMap[p.user_id] || null }
+      ]));
+    }
+    bookings.forEach(b => {
+      b.customer = customerMap[b.user_id] || null;
+      b.professional = proMap[b.professional_id] || null;
+    });
+
     return successResponse(res, {
-      bookings: data || [],
+      bookings,
       total: count ?? 0,
       page: pageNum,
       limit: limitNum,
@@ -391,14 +422,19 @@ export const getAllReviews = async (req, res, next) => {
     try {
       const { data } = await db
         .from('reviews')
-        .select(`
-          id, rating, comment, item_type, item_id, created_at,
-          profile:profiles(full_name, email, avatar_url)
-        `)
+        .select('id, rating, comment, item_type, item_id, created_at, user_id')
         .order('created_at', { ascending: false })
         .limit(200);
 
       reviews = data || [];
+
+      // Attach reviewer profiles
+      const reviewerIds = [...new Set(reviews.map(r => r.user_id).filter(Boolean))];
+      if (reviewerIds.length > 0) {
+        const { data: reviewers } = await db.from('profiles').select('id, full_name, avatar_url').in('id', reviewerIds);
+        const reviewerMap = Object.fromEntries((reviewers || []).map(r => [r.id, r]));
+        reviews.forEach(r => { r.profile = reviewerMap[r.user_id] || null; });
+      }
     } catch {
       // reviews table might not exist
     }

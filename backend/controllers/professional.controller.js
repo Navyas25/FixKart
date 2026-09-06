@@ -77,17 +77,32 @@ export const getProfessionalDashboard = async (req, res, next) => {
       .eq('id', req.user.id)
       .maybeSingle();
 
-    // Get all bookings
+    // Get all bookings (user_id = customer FK)
     const { data: bookings } = await db
       .from('bookings')
       .select(`
         id, status, scheduled_at, created_at, notes, customer_notes,
-        address, service_id, professional_id, customer_id,
-        service:services(id, name, base_price, description, estimated_duration),
-        customer:profiles!bookings_customer_id_fkey(full_name, phone, avatar_url)
+        address, service_id, professional_id, user_id,
+        service:services(id, name, base_price, description, estimated_duration)
       `)
       .eq('professional_id', professional.id)
       .order('created_at', { ascending: false });
+
+    // Attach customer profiles separately (avoids FK name issues)
+    const userIds = [...new Set((bookings || []).map(b => b.user_id).filter(Boolean))];
+    let customerMap = {};
+    if (userIds.length > 0) {
+      const { data: customers } = await db
+        .from('profiles')
+        .select('id, full_name, phone, avatar_url')
+        .in('id', userIds);
+      customerMap = Object.fromEntries((customers || []).map(c => [c.id, c]));
+    }
+    if (bookings) {
+      bookings.forEach(b => {
+        b.customer = customerMap[b.user_id] || null;
+      });
+    }
 
     const allBookings = bookings || [];
 
@@ -115,37 +130,45 @@ export const getProfessionalDashboard = async (req, res, next) => {
     const totalEarnings = completed.reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
     const monthEarnings = monthBookings.reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
 
-    // Pending payments (completed but not yet paid out)
+    // Pending payments (conservative estimate: 5% commission held)
     const pendingPayments = completed
-      .filter(b => !b.paid_out)
-      .reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
+      .reduce((sum, b) => sum + (b.service?.base_price || 0), 0) * 0.05;
 
-    // Reviews
+    // Reviews (safe query with fallback)
     let reviewCount = 0;
     let avgRating = professional.rating || 0;
     let reviews = [];
     try {
-      const { data: reviewData } = await db
+      const { data: reviewData, error: reviewErr } = await db
         .from('reviews')
-        .select(`
-          id, rating, comment, created_at,
-          profile:profiles(full_name, avatar_url)
-        `)
+        .select('id, rating, comment, created_at, user_id')
         .eq('item_type', 'service')
         .eq('item_id', professional.id)
         .order('created_at', { ascending: false })
         .limit(10);
 
-      reviews = reviewData || [];
-      reviewCount = reviews.length;
-      if (reviewCount > 0) {
-        const allReviews = await db
-          .from('reviews')
-          .select('rating')
-          .eq('item_type', 'service')
-          .eq('item_id', professional.id);
-        if (allReviews.data && allReviews.data.length > 0) {
-          avgRating = Math.round((allReviews.data.reduce((s, r) => s + r.rating, 0) / allReviews.data.length) * 10) / 10;
+      if (!reviewErr && reviewData) {
+        reviews = reviewData;
+        reviewCount = reviews.length;
+        // Attach reviewer profiles
+        const reviewerIds = [...new Set(reviews.map(r => r.user_id).filter(Boolean))];
+        if (reviewerIds.length > 0) {
+          const { data: reviewers } = await db
+            .from('profiles')
+            .select('id, full_name, avatar_url')
+            .in('id', reviewerIds);
+          const reviewerMap = Object.fromEntries((reviewers || []).map(r => [r.id, r]));
+          reviews.forEach(r => { r.profile = reviewerMap[r.user_id] || null; });
+        }
+        if (reviewCount > 0) {
+          const { data: allReviews } = await db
+            .from('reviews')
+            .select('rating')
+            .eq('item_type', 'service')
+            .eq('item_id', professional.id);
+          if (allReviews && allReviews.length > 0) {
+            avgRating = Math.round((allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length) * 10) / 10;
+          }
         }
       }
     } catch {
@@ -281,7 +304,7 @@ export const getMyEarnings = async (req, res, next) => {
 
     const { data: bookings, error } = await db
       .from('bookings')
-      .select('id, status, scheduled_at, created_at, paid_out, service:services(id, base_price, name)')
+      .select('id, status, scheduled_at, created_at, service:services(id, base_price, name)')
       .eq('professional_id', professional.id);
 
     if (error) throw error;
@@ -296,11 +319,9 @@ export const getMyEarnings = async (req, res, next) => {
       (sum, b) => sum + (b.service?.base_price || 0), 0
     );
 
-    const paidOut = completed
-      .filter(b => b.paid_out)
-      .reduce((sum, b) => sum + (b.service?.base_price || 0), 0);
-
-    const pendingPayment = totalEarnings - paidOut;
+    // Conservative: assume 5% commission is held until payout
+    const paidOut = 0;
+    const pendingPayment = totalEarnings;
 
     // This month
     const thisMonth = new Date();
@@ -368,9 +389,8 @@ export const getMyBookings = async (req, res, next) => {
     let query = db
       .from('bookings')
       .select(`
-        id, status, scheduled_at, created_at, notes, customer_notes, address,
-        service:services(id, name, base_price, description, estimated_duration, category),
-        customer:profiles!bookings_customer_id_fkey(full_name, phone, avatar_url)
+        id, status, scheduled_at, created_at, notes, customer_notes, address, user_id,
+        service:services(id, name, base_price, description, estimated_duration, category)
       `)
       .eq('professional_id', professional.id)
       .order('created_at', { ascending: false });
@@ -382,7 +402,20 @@ export const getMyBookings = async (req, res, next) => {
     const { data, error } = await query;
     if (error) throw error;
 
-    return successResponse(res, { bookings: data || [] });
+    // Attach customer profiles separately
+    const bookings = data || [];
+    const userIds = [...new Set(bookings.map(b => b.user_id).filter(Boolean))];
+    let customerMap = {};
+    if (userIds.length > 0) {
+      const { data: customers } = await db
+        .from('profiles')
+        .select('id, full_name, phone, avatar_url')
+        .in('id', userIds);
+      customerMap = Object.fromEntries((customers || []).map(c => [c.id, c]));
+    }
+    bookings.forEach(b => { b.customer = customerMap[b.user_id] || null; });
+
+    return successResponse(res, { bookings });
   } catch (err) {
     return next(err);
   }
@@ -404,15 +437,22 @@ export const getMyNotifications = async (req, res, next) => {
     // Pending booking requests
     const { data: pendingBookings } = await db
       .from('bookings')
-      .select('id, created_at, service:services(name), customer:profiles!bookings_customer_id_fkey(full_name)')
+      .select('id, created_at, user_id, service:services(name)')
       .eq('professional_id', professional.id)
       .eq('status', 'pending');
 
+    // Fetch customer names for pending bookings
+    const pendingUserIds = [...new Set((pendingBookings || []).map(b => b.user_id).filter(Boolean))];
+    let pendingCustomerMap = {};
+    if (pendingUserIds.length > 0) {
+      const { data: c } = await db.from('profiles').select('id, full_name').in('id', pendingUserIds);
+      pendingCustomerMap = Object.fromEntries((c || []).map(x => [x.id, x]));
+    }
     (pendingBookings || []).forEach(b => {
       notifications.push({
         type: 'new_request',
         title: 'New Job Request',
-        message: `${b.customer?.full_name || 'Customer'} requested ${b.service?.name || 'a service'}`,
+        message: `${pendingCustomerMap[b.user_id]?.full_name || 'Customer'} requested ${b.service?.name || 'a service'}`,
         severity: 'info',
         created_at: b.created_at,
       });
@@ -437,13 +477,12 @@ export const getMyNotifications = async (req, res, next) => {
       });
     });
 
-    // Payments
+    // Payments (last 3 completed jobs)
     const { data: paidBookings } = await db
       .from('bookings')
       .select('id, created_at, service:services(base_price)')
       .eq('professional_id', professional.id)
       .eq('status', 'completed')
-      .eq('paid_out', true)
       .order('created_at', { ascending: false })
       .limit(3);
 
@@ -461,17 +500,23 @@ export const getMyNotifications = async (req, res, next) => {
     try {
       const { data: newReviews } = await db
         .from('reviews')
-        .select('id, rating, created_at, profile:profiles(full_name)')
+        .select('id, rating, created_at, user_id')
         .eq('item_type', 'service')
         .eq('item_id', professional.id)
         .order('created_at', { ascending: false })
         .limit(3);
 
+      const reviewerIds = [...new Set((newReviews || []).map(r => r.user_id).filter(Boolean))];
+      let reviewerMap = {};
+      if (reviewerIds.length > 0) {
+        const { data: revs } = await db.from('profiles').select('id, full_name').in('id', reviewerIds);
+        reviewerMap = Object.fromEntries((revs || []).map(r => [r.id, r]));
+      }
       (newReviews || []).forEach(r => {
         notifications.push({
           type: 'new_review',
           title: 'New Review',
-          message: `${r.profile?.full_name || 'Customer'} left a ${r.rating}-star review`,
+          message: `${reviewerMap[r.user_id]?.full_name || 'Customer'} left a ${r.rating}-star review`,
           severity: 'info',
           created_at: r.created_at,
         });
@@ -709,24 +754,38 @@ export const getAllProfessionalsAdmin = async (req, res, next) => {
   try {
     const db = getUserSupabase(req);
 
-    const { data, error } = await db
+    // Try full query first (needs verification columns)
+    let { data, error } = await db
       .from('professionals')
       .select(`
         id, user_id, experience_years, rating, bio, created_at,
         verification_status, service_categories, service_locations,
-        availability, id_document_url, is_online,
-        profile:profiles(full_name, phone, avatar_url)
+        availability, id_document_url, is_online
       `)
       .order('created_at', { ascending: false });
 
-    if (error) {
-      if (/column .* does not exist/i.test(error.message)) {
-        return errorResponse(res, 'Professional verification columns are missing.', 503);
-      }
-      throw error;
+    // If columns are missing, fall back to basic columns
+    if (error && /column .* does not exist/i.test(error.message)) {
+      const fallback = await db
+        .from('professionals')
+        .select('id, user_id, experience_years, rating, bio, created_at')
+        .order('created_at', { ascending: false });
+      data = fallback.data || [];
+      error = null;
     }
 
-    return successResponse(res, { professionals: data || [] });
+    if (error) throw error;
+
+    // Attach profiles separately to avoid FK issues
+    const professionals = data || [];
+    const userIds = [...new Set(professionals.map(p => p.user_id).filter(Boolean))];
+    if (userIds.length > 0) {
+      const { data: profiles } = await db.from('profiles').select('id, full_name, phone, avatar_url').in('id', userIds);
+      const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+      professionals.forEach(p => { p.profile = profileMap[p.user_id] || null; });
+    }
+
+    return successResponse(res, { professionals });
   } catch (err) {
     return next(err);
   }

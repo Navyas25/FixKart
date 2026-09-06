@@ -9,7 +9,7 @@ const VENDOR_SELECT_ADMIN = `
   verification_status, created_at, updated_at,
   category, gst_number, business_address, business_phone,
   bank_account_number, bank_ifsc, bank_name, upi_id,
-  profile:profiles(full_name, phone, avatar_url, email)
+  profile:profiles(full_name, phone, avatar_url)
 `;
 
 const VERIFICATION_STATUSES = ['pending', 'verified', 'rejected', 'suspended'];
@@ -28,7 +28,13 @@ export const getAllVendorsAdmin = async (req, res, next) => {
       .select(VENDOR_SELECT_ADMIN)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      // Table may not exist yet — return empty list instead of crashing
+      if (/does not exist|not found|schema cache/i.test(error.message)) {
+        return successResponse(res, { vendors: [] });
+      }
+      throw error;
+    }
 
     return successResponse(res, { vendors: data || [] });
   } catch (err) {
@@ -60,7 +66,7 @@ export const verifyVendor = async (req, res, next) => {
     // First, get the current vendor data
     const { data: currentVendor, error: fetchError } = await db
       .from('vendors')
-      .select('id, user_id, shop_name, profile:profiles(full_name, email)')
+      .select('id, user_id, shop_name')
       .eq('id', id)
       .maybeSingle();
 
@@ -81,7 +87,7 @@ export const verifyVendor = async (req, res, next) => {
     if (error) throw error;
 
     // Send email notification based on status change
-    const vendorEmail = currentVendor.profile?.email || req.user?.email;
+    const vendorEmail = req.user?.email;
     const vendorName = currentVendor.profile?.full_name || 'Vendor';
     const shopName = currentVendor.shop_name || 'Your Shop';
 

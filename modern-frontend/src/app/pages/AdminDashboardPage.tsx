@@ -36,6 +36,7 @@ import {
   MessageSquare,
   RefreshCw,
   Download,
+  Mail,
 } from "lucide-react";
 import { apiGet, apiPatch } from "../../lib/api";
 import { useAuth } from "../../lib/auth";

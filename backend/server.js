@@ -22,6 +22,7 @@ import bookingsRoutes from "./routes/bookings.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import addressesRoutes from "./routes/addresses.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import supportRoutes from "./routes/support.routes.js";
 
 const app = express();
 
@@ -76,6 +77,7 @@ app.use("/api/bookings", bookingsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/addresses", addressesRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/support", supportRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
