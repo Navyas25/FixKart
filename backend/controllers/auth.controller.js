@@ -99,6 +99,7 @@ export const register = async (req, res, next) => {
                   Authorization: `Bearer ${data.session.access_token}`,
                 },
               },
+              realtime: { params: { eventsPerSecondLimit: 0 } },
             });
 
         // Profile row - role is set server-side, never from a client field.
@@ -286,6 +287,7 @@ export const getCurrentUser = async (req, res, next) => {
             Authorization: `Bearer ${token}`,
           },
         },
+        realtime: { params: { eventsPerSecondLimit: 0 } },
       }
     );
 
@@ -499,7 +501,7 @@ export const changePassword = async (req, res, next) => {
     const userClient = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_ANON_KEY,
-      { auth: { persistSession: false, autoRefreshToken: false } }
+      { auth: { persistSession: false, autoRefreshToken: false }, realtime: { params: { eventsPerSecondLimit: 0 } } }
     );
     await userClient.auth.setSession({
       access_token: verified.session.access_token,

@@ -17,6 +17,7 @@ export const getUserSupabase = (req) => {
           Authorization: `Bearer ${req.accessToken}`,
         },
       },
+      realtime: { params: { eventsPerSecondLimit: 0 } },
     }
   );
 };
