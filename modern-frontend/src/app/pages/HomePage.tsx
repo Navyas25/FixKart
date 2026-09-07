@@ -14,6 +14,8 @@ import { attachAutocomplete, detectUserLocation } from "../../lib/location";
 import { useCart } from "../../lib/cart";
 import { useAuth } from "../../lib/auth";
 import HeroSection from "../components/HeroSection";
+import HeroStatsStrip from "../components/HeroStatsStrip";
+import MarqueeSection from "../components/MarqueeSection";
 import { formatINR, formatDate, PLACEHOLDER_IMG } from "../../lib/format";
 import { ProductCard, type ProductCardData } from "../components/ProductCard";
 import { RotatingCurvedText } from "../components/RotatingCurvedText";
@@ -51,68 +53,16 @@ const stagger = {
 
 // HeroSection is imported from ../components/HeroSection
 
-// Stats strip
-function HeroStatsStrip() {
-  const stats = [
-    { val: "50+", label: "Product Categories" },
-    { val: "100%", label: "Verified Professionals" },
-    { val: "24/7", label: "Customer Support" },
-    { val: "Same Day", label: "Service Booking" },
-  ];
+// HeroStatsStrip is imported from ../components/HeroStatsStrip
 
-  return (
-    <section className="bg-[#0F172A] border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        {stats.map((s) => (
-          <div key={s.label}>
-            <div className="text-2xl lg:text-3xl font-extrabold text-white">
-              {s.val}
-            </div>
-
-            <div className="text-white/40 text-sm mt-0.5 font-medium">
-              {s.label}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 
 // ─── Scrolling Text Marquee ───────────────────────────────────────────────────
 // Blocks of text drift horizontally as the page scrolls vertically (the
 // classic Motion + Ticker effect: useScroll mapped onto the lines' x position).
 
-function MarqueeSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  // Opposite directions for the two lines - one trails up, one trails down.
-  const lineA = useTransform(scrollYProgress, [0, 1], ["0%", "-42%"]);
-  const lineB = useTransform(scrollYProgress, [0, 1], ["-42%", "0%"]);
+// MarqueeSection is imported from ../components/MarqueeSection
 
-  const text = "FIXKART • HARDWARE & HOME SERVICES • FIXED FAST • ";
-
-  return (
-    <section ref={ref} className="bg-[#0F172A] border-y border-white/10 overflow-hidden py-8 select-none">
-      <motion.div
-        style={{ x: lineA }}
-        className="whitespace-nowrap text-3xl sm:text-5xl font-extrabold tracking-tight text-white/90"
-      >
-        {text.repeat(6)}
-      </motion.div>
-      <motion.div
-        style={{ x: lineB }}
-        className="whitespace-nowrap text-3xl sm:text-5xl font-extrabold tracking-tight text-[#F59E0B]"
-      >
-        {text.repeat(6)}
-      </motion.div>
-    </section>
-  );
-}
 
 // ─── Animated Layout Grid (anime.js) ─────────────────────────────────────────
 

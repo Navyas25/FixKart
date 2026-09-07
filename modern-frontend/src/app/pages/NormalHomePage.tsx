@@ -9,6 +9,8 @@ import { apiGet } from "../../lib/api";
 import { formatINR } from "../../lib/format";
 import { useAuth } from "../../lib/auth";
 import HeroSection from "../components/HeroSection";
+import HeroStatsStrip from "../components/HeroStatsStrip";
+import MarqueeSection from "../components/MarqueeSection";
 
 const SERVICE_CATEGORIES = [
   { name: "Plumbing", icon: Droplets, color: "#2563EB", desc: "Leak repairs, pipe fitting, installations" },
@@ -57,6 +59,8 @@ export default function NormalHomePage() {
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1220]">
       {/* ─── Hero (same animated scroll hero as premium) ───────── */}
       <HeroSection />
+      <HeroStatsStrip />
+      <MarqueeSection />
 
       {/* ─── Trust Signals ──────────────────────────────────────── */}
       <section className="bg-white dark:bg-[#111827] border-b border-gray-100 dark:border-white/5">
