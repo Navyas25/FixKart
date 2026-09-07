@@ -32,6 +32,8 @@
 - [Deployment](#deployment)
 - [Seeding Sample Data](#seeding-sample-data)
 - [User Roles & Access](#user-roles--access)
+- [Design System](#design-system)
+- [Security](#security)
 - [Contributing](#contributing)
 
 ---
@@ -57,12 +59,16 @@ The platform serves **four distinct user roles**, each with their own dedicated 
 ## Key Features
 
 ### 🛒 Customer Experience
+- **Normal & Premium Plans** — Two-tier system: normal users get auto-assigned nearest professionals; premium users browse and choose any professional
 - **Product Catalog** — Browse hardware products with categories, filters, search, and wishlists
 - **Service Booking** — Find and book verified professionals by service type, location, and rating
+- **Auto-Assigned Professionals** — Normal users select a service, enter their address, and the nearest verified professional is automatically matched
+- **Premium Professional Directory** — Premium users browse the full professional directory, view ratings, and choose their preferred pro
 - **Shopping Cart & Checkout** — Full e-commerce flow with address management and order tracking
 - **Booking Management** — Track service bookings through their lifecycle (Pending → In Progress → Completed)
 - **AI Support Chatbot** — Instant answers for common questions, with escalation to live support
 - **Professional Profiles** — View ratings, reviews, experience, and certifications before booking
+- **Upgrade to Premium** — Free upgrade page with feature comparison and benefits
 
 ### 🔨 Professional Dashboard
 - **Dashboard Overview** — Today's earnings, upcoming jobs, completed jobs, and rating at a glance
@@ -690,6 +696,128 @@ Role-based routing automatically redirects users to their dashboard on login. Pr
 ### Component Library
 
 Built with **shadcn/ui** (40+ components) on top of Radix UI primitives. All components support dark mode via Tailwind's `dark:` variant.
+
+---
+
+## Security
+
+FixKart implements a **defense-in-depth** security strategy across every layer of the stack.
+
+### 🔐 Authentication & Authorization
+
+| Measure | Implementation |
+|---------|---------------|
+| **JWT Authentication** | Supabase Auth issues short-lived JWTs. Every protected endpoint verifies the token via `supabase.auth.getUser()` before processing. |
+| **Role-Based Access Control (RBAC)** | Middleware (`requireAuth`, `requireProfessional`, `requireVendor`) verifies the user's role from the `profiles` table on every request. Roles: `customer`, `professional`, `vendor`, `admin`. |
+| **Admin Email Allowlist** | The `admin` role is only granted to specific allowlisted emails. A profile with `role='admin'` is not enough — the email must match. Prevents privilege escalation. |
+| **Server-Side Role Assignment** | Roles are assigned by the server during registration — never from client-supplied data. A client cannot self-promote to admin or professional. |
+| **Session Management** | Sessions are stored in `localStorage` with a custom key (`fixkart_session`). Tokens expire automatically and require re-authentication. |
+
+### 🛡️ Row-Level Security (RLS)
+
+All Supabase tables have **Row-Level Security enabled** with granular policies:
+
+| Table | Policy |
+|-------|--------|
+| `profiles` | Users can read/update only their own row. Admins use service-role client to bypass. |
+| `professionals` | Public read (for catalog). Owners update own row. Admins manage via service-role. |
+| `vendors` | Public read for verified vendors. Owners manage own profile. |
+| `bookings` | Customers see their own bookings. Professionals see bookings assigned to them. |
+| `orders` | Customers see their own orders. |
+| `wallets` | Users read only their own wallet. Writes via security-definer triggers only. |
+| `reviews` | Public read. Users create reviews for their own completed orders/bookings. |
+| `addresses` | Users manage only their own addresses. |
+
+Admin controllers use `supabaseAdmin` (service-role key) which bypasses RLS for cross-user operations like verification and user management.
+
+### 🚦 Rate Limiting
+
+| Endpoint | Limit |
+|----------|-------|
+| General API | 100 requests per 15 minutes per IP |
+| Auth (login/register) | 20 requests per 15 minutes per IP |
+
+Implemented via `express-rate-limit` in `backend/middleware/rateLimit.middleware.js`.
+
+### 🔒 HTTP Security Headers
+
+**Helmet.js** is enabled globally, setting:
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: DENY`
+- `X-XSS-Protection: 1; mode=block`
+- `Strict-Transport-Security: max-age=31536000`
+- `Content-Security-Policy` (default policy)
+- And 10+ other security headers
+
+### ✅ Input Validation
+
+All API endpoints use **Zod schemas** for request validation:
+
+```javascript
+// Example: booking validation
+const createBookingSchema = z.object({
+  professional_id: z.string().uuid(),
+  service_id: z.string().uuid().optional(),
+  scheduled_at: z.string().datetime(),
+  address: z.string().max(500).optional(),
+  notes: z.string().max(2000).optional(),
+});
+```
+
+Validation middleware rejects malformed requests before they reach controllers.
+
+### 🌐 CORS Configuration
+
+- Requests are only accepted from configured origins (`CLIENT_URL` + `*.vercel.app`)
+- Credentials are allowed for authenticated requests
+- Preflight requests are cached for 1 hour
+
+### 📦 Request Size Limits
+
+- JSON body parser limited to **4 MB** to prevent memory exhaustion attacks
+
+### 🔑 API Key Management
+
+- Supabase **service-role key** is never exposed to the frontend
+- Admin operations use `supabaseAdmin` (service-role) only on the backend
+- Frontend uses `SUPABASE_ANON_KEY` which is subject to RLS
+- Environment variables are never committed to the repository
+
+### 🗄️ Database Security
+
+- All tables have RLS enabled (defense at the database level)
+- Sensitive writes (wallet transactions, role changes) use **security-definer functions** that bypass RLS
+- Foreign key constraints prevent orphaned records
+- CHECK constraints enforce valid enum values (e.g., `verification_status`, `plan`)
+- UUID primary keys prevent sequential ID enumeration
+
+### 🧹 Additional Measures
+
+| Measure | Detail |
+|---------|--------|
+| **No SSR secrets** | Backend env vars are never bundled into the frontend |
+| **Error sanitization** | Internal errors are logged server-side; only safe messages returned to clients |
+| **WebSocket polyfill** | Backend includes a no-op WebSocket shim for Node.js < 22 compatibility — realtime features are disabled on the server |
+| **Supabase anon vs service-role** | Two distinct clients: anon (RLS-scoped, for user requests) and service-role (RLS-bypassing, for admin operations only) |
+| **HTTPS only** | Both Vercel (frontend) and Render (backend) enforce HTTPS in production |
+
+### 📋 Security Checklist
+
+- [x] Authentication on all protected routes
+- [x] Role-based authorization per endpoint
+- [x] Row-Level Security on all database tables
+- [x] Rate limiting on API endpoints
+- [x] HTTP security headers via Helmet
+- [x] Input validation with Zod schemas
+- [x] CORS origin restrictions
+- [x] Request size limits
+- [x] Service-role key isolated to backend
+- [x] Admin email allowlist
+- [x] Error message sanitization
+- [x] UUID primary keys (no enumeration)
+- [x] Foreign key constraints
+- [x] CHECK constraints on enums
+- [x] HTTPS enforcement
 
 ---
 
