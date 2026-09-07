@@ -8,6 +8,7 @@ import {
 } from "./api";
 
 export type UserRole = "customer" | "professional" | "vendor" | "admin" | null;
+export type UserPlan = "normal" | "premium";
 
 interface AuthContextValue {
   session: FixKartSession | null;
@@ -15,9 +16,12 @@ interface AuthContextValue {
   isLoggedIn: boolean;
   /** Role from the profiles TABLE (fetched server-side), not JWT metadata. */
   role: UserRole;
+  /** Plan from profiles TABLE: 'normal' or 'premium'. */
+  plan: UserPlan;
   isAdmin: boolean;
   isProfessional: boolean;
   isVendor: boolean;
+  isPremium: boolean;
   login: (session: FixKartSession) => void;
   logout: () => void;
   refreshRole: () => Promise<void>;
@@ -28,16 +32,19 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSessionState] = useState<FixKartSession | null>(getSession);
   const [role, setRole] = useState<UserRole>(null);
+  const [plan, setPlan] = useState<UserPlan>("normal");
 
   // Load the authoritative role from the database whenever we have a session.
   const refreshRole = async () => {
     if (!getSession()) {
       setRole(null);
+      setPlan("normal");
       return;
     }
     try {
-      const data = await apiGet<{ profile: { role?: UserRole } | null }>("/auth/me");
+      const data = await apiGet<{ profile: { role?: UserRole; plan?: UserPlan } | null }>("/auth/me");
       setRole(data?.profile?.role || null);
+      setPlan(data?.profile?.plan || "normal");
     } catch {
       // Token expired or backend down - keep whatever role we had; the
       // backend still enforces authorization on every protected call.
@@ -67,9 +74,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user: session?.user || null,
       isLoggedIn: Boolean(session?.access_token),
       role,
+      plan,
       isAdmin: role === "admin",
       isProfessional: role === "professional",
       isVendor: role === "vendor",
+      isPremium: plan === "premium",
       login: (next) => {
         persistSession(next);
         setSessionState(next);
@@ -79,10 +88,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearSession();
         setSessionState(null);
         setRole(null);
+        setPlan("normal");
       },
       refreshRole,
     }),
-    [session, role]
+    [session, role, plan]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

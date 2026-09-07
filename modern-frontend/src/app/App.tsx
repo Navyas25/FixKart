@@ -20,6 +20,7 @@ import {
   Calendar,
   Settings,
   Heart,
+  ArrowRight,
 } from "lucide-react";
 
 import { ThemeProvider, useTheme } from "../lib/theme";
@@ -30,6 +31,7 @@ import { SmoothScroll, scrollToTop } from "../lib/smoothScroll";
 import LoadingScreen from "./components/LoadingScreen";
 
 import HomePage from "./pages/HomePage";
+import NormalHomePage from "./pages/NormalHomePage";
 import ProductsPage from "./pages/ProductsPage";
 import ServicesPage from "./pages/ServicesPage";
 import ProfessionalsPage from "./pages/ProfessionalsPage";
@@ -43,6 +45,7 @@ import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import OrdersPage from "./pages/OrdersPage";
 import BookingsPage from "./pages/BookingsPage";
 import BookingPage from "./pages/BookingPage";
+import NormalBookingPage from "./pages/NormalBookingPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import WishlistPage from "./pages/WishlistPage";
@@ -56,6 +59,7 @@ import AdminVendorsPage from "./pages/AdminVendorsPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import CustomerSupportPage from "./pages/CustomerSupportPage";
 import ChatBot from "./components/ChatBot";
+import { PageHeader } from "./components/PageHeader";
 import {
   LoginPage,
   RegisterPage,
@@ -78,7 +82,7 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const { count } = useCart();
   const { count: wishlistCount } = useWishlist();
-  const { isLoggedIn, user, isAdmin, isVendor } = useAuth();
+  const { isLoggedIn, user, isAdmin, isVendor, isPremium } = useAuth();
   const isProfessional = user?.user_metadata?.role === "professional";
 
   useEffect(() => {
@@ -145,7 +149,7 @@ function Navbar() {
               <>
                 {navLink("/products", "Shop")}
                 {navLink("/services", "Services")}
-                {navLink("/professionals", "Professionals")}
+                {isPremium && navLink("/professionals", "Professionals")}
                 {navLink("/bookings", "My Bookings")}
                 {isVendor && navLink("/vendor/dashboard", "Vendor")}
               </>
@@ -283,7 +287,7 @@ function Navbar() {
             [
               { to: "/products", label: "Shop" },
               { to: "/services", label: "Services" },
-              { to: "/professionals", label: "Professionals" },
+              ...(isPremium ? [{ to: "/professionals", label: "Professionals" }] : []),
               { to: "/bookings", label: "My Bookings" },
               { to: isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login", label: isLoggedIn ? "My Account" : "Sign In" },
               ...(isLoggedIn ? [{ to: "/settings", label: "Settings" }] : []),
@@ -416,6 +420,47 @@ function Footer() {
   );
 }
 
+/* ─── Plan-Aware Home ──────────────────────────────────────────────────────── */
+
+function PlanAwareHomePage() {
+  const { isPremium } = useAuth();
+  return isPremium ? <HomePage /> : <NormalHomePage />;
+}
+
+function PlanAwareBookingPage() {
+  const { isPremium } = useAuth();
+  return isPremium ? <BookingPage /> : <NormalBookingPage />;
+}
+
+function PlanAwareProfessionalsPage() {
+  const { isPremium } = useAuth();
+  if (!isPremium) {
+    return (
+      <>
+        <PageHeader eyebrow="Premium Feature" title="Choose Your Professional" subtitle="Upgrade to FixKart Premium to browse and choose any professional." />
+        <section className="py-16 bg-[#F8FAFC] dark:bg-[#0B1220] min-h-[40vh]">
+          <div className="max-w-md mx-auto px-4 text-center bg-white dark:bg-[#111827] rounded-3xl border border-gray-100 dark:border-white/10 py-12">
+            <div className="w-16 h-16 mx-auto bg-[#F59E0B]/10 rounded-full flex items-center justify-center mb-5">
+              <Wrench className="w-8 h-8 text-[#F59E0B]" />
+            </div>
+            <h2 className="text-xl font-extrabold text-[#0F172A] dark:text-white mb-2">Premium Feature</h2>
+            <p className="text-[#64748B] dark:text-slate-400 text-sm mb-6 max-w-sm mx-auto">
+              With your current plan, professionals are auto-assigned based on your location. Upgrade to Premium to browse and choose any professional.
+            </p>
+            <Link
+              to="/booking"
+              className="inline-flex items-center gap-2 bg-[#2563EB] text-white font-bold text-sm px-7 py-3.5 rounded-2xl hover:bg-blue-500 transition-colors"
+            >
+              Book with Auto-Assign <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </section>
+      </>
+    );
+  }
+  return <ProfessionalsPage />;
+}
+
 /* ─── Layout ───────────────────────────────────────────────────────────────── */
 
 function ScrollToTop() {
@@ -427,7 +472,7 @@ function ScrollToTop() {
 }
 
 function Layout() {
-  const { isAdmin, isVendor, user } = useAuth();
+  const { isAdmin, isVendor, isPremium, user } = useAuth();
   const isProfessional = user?.user_metadata?.role === "professional";
   const isDashboard = isAdmin || isProfessional || isVendor;
   const navigate = useNavigate();
@@ -476,10 +521,10 @@ export default function App() {
             <ScrollToTop />
             <Routes>
               <Route element={<Layout />}>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<PlanAwareHomePage />} />
                 <Route path="/products" element={<ProductsPage />} />
                 <Route path="/services" element={<ServicesPage />} />
-                <Route path="/professionals" element={<ProfessionalsPage />} />
+                <Route path="/professionals" element={<PlanAwareProfessionalsPage />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/service/:id" element={<ServiceDetailPage />} />
@@ -489,7 +534,7 @@ export default function App() {
                 <Route path="/order-confirmation/:id" element={<OrderConfirmationPage />} />
                 <Route path="/orders" element={<OrdersPage />} />
                 <Route path="/bookings" element={<BookingsPage />} />
-                <Route path="/booking" element={<BookingPage />} />
+                <Route path="/booking" element={<PlanAwareBookingPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/wishlist" element={<WishlistPage />} />

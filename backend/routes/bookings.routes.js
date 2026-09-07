@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getMyBookings,
   createBooking,
+  autoAssignBooking,
   respondToBooking,
   updateBookingStatus,
 } from '../controllers/bookings.controller.js';
@@ -13,6 +14,7 @@ const router = Router();
 
 router.get('/', requireAuth, getMyBookings);
 router.post('/', requireAuth, validate(createBookingSchema), createBooking);
+router.post('/auto-assign', requireAuth, autoAssignBooking);
 
 // Professional-only actions on their own bookings.
 router.patch('/:id/respond', requireAuth, requireProfessional, respondToBooking);

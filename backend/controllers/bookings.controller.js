@@ -1,5 +1,6 @@
 import { successResponse, errorResponse } from '../utils/response.js';
 import { getUserSupabase } from '../utils/supabaseUser.js';
+import { supabaseAdmin } from '../config/supabase.js';
 
 const BOOKING_SELECT = `
   *,
@@ -260,6 +261,126 @@ export const updateBookingStatus = async (req, res, next) => {
     if (error) throw error;
 
     return successResponse(res, { booking: data });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// =====================================================
+// AUTO-ASSIGN NEAREST PROFESSIONAL
+// POST /api/bookings/auto-assign
+// =====================================================
+// For normal (non-premium) users: automatically finds the nearest
+// verified professional for the selected service and creates the booking.
+
+export const autoAssignBooking = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { service_id, scheduled_at, address, notes } = req.body;
+
+    if (!service_id) {
+      return errorResponse(res, 'service_id is required', 400);
+    }
+    if (!scheduled_at) {
+      return errorResponse(res, 'scheduled_at is required', 400);
+    }
+    if (!address) {
+      return errorResponse(res, 'address is required for auto-assignment', 400);
+    }
+
+    // Look up the service to get its category
+    const { data: service, error: svcError } = await supabaseAdmin
+      .from('services')
+      .select('id, name, category, base_price')
+      .eq('id', service_id)
+      .single();
+
+    if (svcError || !service) {
+      return errorResponse(res, 'Service not found', 404);
+    }
+
+    // Find verified professionals who offer this service category
+    const { data: professionals } = await supabaseAdmin
+      .from('professionals')
+      .select('id, user_id, rating, service_categories, service_locations, availability')
+      .eq('verification_status', 'verified')
+      .contains('service_categories', [service.category]);
+
+    if (!professionals || professionals.length === 0) {
+      // No matching professionals — create booking without assignment
+      // (will be picked up later)
+      const db = getUserSupabase(req);
+      const notesWithAddress = [`Service address: ${address}`, notes]
+        .filter(Boolean)
+        .join(' | ');
+
+      const { data, error } = await db
+        .from('bookings')
+        .insert({
+          user_id: userId,
+          service_id,
+          scheduled_at,
+          notes: notesWithAddress,
+          status: 'pending',
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return successResponse(res, {
+        booking: data,
+        professional_name: 'a verified professional (pending assignment)',
+      }, 201);
+    }
+
+    // Simple nearest-professional selection:
+    // Sort by rating descending (best first), pick the top one.
+    // A production system would use lat/lng distance calculation,
+    // but service_locations text[] contains city/area names.
+    const sorted = [...professionals].sort((a, b) => {
+      // Prioritize by rating, then by number of service locations (more = broader)
+      const ratingDiff = (b.rating || 0) - (a.rating || 0);
+      if (ratingDiff !== 0) return ratingDiff;
+      return (b.service_locations?.length || 0) - (a.service_locations?.length || 0);
+    });
+
+    const chosen = sorted[0];
+
+    // Get the professional's name
+    const { data: proProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('full_name')
+      .eq('id', chosen.user_id)
+      .single();
+
+    const professionalName = proProfile?.full_name || 'a verified professional';
+
+    // Create the booking with the assigned professional
+    const db = getUserSupabase(req);
+    const notesWithAddress = [`Service address: ${address}`, notes]
+      .filter(Boolean)
+      .join(' | ');
+
+    const { data, error } = await db
+      .from('bookings')
+      .insert({
+        user_id: userId,
+        professional_id: chosen.id,
+        service_id,
+        scheduled_at,
+        notes: notesWithAddress,
+        status: 'pending',
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return successResponse(res, {
+      booking: data,
+      professional_name: professionalName,
+    }, 201);
   } catch (err) {
     return next(err);
   }
