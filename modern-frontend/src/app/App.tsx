@@ -125,6 +125,7 @@ function Navbar() {
               </div>
               <span className="text-white font-extrabold text-xl tracking-tight">
                 Fix<span className="text-[#F59E0B]">Kart</span>
+                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-1.5">Premium</span>}
               </span>
             </div>
           ) : (
@@ -134,6 +135,7 @@ function Navbar() {
               </div>
               <span className="text-white font-extrabold text-xl tracking-tight">
                 Fix<span className="text-[#F59E0B]">Kart</span>
+                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-1.5">Premium</span>}
               </span>
             </Link>
           )}
@@ -324,6 +326,7 @@ function Navbar() {
 /* ─── Footer ───────────────────────────────────────────────────────────────── */
 
 function Footer() {
+  const { isPremium } = useAuth();
   const footerLinks: Record<string, string[]> = {
     Company: ["Careers", "Blog", "Press Kit"],
     Services: ["Plumbing", "Electrical", "Carpentry", "AC Repair", "Painting"],
@@ -366,6 +369,7 @@ function Footer() {
               </div>
               <span className="text-white font-extrabold text-xl tracking-tight">
                 Fix<span className="text-[#F59E0B]">Kart</span>
+                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-1.5">Premium</span>}
               </span>
             </div>
             <p className="text-white/35 text-sm leading-relaxed mb-6 max-w-xs">
