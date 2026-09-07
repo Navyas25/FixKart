@@ -70,6 +70,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import CookiePolicyPage from "./pages/CookiePolicyPage";
+import UpgradeToPremiumPage from "./pages/UpgradeToPremiumPage";
 
 /* ─── Navbar ───────────────────────────────────────────────────────────────── */
 
@@ -558,6 +559,7 @@ export default function App() {
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                 <Route path="/cookie-policy" element={<CookiePolicyPage />} />
+                <Route path="/upgrade-to-premium" element={<UpgradeToPremiumPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>

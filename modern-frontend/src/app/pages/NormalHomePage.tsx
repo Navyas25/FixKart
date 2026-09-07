@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 import {
   Wrench, Zap, Droplets, Paintbrush, Car, Hammer, Wind,
   Settings, Sparkles, MapPin, ArrowRight, Star, Shield,
-  CheckCircle, Clock, Headphones, ChevronRight,
+  CheckCircle, Clock, Headphones, ChevronRight, Crown, Lock,
 } from "lucide-react";
 import { apiGet } from "../../lib/api";
 import { formatINR } from "../../lib/format";
@@ -195,6 +195,62 @@ export default function NormalHomePage() {
             Book a Professional Now
             <ArrowRight className="w-4 h-4" />
           </Link>
+        </div>
+      </section>
+
+      {/* ─── Upgrade to Premium ───────────────────────────────── */}
+      <section className="py-14 lg:py-20 bg-gradient-to-br from-[#0F172A] via-[#1a2744] to-[#0F172A]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative bg-[#111827] border border-[#F59E0B]/20 rounded-3xl p-8 lg:p-12 overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#F59E0B]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#2563EB]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+
+            <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              <div className="flex-1 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 bg-[#F59E0B]/10 border border-[#F59E0B]/20 text-[#F59E0B] text-xs font-bold px-4 py-2 rounded-full mb-5">
+                  <Crown className="w-3.5 h-3.5" />
+                  FixKart Premium
+                </div>
+                <h2 className="text-2xl lg:text-3xl font-extrabold text-white mb-3">
+                  Unlock the Full FixKart Experience
+                </h2>
+                <p className="text-white/50 text-sm leading-relaxed mb-6 max-w-md">
+                  With Premium, you can browse and choose any verified professional, see ratings & reviews, compare options, and pick the perfect pro for your needs — instead of auto-assignment.
+                </p>
+                <ul className="space-y-2.5 mb-6">
+                  {[
+                    "Browse & choose any professional",
+                    "See ratings, reviews & experience",
+                    "Compare multiple professionals",
+                    "Priority customer support",
+                  ].map((feature) => (
+                    <li key={feature} className="flex items-center gap-2.5">
+                      <CheckCircle className="w-4 h-4 text-[#F59E0B] flex-shrink-0" />
+                      <span className="text-sm text-white/70 font-medium">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/upgrade-to-premium"
+                  className="inline-flex items-center gap-2 bg-[#F59E0B] text-[#0F172A] font-extrabold text-base px-8 py-4 rounded-2xl hover:bg-amber-400 active:scale-95 transition-all shadow-lg shadow-amber-500/25"
+                >
+                  <Crown className="w-5 h-5" />
+                  Upgrade to Premium
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="hidden lg:block w-px h-64 bg-white/10" />
+
+              <div className="flex-shrink-0 text-center">
+                <div className="w-24 h-24 mx-auto bg-[#F59E0B]/10 rounded-3xl flex items-center justify-center mb-4">
+                  <Crown className="w-12 h-12 text-[#F59E0B]" />
+                </div>
+                <p className="text-3xl font-extrabold text-[#F59E0B] mb-1">Premium</p>
+                <p className="text-xs text-white/40 font-medium">Choose Your Pro</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
