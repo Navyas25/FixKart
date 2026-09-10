@@ -117,7 +117,7 @@ function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between gap-4 lg:gap-6 xl:gap-8 h-16 lg:h-20">
           {/* Logo */}
           {isAdmin ? (
             <div className="flex items-center gap-2.5 flex-shrink-0">
@@ -126,7 +126,7 @@ function Navbar() {
               </div>
               <span className="text-white font-extrabold text-xl tracking-tight">
                 Fix<span className="text-[#F59E0B]">Kart</span>
-                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-1.5">Premium</span>}
+                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-2">Premium</span>}
               </span>
             </div>
           ) : (
@@ -136,7 +136,7 @@ function Navbar() {
               </div>
               <span className="text-white font-extrabold text-xl tracking-tight">
                 Fix<span className="text-[#F59E0B]">Kart</span>
-                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-1.5">Premium</span>}
+                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-2">Premium</span>}
               </span>
             </Link>
           )}
@@ -163,7 +163,7 @@ function Navbar() {
           {!isAdmin && (
             <form
               onSubmit={submitSearch}
-              className="hidden lg:flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3.5 py-2 w-56 xl:w-64 focus-within:border-[#F59E0B]/60 transition-colors"
+              className="hidden lg:flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-3.5 py-2 w-48 xl:w-64 focus-within:border-[#F59E0B]/60 transition-colors"
             >
               <Search className="w-4 h-4 text-white/40 flex-shrink-0" />
               <input
@@ -238,13 +238,13 @@ function Navbar() {
               <>
                 <Link
                   to="/professional"
-                  className="ml-1 bg-[#F59E0B] text-[#0F172A] text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-amber-400 transition-colors shadow-md shadow-amber-500/30"
+                  className="ml-1 bg-[#F59E0B] text-[#0F172A] text-sm font-bold px-4 xl:px-5 py-2.5 rounded-xl hover:bg-amber-400 transition-colors shadow-md shadow-amber-500/30"
                 >
                   Become a Pro
                 </Link>
                 <Link
                   to="/services"
-                  className="ml-1 bg-[#2563EB] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-500 transition-colors shadow-md shadow-blue-600/30"
+                  className="ml-1 bg-[#2563EB] text-white text-sm font-bold px-4 xl:px-5 py-2.5 rounded-xl hover:bg-blue-500 transition-colors shadow-md shadow-blue-600/30"
                 >
                   Book Now
                 </Link>
@@ -370,7 +370,7 @@ function Footer() {
               </div>
               <span className="text-white font-extrabold text-xl tracking-tight">
                 Fix<span className="text-[#F59E0B]">Kart</span>
-                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-1.5">Premium</span>}
+                {isPremium && <span className="text-[#F59E0B] text-sm font-bold ml-2">Premium</span>}
               </span>
             </div>
             <p className="text-white/35 text-sm leading-relaxed mb-6 max-w-xs">
