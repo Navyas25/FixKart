@@ -101,10 +101,10 @@ function Navbar() {
     setOpen(false);
   };
 
-  const navLink = (to: string, label: string) => (
+  const navLink = (to: string, label: string, nowrap?: boolean) => (
     <Link
       to={to}
-      className="text-white/70 hover:text-white text-sm font-semibold transition-colors"
+      className={`text-white/70 hover:text-white text-sm font-semibold transition-colors ${nowrap ? "whitespace-nowrap" : ""}`}
     >
       {label}
     </Link>
@@ -153,7 +153,7 @@ function Navbar() {
                 {navLink("/products", "Shop")}
                 {navLink("/services", "Services")}
                 {isPremium && navLink("/professionals", "Professionals")}
-                {navLink("/bookings", "My Bookings")}
+                {navLink("/bookings", "My Bookings", true)}
                 {isVendor && navLink("/vendor/dashboard", "Vendor")}
               </>
             )}
@@ -291,7 +291,7 @@ function Navbar() {
               { to: "/products", label: "Shop" },
               { to: "/services", label: "Services" },
               ...(isPremium ? [{ to: "/professionals", label: "Professionals" }] : []),
-              { to: "/bookings", label: "My Bookings" },
+              { to: "/bookings", label: "My Bookings", nowrap: true },
               { to: isLoggedIn ? (isProfessional ? "/professional/dashboard" : "/profile") : "/login", label: isLoggedIn ? "My Account" : "Sign In" },
               ...(isLoggedIn ? [{ to: "/settings", label: "Settings" }] : []),
               ...(isVendor ? [{ to: "/vendor/dashboard", label: "Vendor Dashboard" }] : []),
