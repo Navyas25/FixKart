@@ -108,6 +108,7 @@ const SERVICES_LIST = [
 
 export default function ProfessionalDashboardPage() {
   const { isLoggedIn, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [loading, setLoading] = useState(true);

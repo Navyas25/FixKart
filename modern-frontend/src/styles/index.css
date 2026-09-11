@@ -2,4 +2,5 @@
 @import './tailwind.css';
 @import './theme.css';
 @import './globals.css';
+@import './light.css';
 @import './dark.css';

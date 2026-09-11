@@ -38,9 +38,12 @@ import {
   FileText,
   Settings,
   ExternalLink,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { apiGet, apiPost, apiPatch, apiDelete } from "../../lib/api";
 import { useAuth } from "../../lib/auth";
+import { useTheme } from "../../lib/theme";
 import { PageHeader } from "../components/PageHeader";
 
 type Tab =
@@ -85,6 +88,7 @@ const CARD =
 
 export default function VendorDashboardPage() {
   const { isLoggedIn, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [loading, setLoading] = useState(true);

@@ -39,9 +39,12 @@ import {
   Mail,
   Headphones,
   Inbox,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { apiGet, apiPatch, apiPost } from "../../lib/api";
 import { useAuth } from "../../lib/auth";
+import { useTheme } from "../../lib/theme";
 import { PageHeader } from "../components/PageHeader";
 
 /* ─── Constants ───────────────────────────────────────────────────────────── */
@@ -134,6 +137,7 @@ function InfoRow({ label, value }: { label: string; value: any }) {
 
 export default function AdminDashboardPage() {
   const { isLoggedIn, isAdmin, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [loading, setLoading] = useState(true);
@@ -180,6 +184,22 @@ export default function AdminDashboardPage() {
   }
 
   if (!isAdmin) {
+    return (
+      <>
+        <PageHeader eyebrow="FixKart Admin" title="Admin Dashboard" subtitle="Admin only" />
+        <section className="py-16 bg-[#F8FAFC] dark:bg-[#0B1220] min-h-[40vh]">
+          <div className="max-w-md mx-auto px-4 text-center bg-white dark:bg-[#111827] rounded-3xl border border-gray-100 dark:border-white/10 py-12">
+            <ShieldAlert className="w-10 h-10 text-red-500 mx-auto mb-3" />
+            <p className="text-[#0F172A] dark:text-white font-extrabold mb-2">Admin access required</p>
+            <p className="text-sm text-[#64748B] dark:text-slate-400 mb-6">
+              Only users with the <span className="font-bold">admin</span> role can access this page.
+            </p>
+            <Link to="/" className="inline-block bg-[#2563EB] text-white font-bold text-sm px-8 py-3.5 rounded-2xl hover:bg-blue-500 transition-colors">Back to FixKart</Link>
+          </div>
+        </section>
+      </>
+    );
+  }
     return (
       <>
         <PageHeader eyebrow="FixKart Admin" title="Admin Dashboard" subtitle="Admin only" />
