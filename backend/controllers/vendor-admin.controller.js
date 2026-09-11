@@ -8,7 +8,8 @@ const VENDOR_SELECT_ADMIN = [
   'logo_url', 'banner_url', 'rating', 'total_sales',
   'verification_status', 'created_at', 'updated_at',
   'category', 'gst_number', 'business_address', 'business_phone',
-  'bank_account_number', 'bank_ifsc', 'bank_name', 'upi_id'
+  'bank_account_number', 'bank_ifsc', 'bank_name', 'upi_id',
+  'document_url'
 ].join(', ');
 
 const VERIFICATION_STATUSES = ['pending', 'verified', 'rejected', 'suspended'];

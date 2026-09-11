@@ -57,6 +57,7 @@ interface VendorRow {
   bank_ifsc: string | null;
   bank_name: string | null;
   upi_id: string | null;
+  document_url: string | null;
   profile?: {
     full_name: string | null;
     phone: string | null;
@@ -312,6 +313,19 @@ export default function AdminVendorsPage() {
                               ? "Hide details"
                               : "View business details"}
                           </button>
+
+                          {/* Business documents */}
+                          {vendor.document_url && (
+                            <a
+                              href={vendor.document_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB] hover:text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                              Review business documents
+                            </a>
+                          )}
                         </div>
                       </div>
 
@@ -451,6 +465,21 @@ export default function AdminVendorsPage() {
                                   </p>
                                 </div>
                               )
+                          )}
+                          {vendor.document_url && (
+                            <div className="col-span-full pt-2 border-t border-gray-100 dark:border-white/10">
+                              <p className="text-[10px] font-bold uppercase tracking-wide text-[#64748B] dark:text-slate-400">
+                                Business Documents
+                              </p>
+                              <a
+                                href={vendor.document_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-xs font-bold text-[#2563EB] hover:text-blue-600 underline underline-offset-2"
+                              >
+                                View documents <ExternalLink className="inline h-3.5 w-3.5 align-middle -mt-0.5 mr-0.5" />
+                              </a>
+                            </div>
                           )}
                         </div>
                       </div>

@@ -280,6 +280,24 @@ export default function AdminProfessionalsPage() {
                               </span>
                             )}
                           </div>
+
+                          {/* Document review link */}
+                          {pro.id_document_url ? (
+                            <a
+                              href={pro.id_document_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB] hover:text-blue-600 bg-blue-50 dark:bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                              Review uploaded document
+                            </a>
+                          ) : (
+                            <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 px-3 py-1.5 rounded-lg">
+                              <ShieldAlert className="w-3.5 h-3.5" />
+                              No document uploaded
+                            </span>
+                          )}
                         </div>
                       </div>
 
